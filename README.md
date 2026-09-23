@@ -11,8 +11,10 @@ review queue at the chosen thresholds. Coverage (how many records got a match) i
 beside precision (how many of those matches are right), because in this data they are not the
 same number.
 
-**Status.** Phase 0 of `docs/BRIEF.md`: the chassis. No data has been acquired and no
-method has been run, so there are no results yet. The results table below is filled from
+**Status.** Phase 1 of `docs/BRIEF.md`: both side-A candidates and the Discogs masters are
+acquired and profiled (`docs/PROFILE.md`, `artifacts/profile/`); side A and the sample scope
+await the owner's decision in `docs/adr/0001-*.md`. No method has been run, so there are no
+results yet. The results table below is filled from
 `artifacts/eval_<method_version>.json` once Phase 4 has run; until then it reads from an empty
 artifact tree on purpose.
 

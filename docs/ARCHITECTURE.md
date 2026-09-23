@@ -17,6 +17,7 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 | `models/tiering.py` | tier thresholds, ambiguity gap and review-cost constants. |
 | `pipeline/match.py` | `make full` entry point; refuses to run until the pipeline exists. |
 | `citations.py` | the number checker's rules, shared verbatim with demo 1. |
+| `features/normalize.py` | section 2.3 in full: the one normaliser (rule 5); the profiler already calls it. |
 
 ## Artifacts `artifacts/`
 
@@ -32,6 +33,13 @@ no download. Families that do not exist yet build as empty typed relations (`fil
 Silver flattens the artifacts into long, grain-enforced tables; gold is contracted marts the
 site reads. `assert_marts_reconcile_to_eval_artifacts` proves gold equals the artifacts;
 `export_gold` writes CSV and JSON to `docs/site/data/` for the Pages site.
+
+## Phase 1 profiler
+
+`scripts/profile_sources.py` downloads the dumps (free disk checked first), stream-extracts the
+listed MusicBrainz tables, pages Wikidata, writes `artifacts/profile/<source>.json` (aggregates,
+hashes and pattern codes only, schema `profile.schema.json`) and renders `docs/PROFILE.md`;
+`render --check` fails when the rendered block is stale.
 
 ## Checks
 

@@ -62,6 +62,24 @@ MEASURE_WORDS = (
     "event",
     "gaps",
     "ids",
+    # entity-resolution domain words (docs/BRIEF.md amendment of 2026-09-22); demo 1's list above
+    # is kept verbatim so the two scripts stay diffable
+    "pairs",
+    "pair",
+    "records",
+    "record",
+    "masters",
+    "master",
+    "release groups",
+    "release group",
+    "links",
+    "link",
+    "candidates",
+    "candidate",
+    "blocks",
+    "block",
+    "folds",
+    "fold",
 )
 ALLOW_RE = [
     re.compile(r"^(19|20)\d{2}$"),  # years

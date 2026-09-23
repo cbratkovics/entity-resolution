@@ -6,7 +6,7 @@ _Generated from committed artifacts by `scripts/check_model_card.py --write`; do
 
 | Field | Value | Source key |
 |---|---|---|
-| Feature version | `0.0.0` | `artifacts/manifest.json#feature_version` |
+| Feature version | `0.1.0` | `artifacts/manifest.json#feature_version` |
 | Code commit | `unknown` | `artifacts/manifest.json#code_commit` |
 | Side A | undecided (ADR 0001 pending) | `artifacts/manifest.json#side_a` |
 | Side B | discogs | fixed by `docs/BRIEF.md` (section `2.1`) |

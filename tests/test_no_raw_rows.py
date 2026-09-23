@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -47,6 +48,33 @@ def test_no_tracked_csv_has_an_attribute_column() -> None:
             header = next(csv.reader(fh), [])
         bad = {h.strip().lower() for h in header} & FORBIDDEN_COLUMNS
         assert not bad, f"{p}: forbidden columns {sorted(bad)}"
+
+
+FREE_TEXT_ALLOWED_PREFIXES = ("artifacts/eval_", "artifacts/methods/")
+"""Artifacts whose schema carries prose (metric definitions, method definitions). Profile
+artifacts are not among them: every string there must be a hash, URL, date or token."""
+
+
+def _string_values(obj, out: list[str]) -> None:
+    if isinstance(obj, dict):
+        for v in obj.values():
+            _string_values(v, out)
+    elif isinstance(obj, list):
+        for v in obj:
+            _string_values(v, out)
+    elif isinstance(obj, str):
+        out.append(obj)
+
+
+def test_profile_artifacts_carry_no_free_text() -> None:
+    token = re.compile(r"^[A-Za-z0-9_.:/+%?=&-]+$")
+    for p in _tracked():
+        if not p.as_posix().startswith("artifacts/profile/") or p.suffix != ".json":
+            continue
+        values: list[str] = []
+        _string_values(json.loads((REPO_ROOT / p).read_text(encoding="utf-8")), values)
+        with_space = [v for v in values if not token.fullmatch(v)]
+        assert not with_space, f"{p}: string values that look like free text: {with_space[:5]}"
 
 
 def test_no_tracked_artifact_json_has_an_attribute_key() -> None:

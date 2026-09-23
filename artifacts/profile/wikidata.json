@@ -1,0 +1,256 @@
+{
+  "acquisition": {
+    "cached_pages": 84,
+    "id_pages": 83,
+    "kind": "endpoint",
+    "licence_url": "https://www.wikidata.org/wiki/Wikidata:Licensing",
+    "page_size": 2000,
+    "profile_seconds": 1331.2,
+    "queried_at_utc": "2026-09-23T01:57:22+00:00",
+    "request_seconds": 1179.4,
+    "requests": 664,
+    "response_sha256": "6d3aaae99de05f59b90f0ff0902b3b42acbe1276b539070942d80aac6ccdee99",
+    "retries": 4,
+    "server_count": 164910,
+    "timeouts": 4,
+    "url": "https://query.wikidata.org/sparql"
+  },
+  "code_commit": "6d50422c4784414dae0753a868ebcfabf5702563",
+  "examples": [
+    {
+      "a_artist_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "a_title_hash": "339f0f4756b562e699546631818f51be3fd13ea1010169e46ed727b8802a2c41",
+      "b_artist_hash": "8ff2483f2fbaa6c8dfd4e3556dbde298eb5e342b5e46f84eabdccc8e1cbe2d5a",
+      "b_title_hash": "f737be38d861899b28624bf76d412e0a5575cffde13fab68e50c1f4f88b06ee3",
+      "pair_hash": "000316e02cb7c24ca95f5dd08d744bc2704764b10f237e65e6f365d5ee00ec6c",
+      "pattern": "other",
+      "year_a": 1987,
+      "year_b": 1987
+    },
+    {
+      "a_artist_hash": "93afcea41057d04e45b3f1428546c3f882496b50a40bdaf8e149024d602e2dc9",
+      "a_title_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "b_artist_hash": "93afcea41057d04e45b3f1428546c3f882496b50a40bdaf8e149024d602e2dc9",
+      "b_title_hash": "1c8be30e4657ab69d40a7c9eb5ccc90bc7470fb381a2297d490e70f10ea48d8e",
+      "pair_hash": "0000e2c0653aa1fe611b14d29a61b8ae0548d426c2344a05f97382303b270bbf",
+      "pattern": "title_token_subset",
+      "year_a": 1977,
+      "year_b": 1977
+    },
+    {
+      "a_artist_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "a_title_hash": "d0a53aae2ee8c1b4b467cccf8e57edd9166c7544dad8ea6839b12c4c9e90477d",
+      "b_artist_hash": "984e224e1b0dc56a09789e83a094aa8cf116cb5c3b75d1a08771bed7f7d5f4c8",
+      "b_title_hash": "d0a53aae2ee8c1b4b467cccf8e57edd9166c7544dad8ea6839b12c4c9e90477d",
+      "pair_hash": "00032b0d0b3d728024170a547ad65eadf1ed9572af492731685ee944cd100072",
+      "pattern": "artist_credit_join",
+      "year_a": 2002,
+      "year_b": 2002
+    },
+    {
+      "a_artist_hash": "08343e62d8946ffc633e61a89d46c8d8a32987c97690b02d66b0a0a804d7d583",
+      "a_title_hash": "5c5dcb491de6713bc50673448020f17577143e334c519a2153217d4e218b151f",
+      "b_artist_hash": "08343e62d8946ffc633e61a89d46c8d8a32987c97690b02d66b0a0a804d7d583",
+      "b_title_hash": "5c5dcb491de6713bc50673448020f17577143e334c519a2153217d4e218b151f",
+      "pair_hash": "0001adbed2ab00c7bfd465d011ec209645cadc5950c8a0576a02905ba8761c59",
+      "pattern": "year_only",
+      "year_a": 2005,
+      "year_b": 2006
+    },
+    {
+      "a_artist_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "a_title_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "b_artist_hash": "b6c61263ba60669754e12f7aec9cd578faba41d9172069f6165d1b793841cb09",
+      "b_title_hash": "b6c61263ba60669754e12f7aec9cd578faba41d9172069f6165d1b793841cb09",
+      "pair_hash": "000788d56572f574a07ae05e7fee391c03ed6c2d6624fa9288bab5d1cd46fce4",
+      "pattern": "self_titled_vs_named",
+      "year_a": 2007,
+      "year_b": 2007
+    },
+    {
+      "a_artist_hash": "0fbac8c5342ef30d025b7dea3c01cb6a8f39511c89f175882cdc0bc9c717ab39",
+      "a_title_hash": "f63494cfb7a7d82c566d03dfcdb48eb8297a892c8a48c5d926b7d75e6c1e93f2",
+      "b_artist_hash": "1d35a94841cbfca1795472e9050f2270c882844226ae842f267e2edc7a114899",
+      "b_title_hash": "f63494cfb7a7d82c566d03dfcdb48eb8297a892c8a48c5d926b7d75e6c1e93f2",
+      "pair_hash": "0043b94ce4cb3b877d2c6b2d5f5a374c5a46a7ffaeb1e44b7240161f295a0c9a",
+      "pattern": "various_artists_credit",
+      "year_a": 2012,
+      "year_b": 2012
+    },
+    {
+      "a_artist_hash": "5743abddddfa08c1e3a99fdebc2e8f3f1108fa12dcd2a8f58a42f141418c22ec",
+      "a_title_hash": "60eed3086ab8ca25f2ef2b06db70eded2820e9ccab720d5b06b4fdd8a62f8b73",
+      "b_artist_hash": "5743abddddfa08c1e3a99fdebc2e8f3f1108fa12dcd2a8f58a42f141418c22ec",
+      "b_title_hash": "60eed3086ab8ca25f2ef2b06db70eded2820e9ccab720d5b06b4fdd8a62f8b73",
+      "pair_hash": "017869219842322592f88e426a53174b8736b14b93b30f04ae6bba8e3ec11932",
+      "pattern": "numeric_disambiguator",
+      "year_a": null,
+      "year_b": 1991
+    },
+    {
+      "a_artist_hash": "64ad577a175ebd7e0b25fb3a80ddb1476439c47b5952a292837d7765959ed8dc",
+      "a_title_hash": "fadba86cdfcbbdffa545d78750f556cbb18cc55b220e5ceac2502414b1e34766",
+      "b_artist_hash": "64ad577a175ebd7e0b25fb3a80ddb1476439c47b5952a292837d7765959ed8dc",
+      "b_title_hash": "d6c18b9e494a8789cf59d57118727f1e9f0afe85393025702499529b14310a84",
+      "pair_hash": "00ab6ef28ff3de6e31f2d302ea79f2077ef43c0823a74463f7ec4104b0d1db65",
+      "pattern": "title_token_order",
+      "year_a": 1980,
+      "year_b": 1980
+    },
+    {
+      "a_artist_hash": "bd829ff2661b80cdfba37eae5b5823f3e4e3bf5ba912a4776c2bb4b3d5215f59",
+      "a_title_hash": "62fe72bbdefd35f3b950d85311d4ddacfccd21d223781873cffab11cb751c464",
+      "b_artist_hash": "bd829ff2661b80cdfba37eae5b5823f3e4e3bf5ba912a4776c2bb4b3d5215f59",
+      "b_title_hash": "62fe72bbdefd35f3b950d85311d4ddacfccd21d223781873cffab11cb751c464",
+      "pair_hash": "00372cc39d38c7a77033fd5c4991b3452a37a1493fab4c8fa0779a9d225e26cb",
+      "pattern": "article_position",
+      "year_a": null,
+      "year_b": 1964
+    },
+    {
+      "a_artist_hash": "0bd9c428f627104612c8fa80c3e722c457e0596a21c6e14b64378d26e6bfbd7e",
+      "a_title_hash": "0d46d552788ed5f9931a6ba2b4e92b1c484c06fb21e352f1c79a3ad9b25caba0",
+      "b_artist_hash": "0bd9c428f627104612c8fa80c3e722c457e0596a21c6e14b64378d26e6bfbd7e",
+      "b_title_hash": "b5e0eee6e28efca6d6ad05d7b8a94631576037ec9e5ff6d305fe89faa0e1032e",
+      "pair_hash": "02f60373171409b2f3b0f3d63dafa6de3dab0e43b4fe9b2531d0aed60025a89c",
+      "pattern": "edition_qualifier",
+      "year_a": 2007,
+      "year_b": 2007
+    },
+    {
+      "a_artist_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "a_title_hash": "e649128bd8f4cec0ba56e3f5dec7145ee02d8045d2418b8ffff2359b27e23769",
+      "b_artist_hash": "ae497696da1da05581774c71b7c2ecc77f219f3e7914b02fe340c4eabaa17252",
+      "b_title_hash": "d4f22194c921180da0ba4393132a25db899bb7952fefd709f13504eab0268778",
+      "pair_hash": "14a76c507812d9384fc48bbba80bb5f579469766c0d4d2fdd555b3d5a9db0e1f",
+      "pattern": "case_punct_diacritics",
+      "year_a": 2010,
+      "year_b": 2010
+    },
+    {
+      "a_artist_hash": "b4c8fd3d1b08dfe92dfedf3683ad5b0a0b3812b529e83f25d5f7aa69ddea3c3e",
+      "a_title_hash": "10808630f4aa361dfd693c18d83e5bde02b9b9399a6b517af233118c52243d1b",
+      "b_artist_hash": "d719a12ec001589c6e5ebe4079499275e266488c92ce88419285961949bf979c",
+      "b_title_hash": "10808630f4aa361dfd693c18d83e5bde02b9b9399a6b517af233118c52243d1b",
+      "pair_hash": "0003b812996154f17471a0839fc0af80b39934e9730e53b111e4d37d65f9bf17",
+      "pattern": "other",
+      "year_a": 2004,
+      "year_b": 2004
+    },
+    {
+      "a_artist_hash": "198679765887fd3111ad8072b522d7a6fde36ee3dff93c26ab7df2d2596c1028",
+      "a_title_hash": "f274d0ab49422480dc2f7db957029ca82065388f2d96ff7237ba35feaa7cf7e0",
+      "b_artist_hash": "198679765887fd3111ad8072b522d7a6fde36ee3dff93c26ab7df2d2596c1028",
+      "b_title_hash": "77e457ab4b52041521abc26d0ba1af46bd468b5e4b251ab1823774b04954abe4",
+      "pair_hash": "00056eac7dec8eb4c941778ec66c721a34451672d24f33550f39b198bcf1c345",
+      "pattern": "title_token_subset",
+      "year_a": 1987,
+      "year_b": 1987
+    },
+    {
+      "a_artist_hash": "52a7427a9de5ea95e760d297bf7fb6a6d46a542da83986abc27e6f73360961a2",
+      "a_title_hash": "44ffb5c2c440b2c959ace28393d8d5efbcbe96d2e69b6c1327580d0d0638a7e0",
+      "b_artist_hash": "1d35a94841cbfca1795472e9050f2270c882844226ae842f267e2edc7a114899",
+      "b_title_hash": "44ffb5c2c440b2c959ace28393d8d5efbcbe96d2e69b6c1327580d0d0638a7e0",
+      "pair_hash": "0004bf2ce09ec7ba0987914867efa5013aaefed84aaaf8141fb0bb541270c8b9",
+      "pattern": "artist_credit_join",
+      "year_a": 2006,
+      "year_b": 2006
+    },
+    {
+      "a_artist_hash": "68ce588f6b6bd36ea771e53e66422f5c06bb9c4d50e1c3e1b06e31fdd171f50e",
+      "a_title_hash": "6eafd5e8e182945c3baeade35bf4e0c0cbfc083fc399ce88130c58270e5a9047",
+      "b_artist_hash": "68ce588f6b6bd36ea771e53e66422f5c06bb9c4d50e1c3e1b06e31fdd171f50e",
+      "b_title_hash": "6eafd5e8e182945c3baeade35bf4e0c0cbfc083fc399ce88130c58270e5a9047",
+      "pair_hash": "0015e45ab022ba9c6dae4dfd03cd1f7749b4febea29cd029a0c8630bfe492e51",
+      "pattern": "year_only",
+      "year_a": null,
+      "year_b": 1982
+    }
+  ],
+  "feature_version": "0.1.0",
+  "generated_at_utc": "2026-09-23T02:19:33+00:00",
+  "profile_version": "1.0",
+  "records": {
+    "by_class_top": {
+      "Q105543609": 2100,
+      "Q10590726": 430,
+      "Q107154516": 27,
+      "Q11424": 172,
+      "Q134556": 23096,
+      "Q169930": 5015,
+      "Q482994": 133223,
+      "Q60713210": 27,
+      "Q7366": 132,
+      "none": 27
+    },
+    "completeness": {
+      "artist_credit": 0.964562,
+      "title": 0.918251,
+      "year": 0.983334
+    },
+    "duplicate_key": {
+      "keys": 155142,
+      "keys_with_duplicates": 4085,
+      "largest_key_size": 1198,
+      "record_rate": 0.082897,
+      "records_in_duplicate_keys": 13654
+    },
+    "qualifier_share": 0.000103,
+    "self_titled_share": 0.033283,
+    "total": 164711,
+    "various_artists_share": 0.023987,
+    "with_english_label": 0.918384,
+    "with_performer_and_year": 156434,
+    "year": {
+      "by_decade": {
+        "1910": 2,
+        "1920": 10,
+        "1930": 42,
+        "1940": 187,
+        "1950": 2505,
+        "1960": 8217,
+        "1970": 16227,
+        "1980": 23147,
+        "1990": 34230,
+        "2000": 42344,
+        "2010": 28548,
+        "2020": 6505
+      },
+      "max_in_range": 2026,
+      "min_in_range": 1913,
+      "missing": 2745,
+      "out_of_range": 2
+    }
+  },
+  "side": "A",
+  "source": "wikidata",
+  "truth": {
+    "a_records_with_link": 164620,
+    "alive": 163352,
+    "alive_with_artist_and_year": 155222,
+    "dead": 1453,
+    "dead_rate": 0.008816,
+    "distinct_masters": 163272,
+    "links": 164805,
+    "non_numeric_ids": 92,
+    "one_to_many_a": 171,
+    "one_to_many_a_rate": 0.001039,
+    "one_to_many_b": 1460,
+    "one_to_many_b_rate": 0.008942,
+    "pattern_counts": {
+      "article_position": 62,
+      "artist_credit_join": 13432,
+      "case_punct_diacritics": 4,
+      "edition_qualifier": 25,
+      "identical": 105175,
+      "numeric_disambiguator": 588,
+      "other": 20164,
+      "self_titled_vs_named": 1686,
+      "title_token_order": 204,
+      "title_token_subset": 15050,
+      "various_artists_credit": 681,
+      "year_only": 6281
+    }
+  }
+}

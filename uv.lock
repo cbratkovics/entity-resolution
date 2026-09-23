@@ -475,6 +475,7 @@ dependencies = [
     { name = "dbt-duckdb" },
     { name = "duckdb" },
     { name = "jsonschema" },
+    { name = "metaphone" },
     { name = "numpy" },
     { name = "pandas" },
     { name = "pyarrow" },
@@ -497,6 +498,7 @@ requires-dist = [
     { name = "dbt-duckdb", specifier = "==1.11.0" },
     { name = "duckdb", specifier = "==1.5.5" },
     { name = "jsonschema", specifier = ">=4" },
+    { name = "metaphone", specifier = ">=0.6" },
     { name = "numpy", specifier = ">=1.26" },
     { name = "pandas", specifier = ">=2.2" },
     { name = "pyarrow", specifier = ">=15" },
@@ -700,6 +702,12 @@ wheels = [
 msgpack = [
     { name = "msgpack" },
 ]
+
+[[package]]
+name = "metaphone"
+version = "0.6"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/d4/ae/c9e4d007e32a6469be212da11d0b8e104d643f6f247d771742caf6ac6bb8/Metaphone-0.6.tar.gz", hash = "sha256:ad0beadca66cb7ec6ede71ef72bb02da097c493ddf159930d6340bc83f53da27", size = 14075, upload-time = "2016-08-24T14:37:29.687Z" }
 
 [[package]]
 name = "metricflow"

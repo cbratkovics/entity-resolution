@@ -1,0 +1,276 @@
+{
+  "acquisition": {
+    "bytes": 7542238956,
+    "download_seconds": 288.1,
+    "dump_date": "2026-09-19",
+    "extract_passes": 2,
+    "extract_seconds": 1299.1,
+    "extracted_bytes": 4795695166,
+    "filename": "mbdump.tar.bz2",
+    "free_disk_before_bytes": 164024229888,
+    "kind": "dump",
+    "licence_url": "https://musicbrainz.org/doc/About/Data_License",
+    "profile_seconds": 695.3,
+    "sha256": "2811a5c96de306ae9c54264c424a9a00618cf2c382b43588927705e5b55994b6",
+    "tables": {
+      "artist_credit": 419782788,
+      "l_release_group_url": 66452918,
+      "link": 74431257,
+      "link_type": 209013,
+      "release": 785004035,
+      "release_country": 287573643,
+      "release_group": 487455539,
+      "release_group_primary_type": 2913,
+      "release_unknown_country": 8697071,
+      "url": 2666085989
+    },
+    "url": "https://data.metabrainz.org/pub/musicbrainz/data/fullexport/20260919-002047/mbdump.tar.bz2"
+  },
+  "code_commit": "6d50422c4784414dae0753a868ebcfabf5702563",
+  "examples": [
+    {
+      "a_artist_hash": "603d3d668b55d62921792661c29f62757565b653e75d24cf17835c076b833fff",
+      "a_title_hash": "c8768df7e237d51ae4bd1bd2e007b214ebb81ecb2410fea2b8c7a8391ff4a701",
+      "b_artist_hash": "603d3d668b55d62921792661c29f62757565b653e75d24cf17835c076b833fff",
+      "b_title_hash": "06fc0d0acf54c8e3ebc27382ccd9dd48b17bd1d5309102c6960b5cf4c18c81ec",
+      "pair_hash": "0002aa9923dc6c214b1eeb992ee704966ac3b81aa8e3707ced2f64acac66b2b9",
+      "pattern": "other",
+      "year_a": 1979,
+      "year_b": 1979
+    },
+    {
+      "a_artist_hash": "52a7427a9de5ea95e760d297bf7fb6a6d46a542da83986abc27e6f73360961a2",
+      "a_title_hash": "b2cf25a7287760c9d701dd69c3404b3f30c83c57627dfd62eb4d967fcf1fef9c",
+      "b_artist_hash": "1d35a94841cbfca1795472e9050f2270c882844226ae842f267e2edc7a114899",
+      "b_title_hash": "b2cf25a7287760c9d701dd69c3404b3f30c83c57627dfd62eb4d967fcf1fef9c",
+      "pair_hash": "0002ae25d12439257b6f7d335ef28060df052690202c9b9e736484f32c72c152",
+      "pattern": "artist_credit_join",
+      "year_a": 2003,
+      "year_b": 2003
+    },
+    {
+      "a_artist_hash": "0ce0b996d47e09d6f38dfc7d90cecdf1a315ebff00d359e4361bd82eca01fa97",
+      "a_title_hash": "a9e300bc3c03e3990662a80e3b54b34cb1193b0b105285a58087d40aae9b3a28",
+      "b_artist_hash": "0ce0b996d47e09d6f38dfc7d90cecdf1a315ebff00d359e4361bd82eca01fa97",
+      "b_title_hash": "a9e300bc3c03e3990662a80e3b54b34cb1193b0b105285a58087d40aae9b3a28",
+      "pair_hash": "000160ef8e365221d771927634acd7bd421852d4bc8d2e2523db06322210a84f",
+      "pattern": "year_only",
+      "year_a": 2017,
+      "year_b": 2014
+    },
+    {
+      "a_artist_hash": "bbeb81a9068d55e2d9fb3dd87039fb1ae9dbc7bd0d6c2c2adb97d7865e7d08a8",
+      "a_title_hash": "10a53daf4b12da95368c88132883bf4eae11034feea0bce950d1e27651ff14a0",
+      "b_artist_hash": "bbeb81a9068d55e2d9fb3dd87039fb1ae9dbc7bd0d6c2c2adb97d7865e7d08a8",
+      "b_title_hash": "b651dce0a1ef0174dec14101b4c97d2cd195a94702a6a56d0998d829dff42829",
+      "pair_hash": "0001199fda6b83f3f0de313b59c393a66c8b62e52ad446dcd4c8d3b29bf0f86a",
+      "pattern": "title_token_subset",
+      "year_a": 1995,
+      "year_b": 1994
+    },
+    {
+      "a_artist_hash": "d67bcd79c1e27df415572347ed530f344bf5ef7f5238845415b5a736e5756926",
+      "a_title_hash": "b5ffce9768d6c55297dfb0e565098259c2fbedf4bbadc1adfcf4db037effad25",
+      "b_artist_hash": "b5ffce9768d6c55297dfb0e565098259c2fbedf4bbadc1adfcf4db037effad25",
+      "b_title_hash": "b5ffce9768d6c55297dfb0e565098259c2fbedf4bbadc1adfcf4db037effad25",
+      "pair_hash": "003ac9dfeed16a63ae6c6a9580e7888a984094e209d7a8068872413ba3478b7a",
+      "pattern": "self_titled_vs_named",
+      "year_a": 2011,
+      "year_b": 2011
+    },
+    {
+      "a_artist_hash": "52a7427a9de5ea95e760d297bf7fb6a6d46a542da83986abc27e6f73360961a2",
+      "a_title_hash": "a3c96f4a18fff3a0e21f823e83334f5ef4088540874060cb3e00de6b53c6846a",
+      "b_artist_hash": "033fd73fab8ec23a2f0687bd23f8ba649e364961490888f99d8bed155ac432f6",
+      "b_title_hash": "b8798b6f989d37260fc9620d9a304bf6e370aaa98d1c241d0510029ae28c3102",
+      "pair_hash": "0008244119826c3d82f5ef2bec56ff8430d8a066d0bef2e8286c10742b17c768",
+      "pattern": "various_artists_credit",
+      "year_a": 2002,
+      "year_b": 2002
+    },
+    {
+      "a_artist_hash": "8148ce5043b53fcd9f7b6b88b74c8a61b474d09d11f9920917f2c7ae14a7f96a",
+      "a_title_hash": "4f8d4d59152e8ea221ceb1a7c6e715e7ed10fdc247aa1051a1c870ace7abee3d",
+      "b_artist_hash": "8148ce5043b53fcd9f7b6b88b74c8a61b474d09d11f9920917f2c7ae14a7f96a",
+      "b_title_hash": "4f8d4d59152e8ea221ceb1a7c6e715e7ed10fdc247aa1051a1c870ace7abee3d",
+      "pair_hash": "00207c4944985edae1e560f1c82d224f8d6697860bc00c9871988a3667e32d18",
+      "pattern": "numeric_disambiguator",
+      "year_a": 1999,
+      "year_b": 2000
+    },
+    {
+      "a_artist_hash": "f30dfced7fa0f59e24335f24cc25b7820fe8459409fb196409a6e752f6c9f4cc",
+      "a_title_hash": "46e4d1eddb4b8b38d98f5d5ad079629e2b0730d24319d3cf912e99ff3da9a80b",
+      "b_artist_hash": "f30dfced7fa0f59e24335f24cc25b7820fe8459409fb196409a6e752f6c9f4cc",
+      "b_title_hash": "cdd6dc65cff82053f50c16c4a62fbcdacffb5195dabecb738f3fbb0d44d3a7d1",
+      "pair_hash": "0081621e362659ed2077c4325f3bbf03ea1337fe2ad1d0851ced41c9053f53cf",
+      "pattern": "title_token_order",
+      "year_a": 1942,
+      "year_b": 1942
+    },
+    {
+      "a_artist_hash": "eecaae36639bdf38b46db08fcaf8a63d5dc1bd5be51122e55be4e4b822d2b32c",
+      "a_title_hash": "e122609c668fdf2491efe54c97c95687ba7fc0a4367dba2be590d27fc59d219a",
+      "b_artist_hash": "eecaae36639bdf38b46db08fcaf8a63d5dc1bd5be51122e55be4e4b822d2b32c",
+      "b_title_hash": "e122609c668fdf2491efe54c97c95687ba7fc0a4367dba2be590d27fc59d219a",
+      "pair_hash": "026feb2167ce2725064508022f7cf9d0f85d9972531e8fded77dc0ac180473b3",
+      "pattern": "article_position",
+      "year_a": 1990,
+      "year_b": 1992
+    },
+    {
+      "a_artist_hash": "5685c57de6c87fc21796ade461c2ae898e2e7537f7f8c741b2fa60a8f7817882",
+      "a_title_hash": "97b8b81a21cff1ede1c5bba25ba71272048a7feea82ab8c074fe63593a7df00c",
+      "b_artist_hash": "5685c57de6c87fc21796ade461c2ae898e2e7537f7f8c741b2fa60a8f7817882",
+      "b_title_hash": "51945df720a5a6e216939c07a49713aa1745b28c88a901548d3c499fc34a7057",
+      "pair_hash": "01e9b6c2d19af46d5237c7aed962d61649c7b84a8f1d383829f1adc2adf8b850",
+      "pattern": "edition_qualifier",
+      "year_a": 2010,
+      "year_b": 2010
+    },
+    {
+      "a_artist_hash": "6c28fdc944ea53ef0b66860bf3c111bcfe5ee69d24b54c96f62c050be7d4b9d3",
+      "a_title_hash": "740002563b6e5e5f8a859b7382892da909279043f4b16940009423eb6c303ba8",
+      "b_artist_hash": "20574c9619081afe3c5007ef6cf024774e4982a17638ec18338022f5ffcc9929",
+      "b_title_hash": "8753ba4f638db4f03a3d13f5d916e50475e433f2764d377baafb03ec0d05068b",
+      "pair_hash": "5d1f14068404f0b26e714445b4542d2f80571e6794b8ef76e4ae4079c123c3c1",
+      "pattern": "case_punct_diacritics",
+      "year_a": 2016,
+      "year_b": 2016
+    },
+    {
+      "a_artist_hash": "9dfe5b603e8612dfb842c1e7b0ebdf9f29981d14408291ef05b8edaeb74d7e00",
+      "a_title_hash": "8c4d7536865426c8f296cfab6222c125ed19fade76c44215f3d33e6701fa4cc8",
+      "b_artist_hash": "844ee75d78081e371868bc16324c022a6ad7eae9a2835450a37a0901731abd74",
+      "b_title_hash": "8c4d7536865426c8f296cfab6222c125ed19fade76c44215f3d33e6701fa4cc8",
+      "pair_hash": "00039f55954e02cc045be6b5b61d411997474b291c20e0315ceabf1676ce0352",
+      "pattern": "other",
+      "year_a": 2007,
+      "year_b": 2006
+    },
+    {
+      "a_artist_hash": "52a7427a9de5ea95e760d297bf7fb6a6d46a542da83986abc27e6f73360961a2",
+      "a_title_hash": "549804174a22a77593afbbf36c016bac8848262180a664e446d8484debc7d95b",
+      "b_artist_hash": "1d35a94841cbfca1795472e9050f2270c882844226ae842f267e2edc7a114899",
+      "b_title_hash": "549804174a22a77593afbbf36c016bac8848262180a664e446d8484debc7d95b",
+      "pair_hash": "00055f3eacd0a7d0a78bdb209106977b5e8dc1f83cfe8232f80fdb97ff68a867",
+      "pattern": "artist_credit_join",
+      "year_a": 1993,
+      "year_b": 1993
+    },
+    {
+      "a_artist_hash": "9514ff29f90f6b6732ef97ca1f306ed5f79f1f15aa053defaa62510a1e0ea931",
+      "a_title_hash": "40a4d2acfa5019d2c39484ebc676011bf7be2d3e8c5c48d2c6be67b86b33174b",
+      "b_artist_hash": "9514ff29f90f6b6732ef97ca1f306ed5f79f1f15aa053defaa62510a1e0ea931",
+      "b_title_hash": "40a4d2acfa5019d2c39484ebc676011bf7be2d3e8c5c48d2c6be67b86b33174b",
+      "pair_hash": "0005d68a097cafbaa593ae28f4566cb79f543d3825e2a0b4b915625cbfafd0ab",
+      "pattern": "year_only",
+      "year_a": 1971,
+      "year_b": 1972
+    },
+    {
+      "a_artist_hash": "7b1c9ca524d697f044dac04135cb9925b83714d919afb1a30c52253d40ea8c45",
+      "a_title_hash": "4e2edd4fe29197c3c6c6f8a03cde293b0f0df60497673b2d83a6e1c0bca26d86",
+      "b_artist_hash": "7b1c9ca524d697f044dac04135cb9925b83714d919afb1a30c52253d40ea8c45",
+      "b_title_hash": "1bc71d643dd3d5d4e34c3408775a9bfdf5ca408a46f609eba49e640f6b10ab87",
+      "pair_hash": "00058a83bce69d4ece94998220219d57214d2c25abfc08cd9355853f6f02ab43",
+      "pattern": "title_token_subset",
+      "year_a": 2014,
+      "year_b": 2014
+    }
+  ],
+  "feature_version": "0.1.0",
+  "generated_at_utc": "2026-09-23T02:10:00+00:00",
+  "profile_version": "1.0",
+  "records": {
+    "albums": 2324821,
+    "by_primary_type": {
+      "Album": 2324821,
+      "Broadcast": 27691,
+      "EP": 582515,
+      "Other": 64426,
+      "Single": 1424165,
+      "none": 102495
+    },
+    "completeness": {
+      "artist_credit": 0.99978,
+      "title": 0.999617,
+      "year": 0.955787
+    },
+    "duplicate_key": {
+      "keys": 4445478,
+      "keys_with_duplicates": 64088,
+      "largest_key_size": 140,
+      "record_rate": 0.031975,
+      "records_in_duplicate_keys": 144723
+    },
+    "qualifier_share": 0.000919,
+    "self_titled_share": 0.025027,
+    "total": 4526113,
+    "various_artists_share": 0.064152,
+    "year": {
+      "by_decade": {
+        "1900": 1873,
+        "1910": 744,
+        "1920": 3516,
+        "1930": 5547,
+        "1940": 7652,
+        "1950": 19132,
+        "1960": 53232,
+        "1970": 92329,
+        "1980": 163827,
+        "1990": 444672,
+        "2000": 774485,
+        "2010": 1341031,
+        "2020": 1416799
+      },
+      "max_in_range": 2027,
+      "min_in_range": 1900,
+      "missing": 200115,
+      "out_of_range": 1159
+    }
+  },
+  "side": "A",
+  "source": "musicbrainz",
+  "truth": {
+    "a_records_with_link": 348557,
+    "a_records_with_link_by_primary_type": {
+      "Album": 242542,
+      "Broadcast": 112,
+      "EP": 31437,
+      "Other": 1225,
+      "Single": 71985,
+      "none": 1256
+    },
+    "alive": 347237,
+    "alive_with_artist_and_year": 344954,
+    "dead": 2272,
+    "dead_rate": 0.006501,
+    "discogs_master_urls": 349509,
+    "discogs_non_master_urls": 7,
+    "discogs_urls_total": 349516,
+    "distinct_masters": 347490,
+    "link_type_counts": {
+      "discogs": 349509
+    },
+    "links": 349509,
+    "one_to_many_a": 888,
+    "one_to_many_a_rate": 0.002548,
+    "one_to_many_b": 1935,
+    "one_to_many_b_rate": 0.005569,
+    "pattern_counts": {
+      "article_position": 255,
+      "artist_credit_join": 21631,
+      "case_punct_diacritics": 1,
+      "edition_qualifier": 68,
+      "identical": 239326,
+      "numeric_disambiguator": 2103,
+      "other": 41408,
+      "self_titled_vs_named": 2537,
+      "title_token_order": 662,
+      "title_token_subset": 18472,
+      "various_artists_credit": 2242,
+      "year_only": 18532
+    }
+  }
+}

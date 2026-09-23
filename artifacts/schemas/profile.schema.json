@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Source profile (profile_version 1.0)",
+  "description": "artifacts/profile/<source>.json: Phase 1 aggregates for one source. Counts, rates, hashes, timings and enumerated pattern codes only; every free string is constrained to an enum, a URL, a filename, a date or a hex hash so no title or artist credit can appear.",
+  "type": "object",
+  "required": ["profile_version", "source", "side", "generated_at_utc", "feature_version", "code_commit", "acquisition", "records"],
+  "additionalProperties": false,
+  "properties": {
+    "profile_version": {"const": "1.0"},
+    "source": {"enum": ["discogs", "musicbrainz", "wikidata"]},
+    "side": {"enum": ["A", "B"]},
+    "generated_at_utc": {"$ref": "#/$defs/timestamp"},
+    "feature_version": {"$ref": "#/$defs/version"},
+    "code_commit": {"type": "string", "pattern": "^([0-9a-f]{40}|unknown)$"},
+    "acquisition": {
+      "type": "object",
+      "required": ["kind", "url", "licence_url", "profile_seconds"],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {"enum": ["dump", "endpoint"]},
+        "filename": {"type": "string", "pattern": "^[A-Za-z0-9_.-]+$"},
+        "url": {"$ref": "#/$defs/url"},
+        "licence_url": {"$ref": "#/$defs/url"},
+        "dump_date": {"$ref": "#/$defs/date"},
+        "bytes": {"$ref": "#/$defs/count"},
+        "sha256": {"$ref": "#/$defs/sha256"},
+        "download_seconds": {"$ref": "#/$defs/seconds"},
+        "free_disk_before_bytes": {"$ref": "#/$defs/count"},
+        "extract_seconds": {"$ref": "#/$defs/seconds"},
+        "extract_passes": {"$ref": "#/$defs/count"},
+        "extracted_bytes": {"$ref": "#/$defs/count"},
+        "tables": {"type": "object", "propertyNames": {"pattern": "^[a-z_]+$"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+        "queried_at_utc": {"$ref": "#/$defs/timestamp"},
+        "requests": {"$ref": "#/$defs/count"},
+        "retries": {"$ref": "#/$defs/count"},
+        "timeouts": {"$ref": "#/$defs/count"},
+        "request_seconds": {"$ref": "#/$defs/seconds"},
+        "cached_pages": {"$ref": "#/$defs/count"},
+        "page_size": {"$ref": "#/$defs/count"},
+        "id_pages": {"$ref": "#/$defs/count"},
+        "response_sha256": {"$ref": "#/$defs/sha256"},
+        "server_count": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/count"}]},
+        "profile_seconds": {"$ref": "#/$defs/seconds"}
+      }
+    },
+    "records": {
+      "type": "object",
+      "required": ["total", "completeness", "year", "various_artists_share", "self_titled_share", "qualifier_share", "duplicate_key"],
+      "additionalProperties": false,
+      "properties": {
+        "total": {"$ref": "#/$defs/count"},
+        "completeness": {
+          "type": "object",
+          "required": ["title", "artist_credit", "year"],
+          "additionalProperties": false,
+          "properties": {
+            "title": {"$ref": "#/$defs/rate"},
+            "artist_credit": {"$ref": "#/$defs/rate"},
+            "year": {"$ref": "#/$defs/rate"}
+          }
+        },
+        "year": {
+          "type": "object",
+          "required": ["missing", "out_of_range", "min_in_range", "max_in_range", "by_decade"],
+          "additionalProperties": false,
+          "properties": {
+            "missing": {"$ref": "#/$defs/count"},
+            "out_of_range": {"$ref": "#/$defs/count"},
+            "min_in_range": {"oneOf": [{"type": "null"}, {"type": "integer"}]},
+            "max_in_range": {"oneOf": [{"type": "null"}, {"type": "integer"}]},
+            "by_decade": {"type": "object", "propertyNames": {"pattern": "^\\d{4}$"}, "additionalProperties": {"$ref": "#/$defs/count"}}
+          }
+        },
+        "various_artists_share": {"$ref": "#/$defs/rate"},
+        "self_titled_share": {"$ref": "#/$defs/rate"},
+        "qualifier_share": {"$ref": "#/$defs/rate"},
+        "numeric_disambiguator_share": {"$ref": "#/$defs/rate"},
+        "main_release_present": {"$ref": "#/$defs/rate"},
+        "genres_present": {"$ref": "#/$defs/rate"},
+        "multi_artist_credit_share": {"$ref": "#/$defs/rate"},
+        "duplicate_key": {
+          "type": "object",
+          "required": ["keys", "keys_with_duplicates", "records_in_duplicate_keys", "record_rate", "largest_key_size"],
+          "additionalProperties": false,
+          "properties": {
+            "keys": {"$ref": "#/$defs/count"},
+            "keys_with_duplicates": {"$ref": "#/$defs/count"},
+            "records_in_duplicate_keys": {"$ref": "#/$defs/count"},
+            "record_rate": {"$ref": "#/$defs/rate"},
+            "largest_key_size": {"$ref": "#/$defs/count"}
+          }
+        },
+        "by_primary_type": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z /-]+$"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+        "albums": {"$ref": "#/$defs/count"},
+        "with_english_label": {"$ref": "#/$defs/rate"},
+        "with_performer_and_year": {"$ref": "#/$defs/count"},
+        "by_class_top": {"type": "object", "propertyNames": {"pattern": "^(Q\\d+|none)$"}, "additionalProperties": {"$ref": "#/$defs/count"}}
+      }
+    },
+    "truth": {
+      "type": "object",
+      "required": ["links", "a_records_with_link", "distinct_masters", "dead", "dead_rate", "alive", "one_to_many_a", "one_to_many_a_rate", "one_to_many_b", "one_to_many_b_rate", "alive_with_artist_and_year", "pattern_counts"],
+      "additionalProperties": false,
+      "properties": {
+        "links": {"$ref": "#/$defs/count"},
+        "a_records_with_link": {"$ref": "#/$defs/count"},
+        "distinct_masters": {"$ref": "#/$defs/count"},
+        "dead": {"$ref": "#/$defs/count"},
+        "dead_rate": {"$ref": "#/$defs/rate"},
+        "alive": {"$ref": "#/$defs/count"},
+        "one_to_many_a": {"$ref": "#/$defs/count"},
+        "one_to_many_a_rate": {"$ref": "#/$defs/rate"},
+        "one_to_many_b": {"$ref": "#/$defs/count"},
+        "one_to_many_b_rate": {"$ref": "#/$defs/rate"},
+        "alive_with_artist_and_year": {"$ref": "#/$defs/count"},
+        "pattern_counts": {"type": "object", "propertyNames": {"$ref": "#/$defs/pattern"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+        "discogs_urls_total": {"$ref": "#/$defs/count"},
+        "discogs_master_urls": {"$ref": "#/$defs/count"},
+        "discogs_non_master_urls": {"$ref": "#/$defs/count"},
+        "link_type_counts": {"type": "object", "propertyNames": {"pattern": "^[a-z_ ]+$"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+        "a_records_with_link_by_primary_type": {"type": "object", "propertyNames": {"pattern": "^[A-Za-z /-]+$"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+        "non_numeric_ids": {"$ref": "#/$defs/count"}
+      }
+    },
+    "examples": {
+      "type": "array",
+      "maxItems": 15,
+      "items": {
+        "type": "object",
+        "required": ["pattern", "pair_hash", "a_title_hash", "b_title_hash", "a_artist_hash", "b_artist_hash", "year_a", "year_b"],
+        "additionalProperties": false,
+        "properties": {
+          "pattern": {"$ref": "#/$defs/pattern"},
+          "pair_hash": {"$ref": "#/$defs/sha256"},
+          "a_title_hash": {"$ref": "#/$defs/sha256"},
+          "b_title_hash": {"$ref": "#/$defs/sha256"},
+          "a_artist_hash": {"$ref": "#/$defs/sha256"},
+          "b_artist_hash": {"$ref": "#/$defs/sha256"},
+          "year_a": {"oneOf": [{"type": "null"}, {"type": "integer"}]},
+          "year_b": {"oneOf": [{"type": "null"}, {"type": "integer"}]}
+        }
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "rate": {"oneOf": [{"type": "null"}, {"type": "number", "minimum": 0, "maximum": 1}]},
+    "seconds": {"oneOf": [{"type": "null"}, {"type": "number", "minimum": 0}]},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "url": {"type": "string", "pattern": "^https?://[^\\s]+$"},
+    "date": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$"},
+    "timestamp": {"type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(\\+00:00|Z)$"},
+    "version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"},
+    "pattern": {"enum": ["identical", "year_only", "case_punct_diacritics", "ampersand_vs_and", "article_position", "numeric_disambiguator", "edition_qualifier", "title_token_order", "title_token_subset", "artist_credit_join", "various_artists_credit", "self_titled_vs_named", "other"]}
+  }
+}

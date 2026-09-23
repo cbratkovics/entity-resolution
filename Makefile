@@ -15,7 +15,7 @@ help:
 	@echo "dbt    - dbt deps + build the warehouse from the committed artifacts + docs generate + description check"
 	@echo "full   - the full build over the real dumps (network, hours): entity_resolution.pipeline.match"
 	@echo "smoke  - clone HEAD (+ uncommitted changes) into a temp dir and run setup lint test dbt docs there"
-	@echo "docs   - regenerate docs/METHODS_CARD.md from artifacts and run the number and placeholder checks"
+	@echo "docs   - regenerate docs/METHODS_CARD.md, check docs/PROFILE.md is current, run the number and placeholder checks"
 
 setup:
 	uv sync --frozen --all-extras
@@ -57,4 +57,5 @@ smoke:
 docs:
 	$(PY) scripts/check_model_card.py --write
 	$(PY) scripts/check_model_card.py
+	$(PY) scripts/profile_sources.py render --check
 	$(PY) scripts/check_numbers.py

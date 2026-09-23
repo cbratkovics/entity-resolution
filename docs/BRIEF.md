@@ -249,3 +249,6 @@ Commit: <sha> <message>
 |---|---|---|---|
 | 2026-09-22 | — | — | Brief created. |
 | 2026-09-22 | 0 | — | Chassis: Python pins move from `constraints.txt` to a committed `uv.lock` (`uv sync --frozen`); `constraints.txt` deleted. |
+| 2026-09-22 | 1 | — | `check_numbers.py` measure words gain this domain's unit words (pairs, records, masters, release groups, links, keys, candidates, blocks, folds); demo 1's words kept so the scripts stay diffable. |
+| 2026-09-22 | 1 | — | Phase 1 file list gains `entity_resolution/features/normalize.py` (section 2.3 in full) and `tests/test_normalize.py`, so the profiler uses the one normaliser (rule 5) instead of a second implementation. |
+| 2026-09-22 | 1 | 0002 | MusicBrainz first-release year comes from the core tables `release`, `release_country`, `release_unknown_country` instead of `release_group_meta`, which is not in `mbdump.tar.bz2` (it ships in the derived archive with user ratings, CC BY-NC-SA). Table list in 2.1 amended. |
