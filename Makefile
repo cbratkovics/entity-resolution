@@ -12,7 +12,7 @@ help:
 	@echo "setup  - create .venv from uv.lock (runtime + dev, frozen) and install the dbt packages"
 	@echo "lint   - ruff check + ruff format --check + sqlfluff over the dbt project"
 	@echo "test   - pytest (offline; real-data tests skip when data/ is absent)"
-	@echo "dbt    - dbt deps + build the warehouse from the committed artifacts + docs generate + description check"
+	@echo "dbt    - build the warehouse from the committed artifacts, docs generate, description check, export gold to docs/site/data"
 	@echo "full   - the full build over the real dumps (network, hours): entity_resolution.pipeline.match"
 	@echo "smoke  - clone HEAD (+ uncommitted changes) into a temp dir and run setup lint test dbt docs there"
 	@echo "docs   - regenerate docs/METHODS_CARD.md, check docs/PROFILE.md is current, run the number and placeholder checks"
@@ -45,6 +45,8 @@ dbt:
 	$(DBT) build $(DBT_FLAGS) --target dev --full-refresh
 	$(DBT) docs generate $(DBT_FLAGS) --target dev --static
 	$(PY) scripts/check_dbt_descriptions.py
+	mkdir -p docs/site/data
+	$(DBT) run-operation export_gold $(DBT_FLAGS) --target dev
 
 # The full build (docs/BRIEF.md 2.12): acquire the dumps, sample, block, feature, fit, decide,
 # evaluate, write artifacts/. Refuses to run until the phases that build it are complete.

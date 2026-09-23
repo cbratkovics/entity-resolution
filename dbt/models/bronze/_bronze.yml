@@ -321,3 +321,53 @@ models:
         description: Identifier of the full-build run.
       - name: decided_at_utc
         description: When the decision was written.
+
+  - name: brz_review_floor
+    description: "The review-floor sweep of artifacts/review_sensitivity.json, one row per (method_version, floor): queue size, its share of the test fold and recall with review at each floor. Empty until the first full build reaches the methods stage."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [method_version, floor]
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: method_version
+        description: The method the sweep belongs to.
+      - name: accept_min
+        description: The method's auto-accept threshold the sweep was run under.
+      - name: n_test_a
+        description: Test-fold A records.
+      - name: n_labelled_reachable
+        description: Labelled test-fold A records whose truth survived blocking.
+      - name: floor
+        description: The review floor swept (0.05 to 0.95).
+      - name: review_queue
+        description: Test-fold A records with floor <= probability < accept_min.
+      - name: queue_share_of_test_a
+        description: review_queue over n_test_a.
+      - name: recall_with_review
+        description: Correct auto-accepts plus reviews whose truth is among the candidates, over n_labelled_reachable.
+
+  - name: brz_manifest_sources
+    description: "The sources block of artifacts/manifest.json, one row per dump. Grain (name). Empty on the empty manifest."
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: name
+        description: Source name (discogs, musicbrainz).
+        data_tests:
+          - unique
+      - name: side
+        description: A or B.
+      - name: dump_filename
+        description: The dump file name.
+      - name: dump_bytes
+        description: Size of the dump in bytes.
+      - name: dump_sha256
+        description: sha256 of the dump.
+      - name: dump_date
+        description: The dump's date as published.
+      - name: download_url
+        description: Where the dump was downloaded from.
+      - name: licence_url
+        description: Where the licence text in docs/DATA_SOURCES.md was read from.

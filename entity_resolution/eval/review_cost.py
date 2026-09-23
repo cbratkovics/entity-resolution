@@ -16,6 +16,9 @@ from entity_resolution.models.tiering import (
     SWEEP_THRESHOLDS,
 )
 
+REVIEW_FLOORS: tuple[float, ...] = tuple(round(0.05 * i, 2) for i in range(1, 20))
+"""Review floors swept for the queue-budget analysis: 0.05 to 0.95 in steps of 0.05."""
+
 
 def sweep(
     test_decisions: pd.DataFrame,
@@ -24,9 +27,14 @@ def sweep(
     *,
     review_min: float,
     chosen_accept: float,
+    reachable: np.ndarray,
+    n_test_a: int,
+    n_labelled_reachable: int,
 ) -> dict[str, Any]:
     """``test_decisions`` has one row per test-fold A record with a candidate (``probability``);
-    ``correct`` and ``is_labelled`` are aligned boolean arrays."""
+    ``correct``, ``is_labelled`` and ``reachable`` (the A record's truth is among its
+    candidates) are aligned boolean arrays; ``n_test_a`` counts every test-fold A record and
+    ``n_labelled_reachable`` the labelled ones whose truth survived blocking."""
     p = test_decisions["probability"].to_numpy(dtype="float64")
     points = []
     for t in SWEEP_THRESHOLDS:
@@ -56,8 +64,57 @@ def sweep(
         )
     return {
         "review_cost_units": REVIEW_COST_UNITS,
+        "review_floor_sweep": floor_sweep(
+            test_decisions,
+            correct,
+            is_labelled,
+            reachable=reachable,
+            accept_min=chosen_accept,
+            n_test_a=n_test_a,
+            n_labelled_reachable=n_labelled_reachable,
+        ),
         "false_accept_cost_ratios": list(FALSE_ACCEPT_COST_RATIOS),
         "review_min": review_min,
         "chosen_accept_threshold": chosen_accept,
+        "points": points,
+    }
+
+
+def floor_sweep(
+    test_decisions: pd.DataFrame,
+    correct: np.ndarray,
+    is_labelled: np.ndarray,
+    *,
+    reachable: np.ndarray,
+    accept_min: float,
+    n_test_a: int,
+    n_labelled_reachable: int,
+) -> dict[str, Any]:
+    """For each review floor, the review queue (test A records with floor <= p < accept_min),
+    its share of the test fold, and recall with review: correct auto-accepts plus reviews whose
+    truth is among the candidates, over labelled reachable A records (the upper bound of
+    ``at_auto_accept_or_review``, as a function of the floor)."""
+    p = test_decisions["probability"].to_numpy(dtype="float64")
+    accept = p >= accept_min
+    correct_accepts = int((accept & is_labelled & correct).sum())
+    points = []
+    for floor in REVIEW_FLOORS:
+        review = (p >= floor) & ~accept
+        queue = int(review.sum())
+        resolved = int((review & is_labelled & reachable).sum())
+        points.append(
+            {
+                "floor": floor,
+                "review_queue": queue,
+                "queue_share_of_test_a": round(queue / n_test_a, 6) if n_test_a else None,
+                "recall_with_review": round((correct_accepts + resolved) / n_labelled_reachable, 6)
+                if n_labelled_reachable
+                else None,
+            }
+        )
+    return {
+        "accept_min": accept_min,
+        "n_test_a": n_test_a,
+        "n_labelled_reachable": n_labelled_reachable,
         "points": points,
     }

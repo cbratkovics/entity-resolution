@@ -1,6 +1,6 @@
 {
-  "code_commit": "7eda8839df8d4e421a82fa398d460b73b24619e9",
-  "created_at_utc": "2026-09-23T12:25:26+00:00",
+  "code_commit": "7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e",
+  "created_at_utc": "2026-09-23T13:34:14+00:00",
   "definition": "accept iff title_exact_norm and artist_full_exact and year_diff in {0, missing}; score in {0, 1} used as the probability; nothing fitted",
   "feature_version": "0.2.0",
   "fitted_on": null,
@@ -10,7 +10,7 @@
       "full_path": "data/mapping/mapping_exact_v1.parquet",
       "full_rows": 182462,
       "test_exhibit": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
-      "test_exhibit_sha256": "249cd494507625a965a8d87be6be70afb26939edfbaa31e348f80c4296024d1b",
+      "test_exhibit_sha256": "38cba0205c80942c4d8375a1c2ca19bc81b1f66f503739dea4db05ba639492e7",
       "test_rows": 36736
     },
     "score_values": [

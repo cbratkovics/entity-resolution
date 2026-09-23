@@ -12,13 +12,16 @@ expected as (
 ),
 
 marts as (
-    select method_version from {{ ref('fct_eval_metrics') }}
+    select
+        method_version,
+        precision_auto_accept
+    from {{ ref('fct_eval_metrics') }}
 )
 
 select
     e.method_version,
-    'baseline row missing from fct_eval_metrics or artifacts' as problem
+    'baseline row missing from fct_eval_metrics or artifacts, or its precision is null' as problem
 from expected as e
 left join artifacts as a on e.method_version = a.method_version
 left join marts as m on e.method_version = m.method_version
-where a.method_version is null or m.method_version is null
+where a.method_version is null or m.method_version is null or m.precision_auto_accept is null

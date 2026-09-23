@@ -12,6 +12,15 @@ B id); it dropped 6,035,571 of the 13,631,048 union pairs and lost 240 truth pai
 ordering costs almost nothing in pair completeness and removes most of the pairs from generic
 title blocks that the feature stage would otherwise score. <!-- cite: artifacts/blocking_report.json#cap_overflow.pairs_dropped; artifacts/blocking_report.json#union_pairs; artifacts/blocking_report.json#pair_completeness.truth_pairs_lost_to_cap; artifacts/blocking_report.json#candidate_cap_per_a -->
 
+## Calibration note (for the Phase 6 narrative)
+
+`learned_v1` is calibrated at pair level (isotonic on calibrate-fold pairs) and its pair-level
+ECE on the test fold is 0.000147; the decision-level ECE, measured on each A record's top
+candidate, is 0.047858. <!-- cite: artifacts/eval_learned_v1.json#metrics.calibration.pair_level.ece; artifacts/eval_learned_v1.json#metrics.calibration.decision_level.ece -->
+The gap is a selection effect: taking the argmax over calibrated pair probabilities biases the
+chosen probability upward, so the tiers act on numbers that are overconfident even though the
+pair probabilities are not. Calibrating on decisions is on the roadmap.
+
 ## Limitations
 
 Numbered; the mandatory entries first. Every phase adds what it found.

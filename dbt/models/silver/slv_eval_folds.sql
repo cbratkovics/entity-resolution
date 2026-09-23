@@ -9,9 +9,9 @@ select
     a.method_version,
     '{{ fold }}' as fold,
     cast(json_extract(a.fold_counts, '$.{{ fold }}.a_records') as integer) as a_records,
-    cast(json_extract(a.fold_counts, '$.{{ fold }}.b_records') as integer) as b_records,
+    cast(json_extract(a.fold_counts, '$.{{ fold }}.labelled_a_records') as integer) as labelled_a_records,
     cast(json_extract(a.fold_counts, '$.{{ fold }}.candidate_pairs') as integer) as candidate_pairs,
-    cast(json_extract(a.fold_counts, '$.{{ fold }}.truth_pairs') as integer) as truth_pairs
+    cast(json_extract(a.fold_counts, '$.{{ fold }}.decisions') as integer) as decisions
 from artifacts as a
 {% if not loop.last %}union all{% endif %}
 {% endfor %}

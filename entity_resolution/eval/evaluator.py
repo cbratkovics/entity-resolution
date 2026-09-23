@@ -216,8 +216,10 @@ def evaluate(
     unverified = int(((tiers_all == "auto_accept") & ~tiers_all.index.isin(labelled)).sum())
     n_all_a = int(len(a_folds))
     n_accept_all = int((dec["tier"] == "auto_accept").sum())
+    # full precision: the three shares must sum to one within 1e-9 (assert_tiers_partition)
     tier_shares = {
-        t: _rate(int((tiers_all == t).sum()), n_test_a) for t in ("auto_accept", "review", "reject")
+        t: (float(int((tiers_all == t).sum()) / n_test_a) if n_test_a else None)
+        for t in ("auto_accept", "review", "reject")
     }
     # calibration: decision level (labelled test A top candidates) and pair level
     decision_level = reliability(d_lab["probability"].to_numpy(dtype="float64"), d_correct)

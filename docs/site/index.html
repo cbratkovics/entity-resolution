@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entity Resolution: results</title>
+<meta name="description" content="Record linkage between Discogs masters and MusicBrainz release groups, measured against labelled ground truth. Every figure on this page is read from data/*.json exported by the dbt project; nothing is typed into the page.">
+<style>
+  :root { --ink: #1f2933; --muted: #52606d; --line: #cbd2d9; --bg: #ffffff; --panel: #f5f7fa;
+          --exact: #2f6f9f; --rules: #c77d2a; --learned: #3b8a5a; --ref: #9aa5b1; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #e4e7eb; --muted: #9aa5b1; --line: #3e4c59; --bg: #0f1117; --panel: #1f2933; --ref: #616e7c; }
+  }
+  :root[data-theme="dark"] { --ink: #e4e7eb; --muted: #9aa5b1; --line: #3e4c59; --bg: #0f1117; --panel: #1f2933; --ref: #616e7c; }
+  body { margin: 0; padding: 16px; font: 16px/1.5 system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+  main { max-width: 960px; margin: 0 auto; }
+  h1 { font-size: 28px; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  p { color: var(--muted); max-width: 70ch; }
+  table { border-collapse: collapse; min-width: max-content; font-size: 14px; }
+  th, td { text-align: right; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { color: var(--muted); font-weight: 600; }
+  .panel { background: var(--panel); border-radius: 8px; padding: 12px; overflow-x: auto; container-type: inline-size; }
+  svg { display: block; width: 100cqi; height: auto; }
+  .legend span { display: inline-block; margin-right: 16px; font-size: 14px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+  .exact { background: var(--exact); } .rules { background: var(--rules); } .learned { background: var(--learned); }
+  .note { font-size: 14px; }
+  code { font-family: ui-monospace, monospace; font-size: 13px; }
+  .missing { color: var(--muted); font-style: italic; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Entity resolution: Discogs masters against MusicBrainz release groups</h1>
+  <p>Three methods score the same candidate pairs and are judged on the same test fold against labelled ground truth. Every figure here is read from the JSON files the dbt project exports into <code>data/</code>; the page types no number of its own. Keys are named under each table.</p>
+
+  <h2>Methods on the test fold</h2>
+  <div class="panel"><table id="methods"><thead><tr>
+    <th>method</th><th>pair completeness</th><th>precision</th><th>recall (labelled)</th><th>recall (overall)</th><th>F1</th><th>coverage</th><th>unverified accepts</th><th>review queue</th><th>ECE (decisions)</th>
+  </tr></thead><tbody></tbody></table></div>
+  <p class="note">Source: <code>fct_eval_metrics.json</code>. Precision, recall and F1 are over labelled A records; coverage counts every test-fold A record; unverified accepts are auto-accepts on unlabelled A records, counted by coverage and not by the accuracy metrics.</p>
+
+  <h2>Reliability: top-candidate probability against observed correctness</h2>
+  <div class="panel"><svg id="reliability" viewBox="0 0 640 360" role="img" aria-label="Reliability diagram per method at decision level"></svg>
+  <div class="legend"><span><i class="exact"></i>exact_v1</span><span><i class="rules"></i>rules_v1</span><span><i class="learned"></i>learned_v1</span><span>diagonal: perfect calibration</span></div></div>
+  <p class="note">Source: <code>fct_calibration.json</code>, decision level. Point size grows with the bin count.</p>
+
+  <h2>Review cost against the accept threshold</h2>
+  <div class="panel"><svg id="cost" viewBox="0 0 640 360" role="img" aria-label="Total cost per method as the accept threshold moves"></svg>
+  <div class="legend"><span><i class="exact"></i>exact_v1</span><span><i class="rules"></i>rules_v1</span><span><i class="learned"></i>learned_v1</span><span>marker: chosen threshold</span></div></div>
+  <p class="note">Source: <code>fct_review_queue.json</code>. Total cost in review-row units at the cost ratio selected: <select id="ratio"></select>.</p>
+
+  <h2>What a review budget buys</h2>
+  <div class="panel"><svg id="floor" viewBox="0 0 640 360" role="img" aria-label="Recall with review against the review queue share per method"></svg>
+  <div class="legend"><span><i class="exact"></i>exact_v1</span><span><i class="rules"></i>rules_v1</span><span><i class="learned"></i>learned_v1</span></div></div>
+  <p class="note">Source: <code>fct_review_floor.json</code>. Each point is one review floor; the horizontal axis is the queue as a share of the test fold, the vertical axis is recall if every queued row were resolved.</p>
+
+  <h2>Blocking</h2>
+  <div class="panel"><table id="blocking"><thead><tr><th>key</th><th>pairs</th><th>pair completeness</th></tr></thead><tbody></tbody></table></div>
+  <p class="note" id="blocking-note">Source: <code>fct_blocking.json</code>.</p>
+
+  <h2>Sources</h2>
+  <div class="panel"><table id="sources"><thead><tr><th>source</th><th>side</th><th>dump</th><th>date</th><th>licence</th></tr></thead><tbody></tbody></table></div>
+  <p class="note">Source: <code>dim_source.json</code>. Licence texts are in <code>docs/DATA_SOURCES.md</code> of the repository.</p>
+</main>
+<script>
+(function () {
+  var COLORS = { exact_v1: 'var(--exact)', rules_v1: 'var(--rules)', learned_v1: 'var(--learned)' };
+  var ORDER = ['exact_v1', 'rules_v1', 'learned_v1'];
+  function load(name) {
+    return fetch('data/' + name + '.json').then(function (r) { if (!r.ok) { throw new Error(name); } return r.json(); });
+  }
+  function fmt(x, digits) {
+    if (x === null || x === undefined || x !== x) { return '—'; }
+    if (typeof x !== 'number') { return String(x); }
+    if (Number.isInteger(x) && digits === undefined) { return x.toLocaleString('en-US'); }
+    return x.toFixed(digits === undefined ? 4 : digits);
+  }
+  function el(tag, attrs, text) {
+    var e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    if (text !== undefined) { e.textContent = text; }
+    return e;
+  }
+  function byMethod(rows) {
+    var out = {};
+    rows.forEach(function (r) { (out[r.method_version] = out[r.method_version] || []).push(r); });
+    return out;
+  }
+  function frame(svg, xLabel, yLabel) {
+    var W = Number(svg.getAttribute('viewBox').split(' ')[2]), H = Number(svg.getAttribute('viewBox').split(' ')[3]);
+    var m = { l: 56, r: 16, t: 16, b: 44 };
+    var plot = { x: m.l, y: m.t, w: W - m.l - m.r, h: H - m.t - m.b };
+    svg.appendChild(el('rect', { x: plot.x, y: plot.y, width: plot.w, height: plot.h, fill: 'none', stroke: 'var(--line)' }));
+    svg.appendChild(el('text', { x: plot.x + plot.w / 2, y: H - 8, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 12 }, xLabel));
+    var yl = el('text', { x: 14, y: plot.y + plot.h / 2, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 12, transform: 'rotate(-90 14 ' + (plot.y + plot.h / 2) + ')' }, yLabel);
+    svg.appendChild(yl);
+    return plot;
+  }
+  function axes(svg, plot, xMax, yMax, xTicks, yTicks, xFmt, yFmt) {
+    var i;
+    for (i = 0; i <= xTicks; i += 1) {
+      var xv = xMax * i / xTicks, xp = plot.x + plot.w * i / xTicks;
+      svg.appendChild(el('line', { x1: xp, y1: plot.y + plot.h, x2: xp, y2: plot.y + plot.h + 4, stroke: 'var(--line)' }));
+      svg.appendChild(el('text', { x: xp, y: plot.y + plot.h + 18, 'text-anchor': 'middle', fill: 'var(--muted)', 'font-size': 11 }, xFmt(xv)));
+    }
+    for (i = 0; i <= yTicks; i += 1) {
+      var yv = yMax * i / yTicks, yp = plot.y + plot.h - plot.h * i / yTicks;
+      svg.appendChild(el('line', { x1: plot.x - 4, y1: yp, x2: plot.x, y2: yp, stroke: 'var(--line)' }));
+      svg.appendChild(el('text', { x: plot.x - 8, y: yp + 4, 'text-anchor': 'end', fill: 'var(--muted)', 'font-size': 11 }, yFmt(yv)));
+    }
+  }
+  function niceMax(v) {
+    if (!(v > 0)) { return 1; }
+    var p = Math.pow(10, Math.floor(Math.log(v) / Math.LN10));
+    var f = v / p;
+    var n = f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10;
+    return n * p;
+  }
+  function methodsTable(rows) {
+    var body = document.querySelector('#methods tbody');
+    var by = byMethod(rows);
+    ORDER.forEach(function (m) {
+      var r = (by[m] || [])[0];
+      var tr = document.createElement('tr');
+      var cells = r ? [m, fmt(r.pair_completeness), fmt(r.precision_auto_accept), fmt(r.recall_labelled_auto_accept), fmt(r.recall_overall), fmt(r.f1_auto_accept), fmt(r.coverage), fmt(r.unverified_accepts) + ' (' + fmt(r.unverified_accepts_share) + ')', fmt(r.review_queue), fmt(r.ece)] : [m, 'not run'];
+      cells.forEach(function (c) { var td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+      body.appendChild(tr);
+    });
+  }
+  function reliability(rows) {
+    var svg = document.getElementById('reliability');
+    var plot = frame(svg, 'mean predicted probability of the top candidate', 'observed share correct');
+    axes(svg, plot, 1, 1, 5, 5, function (v) { return v.toFixed(1); }, function (v) { return v.toFixed(1); });
+    svg.appendChild(el('line', { x1: plot.x, y1: plot.y + plot.h, x2: plot.x + plot.w, y2: plot.y, stroke: 'var(--ref)', 'stroke-dasharray': '4 4' }));
+    var by = byMethod(rows.filter(function (r) { return r.level === 'decision_level'; }));
+    var maxN = rows.reduce(function (a, r) { return Math.max(a, r.n || 0); }, 0);
+    ORDER.forEach(function (m) {
+      var pts = (by[m] || []).filter(function (r) { return r.n > 0 && r.mean_probability !== null; }).sort(function (a, b) { return a.bin_index - b.bin_index; });
+      var d = '';
+      pts.forEach(function (r, i) {
+        var x = plot.x + plot.w * r.mean_probability, y = plot.y + plot.h - plot.h * r.observed_rate;
+        d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1);
+        var rad = 3 + 9 * Math.sqrt(r.n / maxN);
+        svg.appendChild(el('circle', { cx: x, cy: y, r: rad, fill: COLORS[m], 'fill-opacity': '.6', stroke: COLORS[m] }));
+      });
+      if (d) { svg.appendChild(el('path', { d: d, fill: 'none', stroke: COLORS[m], 'stroke-width': 2 })); }
+    });
+  }
+  function cost(rows) {
+    var select = document.getElementById('ratio');
+    var ratios = Array.from(new Set(rows.map(function (r) { return r.cost_ratio; }))).sort(function (a, b) { return a - b; });
+    ratios.forEach(function (r) { var o = document.createElement('option'); o.value = r; o.textContent = String(r); select.appendChild(o); });
+    function draw() {
+      var svg = document.getElementById('cost');
+      while (svg.firstChild) { svg.removeChild(svg.firstChild); }
+      var ratio = Number(select.value);
+      var sub = rows.filter(function (r) { return r.cost_ratio === ratio && r.total_cost !== null; });
+      var yMax = niceMax(sub.reduce(function (a, r) { return Math.max(a, r.total_cost); }, 0));
+      var plot = frame(svg, 'accept threshold', 'total cost (review-row units)');
+      axes(svg, plot, 1, yMax, 5, 5, function (v) { return v.toFixed(1); }, function (v) { return Math.round(v).toLocaleString('en-US'); });
+      var by = byMethod(sub);
+      ORDER.forEach(function (m) {
+        var pts = (by[m] || []).sort(function (a, b) { return a.threshold - b.threshold; });
+        var d = '';
+        pts.forEach(function (r, i) {
+          var x = plot.x + plot.w * r.threshold, y = plot.y + plot.h - plot.h * r.total_cost / yMax;
+          d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1);
+          if (r.is_chosen) { svg.appendChild(el('circle', { cx: x, cy: y, r: 6, fill: COLORS[m], stroke: 'var(--bg)', 'stroke-width': 2 })); }
+        });
+        if (d) { svg.appendChild(el('path', { d: d, fill: 'none', stroke: COLORS[m], 'stroke-width': 2 })); }
+      });
+    }
+    select.addEventListener('change', draw);
+    if (ratios.length) { select.value = ratios[Math.min(1, ratios.length - 1)]; draw(); }
+  }
+  function floor(rows) {
+    var svg = document.getElementById('floor');
+    var plot = frame(svg, 'review queue as a share of the test fold', 'recall with every queued row resolved');
+    axes(svg, plot, 1, 1, 5, 5, function (v) { return v.toFixed(1); }, function (v) { return v.toFixed(1); });
+    var by = byMethod(rows.filter(function (r) { return r.recall_with_review !== null; }));
+    ORDER.forEach(function (m) {
+      var pts = (by[m] || []).sort(function (a, b) { return a.queue_share_of_test_a - b.queue_share_of_test_a; });
+      var d = '';
+      pts.forEach(function (r, i) {
+        var x = plot.x + plot.w * r.queue_share_of_test_a, y = plot.y + plot.h - plot.h * r.recall_with_review;
+        d += (i === 0 ? 'M' : 'L') + x.toFixed(1) + ' ' + y.toFixed(1);
+        svg.appendChild(el('circle', { cx: x, cy: y, r: 3, fill: COLORS[m] }));
+      });
+      if (d) { svg.appendChild(el('path', { d: d, fill: 'none', stroke: COLORS[m], 'stroke-width': 2 })); }
+    });
+  }
+  function blocking(rows) {
+    var body = document.querySelector('#blocking tbody');
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      [r.block_key, fmt(r.key_pairs), fmt(r.key_pair_completeness)].forEach(function (c) { var td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+      body.appendChild(tr);
+    });
+    if (rows.length) {
+      var r = rows[0];
+      document.getElementById('blocking-note').textContent = 'Source: fct_blocking.json. Union pairs ' + fmt(r.union_pairs) + ', after the per-A cap ' + fmt(r.candidate_pairs_after_cap) + '; union pair completeness ' + fmt(r.union_pair_completeness) + ', after the cap ' + fmt(r.after_cap_pair_completeness) + '; truth pairs lost to the cap ' + fmt(r.truth_pairs_lost_to_cap) + '.';
+    }
+  }
+  function sources(rows) {
+    var body = document.querySelector('#sources tbody');
+    rows.forEach(function (r) {
+      var tr = document.createElement('tr');
+      [r.source, r.side, r.dump_filename, r.dump_date].forEach(function (c) { var td = document.createElement('td'); td.textContent = c; tr.appendChild(td); });
+      var td = document.createElement('td'); var a = document.createElement('a'); a.href = r.licence_url; a.textContent = 'licence'; td.appendChild(a); tr.appendChild(td);
+      body.appendChild(tr);
+    });
+  }
+  function missing(id, name) {
+    var p = document.createElement('p'); p.className = 'missing'; p.textContent = 'data/' + name + '.json is not exported yet (run make dbt).';
+    document.getElementById(id).parentNode.appendChild(p);
+  }
+  load('fct_eval_metrics').then(methodsTable).catch(function () { missing('methods', 'fct_eval_metrics'); });
+  load('fct_calibration').then(reliability).catch(function () { missing('reliability', 'fct_calibration'); });
+  load('fct_review_queue').then(cost).catch(function () { missing('cost', 'fct_review_queue'); });
+  load('fct_review_floor').then(floor).catch(function () { missing('floor', 'fct_review_floor'); });
+  load('fct_blocking').then(blocking).catch(function () { missing('blocking', 'fct_blocking'); });
+  load('dim_source').then(sources).catch(function () { missing('sources', 'dim_source'); });
+})();
+</script>
+</body>
+</html>

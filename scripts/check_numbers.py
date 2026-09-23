@@ -23,7 +23,11 @@ DEFAULT = [
     "docs/PROFILE.md",
     "docs/REPRODUCIBILITY.md",
     "docs/adr",
+    "docs/site",
 ]
+# docs/site holds HTML that must type no number of its own (it renders data/*.json); the
+# checker reads its .html files as text, so any measured-looking literal in markup fails.
+SITE_SUFFIXES = (".md", ".html")
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -34,7 +38,7 @@ def main(argv: list[str] | None = None) -> int:
     for raw in a.paths:
         path = REPO_ROOT / raw
         if path.is_dir():
-            files += sorted(path.glob("*.md"))
+            files += sorted(p for p in path.iterdir() if p.suffix in SITE_SUFFIXES)
         elif path.exists():
             files.append(path)
     problems: list[str] = []

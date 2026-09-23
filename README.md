@@ -11,11 +11,11 @@ review queue at the chosen thresholds. Coverage (how many records got a match) i
 beside precision (how many of those matches are right), because in this data they are not the
 same number.
 
-**Status.** Phase 4 of `docs/BRIEF.md`: the three methods are fitted, decided and evaluated on
-the test fold (`artifacts/eval_<method_version>.json`, `artifacts/methods/`,
-`artifacts/review_sensitivity.json`, `artifacts/mapping/`). The results table below and the
-narrative in `docs/FINDINGS.md` are filled in Phase 6; until then `docs/METHODS_CARD.md`
-carries the figures with their keys. The results table below is filled from
+**Status.** Phase 5 of `docs/BRIEF.md`: the methods are evaluated, the dbt warehouse builds
+silver and gold marts from the committed artifacts with reconciliation tests, and the docs
+site renders the results from the exported JSON. The results table below and the narrative in
+`docs/FINDINGS.md` are filled in Phase 6; until then `docs/METHODS_CARD.md` carries the
+figures with their keys. The results table below is filled from
 `artifacts/eval_<method_version>.json` once Phase 4 has run; until then it reads from an empty
 artifact tree on purpose.
 

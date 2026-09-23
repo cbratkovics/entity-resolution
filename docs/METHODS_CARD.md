@@ -8,10 +8,10 @@ _Generated from committed artifacts by `scripts/check_model_card.py --write`; do
 | Field | Value | Source key |
 |---|---|---|
 | Feature version | `0.2.0` | `artifacts/manifest.json#feature_version` |
-| Code commit | `7eda8839df8d4e421a82fa398d460b73b24619e9` | `artifacts/manifest.json#code_commit` |
+| Code commit | `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e` | `artifacts/manifest.json#code_commit` |
 | Side A | musicbrainz | `artifacts/manifest.json#side_a` |
 | Side B | discogs | fixed by `docs/BRIEF.md` (section `2.1`) |
-| Run id | `20260923T121557+0000` | `artifacts/manifest.json#run_id` |
+| Run id | `20260923T132431+0000` | `artifacts/manifest.json#run_id` |
 
 ## Methods
 
@@ -33,7 +33,7 @@ Keys per method: `artifacts/eval_<method_version>.json#metrics.pair_completeness
 
 ### `exact_v1`
 
-Source: `artifacts/eval_exact_v1.json`; feature version `0.2.0`, code commit `7eda8839df8d4e421a82fa398d460b73b24619e9`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
+Source: `artifacts/eval_exact_v1.json`; feature version `0.2.0`, code commit `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
 
 | Metric | Value | Key |
 |---|---|---|
@@ -45,16 +45,16 @@ Source: `artifacts/eval_exact_v1.json`; feature version `0.2.0`, code commit `7e
 | at_auto_accept_or_review.precision | 0.998712 | `artifacts/eval_exact_v1.json#metrics.at_auto_accept_or_review.precision` |
 | at_auto_accept_or_review.recall_labelled | 0.765062 | `artifacts/eval_exact_v1.json#metrics.at_auto_accept_or_review.recall_labelled` |
 | coverage_all_folds | 0.375917 | `artifacts/eval_exact_v1.json#metrics.coverage_all_folds` |
-| tier_shares.auto_accept | 0.378315 | `artifacts/eval_exact_v1.json#metrics.tier_shares.auto_accept` |
-| tier_shares.review | 0.002144 | `artifacts/eval_exact_v1.json#metrics.tier_shares.review` |
-| tier_shares.reject | 0.619541 | `artifacts/eval_exact_v1.json#metrics.tier_shares.reject` |
+| tier_shares.auto_accept | 0.37831539919425833 | `artifacts/eval_exact_v1.json#metrics.tier_shares.auto_accept` |
+| tier_shares.review | 0.0021438114274470003 | `artifacts/eval_exact_v1.json#metrics.tier_shares.review` |
+| tier_shares.reject | 0.6195407893782947 | `artifacts/eval_exact_v1.json#metrics.tier_shares.reject` |
 | ambiguity_rule.decisions_moved_to_review | 207 | `artifacts/eval_exact_v1.json#metrics.ambiguity_rule.decisions_moved_to_review` |
 | calibration.decision_level.brier | 0.093735 | `artifacts/eval_exact_v1.json#metrics.calibration.decision_level.brier` |
 | calibration.pair_level.ece | 0.012434 | `artifacts/eval_exact_v1.json#metrics.calibration.pair_level.ece` |
 
 ### `learned_v1`
 
-Source: `artifacts/eval_learned_v1.json`; feature version `0.2.0`, code commit `7eda8839df8d4e421a82fa398d460b73b24619e9`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
+Source: `artifacts/eval_learned_v1.json`; feature version `0.2.0`, code commit `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
 
 | Metric | Value | Key |
 |---|---|---|
@@ -66,16 +66,16 @@ Source: `artifacts/eval_learned_v1.json`; feature version `0.2.0`, code commit `
 | at_auto_accept_or_review.precision | 0.998666 | `artifacts/eval_learned_v1.json#metrics.at_auto_accept_or_review.precision` |
 | at_auto_accept_or_review.recall_labelled | 0.963239 | `artifacts/eval_learned_v1.json#metrics.at_auto_accept_or_review.recall_labelled` |
 | coverage_all_folds | 0.421281 | `artifacts/eval_learned_v1.json#metrics.coverage_all_folds` |
-| tier_shares.auto_accept | 0.422113 | `artifacts/eval_learned_v1.json#metrics.tier_shares.auto_accept` |
-| tier_shares.review | 0.062305 | `artifacts/eval_learned_v1.json#metrics.tier_shares.review` |
-| tier_shares.reject | 0.515581 | `artifacts/eval_learned_v1.json#metrics.tier_shares.reject` |
+| tier_shares.auto_accept | 0.4221133630912311 | `artifacts/eval_learned_v1.json#metrics.tier_shares.auto_accept` |
+| tier_shares.review | 0.062305166896237454 | `artifacts/eval_learned_v1.json#metrics.tier_shares.review` |
+| tier_shares.reject | 0.5155814700125314 | `artifacts/eval_learned_v1.json#metrics.tier_shares.reject` |
 | ambiguity_rule.decisions_moved_to_review | 350 | `artifacts/eval_learned_v1.json#metrics.ambiguity_rule.decisions_moved_to_review` |
 | calibration.decision_level.brier | 0.033224 | `artifacts/eval_learned_v1.json#metrics.calibration.decision_level.brier` |
 | calibration.pair_level.ece | 0.000147 | `artifacts/eval_learned_v1.json#metrics.calibration.pair_level.ece` |
 
 ### `rules_v1`
 
-Source: `artifacts/eval_rules_v1.json`; feature version `0.2.0`, code commit `7eda8839df8d4e421a82fa398d460b73b24619e9`; thresholds auto_accept_min `0.65`, review_min `0.0756756772994995`, ambiguity_gap `0.1`.
+Source: `artifacts/eval_rules_v1.json`; feature version `0.2.0`, code commit `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e`; thresholds auto_accept_min `0.65`, review_min `0.0756756772994995`, ambiguity_gap `0.1`.
 
 | Metric | Value | Key |
 |---|---|---|
@@ -87,9 +87,9 @@ Source: `artifacts/eval_rules_v1.json`; feature version `0.2.0`, code commit `7e
 | at_auto_accept_or_review.precision | 0.981717 | `artifacts/eval_rules_v1.json#metrics.at_auto_accept_or_review.precision` |
 | at_auto_accept_or_review.recall_labelled | 0.998477 | `artifacts/eval_rules_v1.json#metrics.at_auto_accept_or_review.recall_labelled` |
 | coverage_all_folds | 0.497063 | `artifacts/eval_rules_v1.json#metrics.coverage_all_folds` |
-| tier_shares.auto_accept | 0.498566 | `artifacts/eval_rules_v1.json#metrics.tier_shares.auto_accept` |
-| tier_shares.review | 0.259702 | `artifacts/eval_rules_v1.json#metrics.tier_shares.review` |
-| tier_shares.reject | 0.241733 | `artifacts/eval_rules_v1.json#metrics.tier_shares.reject` |
+| tier_shares.auto_accept | 0.4985656140932299 | `artifacts/eval_rules_v1.json#metrics.tier_shares.auto_accept` |
+| tier_shares.review | 0.2597015234524685 | `artifacts/eval_rules_v1.json#metrics.tier_shares.review` |
+| tier_shares.reject | 0.24173286245430162 | `artifacts/eval_rules_v1.json#metrics.tier_shares.reject` |
 | ambiguity_rule.decisions_moved_to_review | 7260 | `artifacts/eval_rules_v1.json#metrics.ambiguity_rule.decisions_moved_to_review` |
 | calibration.decision_level.brier | 0.027255 | `artifacts/eval_rules_v1.json#metrics.calibration.decision_level.brier` |
 | calibration.pair_level.ece | 0.40204 | `artifacts/eval_rules_v1.json#metrics.calibration.pair_level.ece` |

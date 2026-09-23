@@ -326,14 +326,24 @@ def _finish(
         dtype=bool,
     )
     is_labelled = test_dec["a_id"].isin(labels.labelled_a).to_numpy()
+    test_pairs = pairs[pairs["fold"] == "test"]
+    reachable_set = {
+        a
+        for a, b in zip(test_pairs["a_id"], test_pairs["b_id"], strict=True)
+        if labels.is_correct(a, b)
+    }
+    reachable = test_dec["a_id"].isin(reachable_set).to_numpy()
+    m = art["metrics"]
     sensitivity[method_version] = review_cost.sweep(
         test_dec,
         correct,
         is_labelled,
         review_min=thr["review_min"],
         chosen_accept=thr["auto_accept_min"],
+        reachable=reachable,
+        n_test_a=m["test_a"],
+        n_labelled_reachable=m["labelled_a_reachable"],
     )
-    m = art["metrics"]
     print(
         f"   {method_version}: precision {m['at_auto_accept']['precision']} recall_labelled "
         f"{m['at_auto_accept']['recall_labelled']} f1 {m['at_auto_accept']['f1']} coverage {m['coverage']} "

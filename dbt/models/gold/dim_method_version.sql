@@ -1,5 +1,6 @@
--- Grain: one row per method_version. The method version records as a dimension; the site and
--- fct_eval_metrics join to it. Empty until Phase 4 writes the first record.
+-- Grain: one row per method_version. The method version records as a dimension: definition,
+-- what was fitted on which fold, feature version, commit and the tier policy. Empty until
+-- Phase 4 writes the first record.
 select
     cast(method_version as varchar) as method_version,
     cast(definition as varchar) as definition,

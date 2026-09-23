@@ -2,10 +2,13 @@
 -- 1e-9. The mart cannot publish a number the artifacts do not already carry. Empty result =
 -- pass; with no artifacts committed there is nothing to reconcile and the test passes.
 {% set metrics = [
-    'pair_completeness', 'precision_auto_accept', 'recall_labelled_auto_accept', 'f1_auto_accept',
+    'test_a', 'labelled_a', 'labelled_a_reachable', 'pair_completeness', 'accepted', 'correct',
+    'precision_auto_accept', 'recall_labelled_auto_accept', 'f1_auto_accept',
     'precision_auto_accept_or_review', 'recall_labelled_auto_accept_or_review',
     'f1_auto_accept_or_review', 'recall_overall', 'coverage', 'coverage_all_folds',
-    'tier_share_auto_accept', 'tier_share_review', 'tier_share_reject', 'ece', 'brier'
+    'unverified_accepts', 'unverified_accepts_share',
+    'tier_share_auto_accept', 'tier_share_review', 'tier_share_reject',
+    'ambiguity_moved_to_review', 'review_queue', 'ece', 'brier', 'ece_pair_level', 'brier_pair_level'
 ] %}
 
 with long as (

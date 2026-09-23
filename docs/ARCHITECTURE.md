@@ -42,9 +42,23 @@ test-fold mapping exhibits `mapping/mapping_<method_version>.test.csv.gz` (ADR 0
 
 Bronze reads only committed artifacts through `read_json_auto`, so `dbt build` runs in CI with
 no download. Families that do not exist yet build as empty typed relations (`files_exist`).
-Silver flattens the artifacts into long, grain-enforced tables; gold is contracted marts the
-site reads. `assert_marts_reconcile_to_eval_artifacts` proves gold equals the artifacts;
-`export_gold` writes CSV and JSON to `docs/site/data/` for the Pages site.
+Silver flattens the artifacts into long, grain-enforced tables (`slv_eval_folds`,
+`slv_eval_metrics`, `slv_mapping` deduplicated at `(a_id, method_version)`,
+`slv_tier_thresholds`, `slv_calibration`); gold is the contracted marts the site reads:
+`dim_source`, `dim_method_version`, `fct_mapping` (test-fold grain, ADR 0005),
+`fct_review_queue`, `fct_review_floor`, `fct_eval_metrics`, `fct_blocking`, `fct_calibration`.
+`assert_marts_reconcile_to_eval_artifacts` proves gold equals the artifacts; the other custom
+tests hold the tier partition, unit-interval shares, recall not above pair completeness, one
+accept per A record, block keys on every decided pair and the review-cost arithmetic; two dbt
+unit tests cover the mapping deduplication and the cost arithmetic. `export_gold` writes CSV and
+JSON to `docs/site/data/` for the Pages site.
+
+## Site
+
+`docs/site/index.html` is plain HTML with inline SVG drawn by a small script that reads only
+`data/<gold model>.json`; no number is typed into the page (the number checker covers
+`docs/site/`, and `tests/test_site.py` checks the wiring). `pages.yml` builds the warehouse,
+exports, and publishes the page with the dbt docs under `/dbt/`.
 
 ## Phase 1 profiler
 

@@ -1,6 +1,40 @@
 version: 2
 
 models:
+  - name: dim_source
+    description: One row per source (Discogs on side B, MusicBrainz on side A) with the dump the current run was loaded from, its size, sha256, date and licence URL.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: source
+        description: Source name.
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: side
+        description: A or B.
+        data_type: varchar
+      - name: dump_filename
+        description: The dump file name.
+        data_type: varchar
+      - name: dump_bytes
+        description: Size of the dump in bytes.
+        data_type: bigint
+      - name: dump_sha256
+        description: sha256 of the dump.
+        data_type: varchar
+      - name: dump_date
+        description: The dump's date as published.
+        data_type: varchar
+      - name: download_url
+        description: Where the dump was downloaded from.
+        data_type: varchar
+      - name: licence_url
+        description: Where the licence text was read from.
+        data_type: varchar
+
   - name: dim_method_version
     description: One row per method version, from the committed method records. The definition, feature version, code commit and tier policy each method's mapping was produced under.
     config:
@@ -26,13 +60,266 @@ models:
         description: When the record was written.
         data_type: timestamp
       - name: auto_accept_min
-        description: Calibrated probability at or above which the method auto-accepts.
+        description: Probability (raw score for rules_v1) at or above which the method auto-accepts.
         data_type: double
       - name: review_min
-        description: Calibrated probability at or above which (below auto_accept_min) the method sends to review.
+        description: Lower bound of the review tier.
         data_type: double
       - name: ambiguity_gap
-        description: Top-two probability gap below which a pair is reviewed regardless of probability.
+        description: Top-two gap below which a decision is reviewed regardless of probability.
+        data_type: double
+
+  - name: fct_mapping
+    description: "The auditable mapping at test-fold grain: one row per (a_id, method_version) for test-fold A records with a non-reject decision, from the committed exhibits artifacts/mapping/mapping_<method_version>.test.csv.gz (ADR 0005). The fit and calibrate folds are counted in the evaluation artifacts only; the full mapping is a make full output under data/."
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [a_id, method_version]
+    columns:
+      - name: a_id
+        description: Side-A native id (MusicBrainz release group gid).
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: b_id
+        description: The decided side-B native id (Discogs master id).
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: method_version
+        description: The method that made the decision.
+        data_type: varchar
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_method_version')
+                field: method_version
+      - name: feature_version
+        description: FEATURE_VERSION the pair features were computed with.
+        data_type: varchar
+      - name: score
+        description: The method's raw score for the decided pair.
+        data_type: double
+      - name: probability
+        description: The probability the tier was assigned on (calibrated for learned_v1, raw otherwise).
+        data_type: double
+      - name: tier
+        description: auto_accept or review; reject rows are not in the exhibit.
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["auto_accept", "review"]
+      - name: block_keys
+        description: The blocking keys that produced the decided pair, pipe-joined.
+        data_type: varchar
+      - name: top2_gap
+        description: Probability gap to the runner-up candidate; null with a single candidate.
+        data_type: double
+      - name: fold
+        description: The A record's fold; always test.
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["test"]
+      - name: run_id
+        description: Identifier of the full-build run.
+        data_type: varchar
+      - name: decided_at_utc
+        description: When the decision was written.
+        data_type: timestamp
+
+  - name: fct_review_queue
+    description: "The review-cost curve on the test fold, one row per (method_version, threshold, cost_ratio): accepts, review queue, precision over labelled decisions, expected false accepts and total cost in review-row units, with the chosen threshold flagged."
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [method_version, threshold, cost_ratio]
+    columns:
+      - name: method_version
+        description: The method the curve belongs to.
+        data_type: varchar
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_method_version')
+                field: method_version
+      - name: threshold
+        description: The swept accept threshold.
+        data_type: double
+      - name: cost_ratio
+        description: Cost of one false accept relative to one review row (1, 5 or 20).
+        data_type: integer
+      - name: review_min
+        description: The method's review lower bound.
+        data_type: double
+      - name: chosen_accept_threshold
+        description: The method's chosen auto-accept threshold.
+        data_type: double
+      - name: accepts
+        description: Test-fold A records accepted at this threshold.
+        data_type: bigint
+      - name: review_queue
+        description: Test-fold A records between review_min and the threshold.
+        data_type: bigint
+      - name: precision_labelled
+        description: Precision at this threshold over labelled test-fold decisions.
+        data_type: double
+      - name: expected_false_accepts
+        description: accepts times one minus precision_labelled.
+        data_type: double
+      - name: total_cost
+        description: review_queue plus expected_false_accepts times cost_ratio, as the artifact carries it.
+        data_type: double
+      - name: total_cost_recomputed
+        description: The same arithmetic recomputed in SQL; the unit test and assert_review_cost_arithmetic hold the two equal.
+        data_type: double
+      - name: is_chosen
+        description: True on the row whose threshold is the method's chosen accept threshold.
+        data_type: boolean
+
+  - name: fct_review_floor
+    description: "What a review budget buys, one row per (method_version, floor): the review queue at each floor, its share of the test fold, and recall if every queued row were resolved."
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [method_version, floor]
+    columns:
+      - name: method_version
+        description: The method the sweep belongs to.
+        data_type: varchar
+      - name: floor
+        description: The review floor swept.
+        data_type: double
+      - name: accept_min
+        description: The method's auto-accept threshold.
+        data_type: double
+      - name: review_queue
+        description: Test-fold A records with floor <= probability < accept_min.
+        data_type: bigint
+      - name: queue_share_of_test_a
+        description: review_queue over the test-fold A count.
+        data_type: double
+      - name: recall_with_review
+        description: Correct auto-accepts plus resolvable reviews over labelled reachable A records.
+        data_type: double
+      - name: n_test_a
+        description: Test-fold A records.
+        data_type: bigint
+      - name: n_labelled_reachable
+        description: Labelled test-fold A records whose truth survived blocking.
+        data_type: bigint
+
+  - name: fct_blocking
+    description: One row per block key with the pairs it produced and its own pair completeness; the union and cap figures of the run are repeated on every row.
+    config:
+      contract:
+        enforced: true
+    columns:
+      - name: block_key
+        description: The blocking key.
+        data_type: varchar
+        data_tests:
+          - unique
+          - not_null
+      - name: key_pairs
+        description: Candidate pairs this key produced on its own.
+        data_type: bigint
+      - name: key_pair_completeness
+        description: Share of sampled truth pairs this key recovers on its own.
+        data_type: double
+      - name: keys_emitted_a
+        description: Key values emitted by side-A records.
+        data_type: bigint
+      - name: keys_emitted_b
+        description: Key values emitted by side-B records.
+        data_type: bigint
+      - name: union_pairs
+        description: Distinct pairs in the union of every key, before the cap.
+        data_type: bigint
+      - name: candidate_pairs_after_cap
+        description: Candidate pairs kept after the per-A cap.
+        data_type: bigint
+      - name: reduction_ratio
+        description: One minus candidate pairs after the cap over the cross product.
+        data_type: double
+      - name: union_pair_completeness
+        description: Share of sampled truth pairs recovered by the union.
+        data_type: double
+      - name: after_cap_pair_completeness
+        description: Share of sampled truth pairs still present after the cap.
+        data_type: double
+      - name: truth_pairs
+        description: Sampled truth pairs the completeness figures are measured against.
+        data_type: bigint
+      - name: truth_pairs_lost_to_cap
+        description: Truth pairs in the union that the cap removed.
+        data_type: bigint
+      - name: a_records_over_cap
+        description: A records whose union candidates exceeded the cap.
+        data_type: bigint
+      - name: pairs_dropped
+        description: Candidate pairs removed by the cap.
+        data_type: bigint
+      - name: candidate_cap_per_a
+        description: The per-A candidate cap.
+        data_type: integer
+      - name: feature_version
+        description: FEATURE_VERSION the keys were emitted with.
+        data_type: varchar
+
+  - name: fct_calibration
+    description: "Reliability tables the site plots, one row per (method_version, level, bin_index): decision level is the top candidate per labelled test A record, pair level every labelled test pair."
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [method_version, level, bin_index]
+    columns:
+      - name: method_version
+        description: The method the table belongs to.
+        data_type: varchar
+      - name: level
+        description: decision_level or pair_level.
+        data_type: varchar
+      - name: bin_index
+        description: Bin number 0 to 9.
+        data_type: integer
+      - name: lower_bound
+        description: Lower edge of the probability bin.
+        data_type: double
+      - name: upper_bound
+        description: Upper edge of the probability bin.
+        data_type: double
+      - name: n
+        description: Items in the bin.
+        data_type: bigint
+      - name: mean_probability
+        description: Mean predicted probability in the bin; null when empty.
+        data_type: double
+      - name: observed_rate
+        description: Observed share of correct items in the bin; null when empty.
+        data_type: double
+      - name: n_total
+        description: Items across every bin at this level.
+        data_type: bigint
+      - name: ece
+        description: Expected calibration error at this level.
+        data_type: double
+      - name: brier
+        description: Brier score at this level.
         data_type: double
 
   - name: fct_eval_metrics
@@ -51,14 +338,29 @@ models:
               arguments:
                 to: ref('dim_method_version')
                 field: method_version
+      - name: test_a
+        description: A records in the test fold.
+        data_type: double
+      - name: labelled_a
+        description: Labelled A records in the test fold.
+        data_type: double
+      - name: labelled_a_reachable
+        description: Labelled test A records whose truth survived blocking.
+        data_type: double
       - name: pair_completeness
-        description: Share of sampled test-fold truth pairs that blocking produced (union of keys).
+        description: labelled_a_reachable over labelled_a (A-level pair completeness on the test fold).
+        data_type: double
+      - name: accepted
+        description: Labelled test A records auto-accepted.
+        data_type: double
+      - name: correct
+        description: Auto-accepts whose B is in the A record's truth set.
         data_type: double
       - name: precision_auto_accept
-        description: Precision among auto-accepted pairs.
+        description: Precision among auto-accepted labelled A records.
         data_type: double
       - name: recall_labelled_auto_accept
-        description: Recall against labelled pairs at auto_accept.
+        description: Correct accepts over labelled reachable A records.
         data_type: double
       - name: f1_auto_accept
         description: F1 at auto_accept.
@@ -67,19 +369,25 @@ models:
         description: Precision if every review were resolved correctly (upper bound).
         data_type: double
       - name: recall_labelled_auto_accept_or_review
-        description: Recall against labelled pairs if every review were resolved correctly (upper bound).
+        description: Recall if every review were resolved correctly (upper bound).
         data_type: double
       - name: f1_auto_accept_or_review
         description: F1 at auto_accept plus review (upper bound).
         data_type: double
       - name: recall_overall
-        description: recall_labelled_auto_accept multiplied by pair_completeness; blocking loss included.
+        description: Correct accepts over all labelled test A records; equals recall_labelled times pair_completeness.
         data_type: double
       - name: coverage
-        description: Accepted A records over all A records in the test fold; a volume measure, not accuracy.
+        description: Auto-accepted A records over all test-fold A records; a volume measure, not accuracy.
         data_type: double
       - name: coverage_all_folds
-        description: Accepted A records over all A records in every fold; not an accuracy measure.
+        description: Auto-accepted A records over all sampled A records; not an accuracy measure.
+        data_type: double
+      - name: unverified_accepts
+        description: Auto-accepts on unlabelled test A records, counted by coverage only.
+        data_type: double
+      - name: unverified_accepts_share
+        description: unverified_accepts over all test-fold auto-accepts.
         data_type: double
       - name: tier_share_auto_accept
         description: Share of test-fold A records auto-accepted.
@@ -88,13 +396,25 @@ models:
         description: Share of test-fold A records sent to review.
         data_type: double
       - name: tier_share_reject
-        description: Share of test-fold A records rejected.
+        description: Share of test-fold A records rejected (no candidate counts as reject).
+        data_type: double
+      - name: ambiguity_moved_to_review
+        description: Decisions the ambiguity rule moved from auto_accept to review.
+        data_type: double
+      - name: review_queue
+        description: Test-fold A records in the review tier.
         data_type: double
       - name: ece
-        description: Expected calibration error over ten equal-width bins.
+        description: Expected calibration error at decision level.
         data_type: double
       - name: brier
-        description: Brier score of the calibrated probability against the truth label.
+        description: Brier score at decision level.
+        data_type: double
+      - name: ece_pair_level
+        description: Expected calibration error at pair level.
+        data_type: double
+      - name: brier_pair_level
+        description: Brier score at pair level.
         data_type: double
       - name: fold
         description: The fold every metric in the row was computed on; always test.
@@ -103,3 +423,32 @@ models:
           - accepted_values:
               arguments:
                 values: ["test"]
+
+unit_tests:
+  - name: slv_mapping_deduplicates_at_a_id_and_method
+    description: Two exhibit rows for the same (a_id, method_version) collapse to the higher probability, then the lower b_id.
+    model: slv_mapping
+    given:
+      - input: ref('brz_mapping')
+        rows:
+          - {source_file: f, a_id: a1, b_id: "9", method_version: rules_v1, feature_version: "0.2.0", score: 0.5, probability: 0.5, tier: review, block_keys: k_title3, top2_gap: null, fold: test, run_id: r, decided_at_utc: "2026-09-23 00:00:00"}
+          - {source_file: f, a_id: a1, b_id: "2", method_version: rules_v1, feature_version: "0.2.0", score: 0.9, probability: 0.9, tier: auto_accept, block_keys: k_title3, top2_gap: 0.4, fold: test, run_id: r, decided_at_utc: "2026-09-23 00:00:00"}
+          - {source_file: f, a_id: a1, b_id: "3", method_version: rules_v1, feature_version: "0.2.0", score: 0.9, probability: 0.9, tier: auto_accept, block_keys: k_title3, top2_gap: 0.4, fold: test, run_id: r, decided_at_utc: "2026-09-23 00:00:00"}
+          - {source_file: f, a_id: a1, b_id: "2", method_version: exact_v1, feature_version: "0.2.0", score: 1.0, probability: 1.0, tier: auto_accept, block_keys: k_title3, top2_gap: null, fold: test, run_id: r, decided_at_utc: "2026-09-23 00:00:00"}
+    expect:
+      rows:
+        - {a_id: a1, method_version: rules_v1, b_id: "2", probability: 0.9}
+        - {a_id: a1, method_version: exact_v1, b_id: "2", probability: 1.0}
+
+  - name: fct_review_queue_cost_arithmetic
+    description: total_cost_recomputed equals review_queue plus expected_false_accepts times cost_ratio, and the chosen threshold is flagged.
+    model: fct_review_queue
+    given:
+      - input: ref('brz_review_sensitivity')
+        rows:
+          - {source_file: f, generated_at_utc: "2026-09-23 00:00:00", feature_version: "0.2.0", code_commit: c, method_version: learned_v1, review_min: 0.5, chosen_accept_threshold: 0.95, threshold: 0.95, accepts: 100, review_queue: 40, precision_labelled: 0.9, expected_false_accepts: 10.0, cost_ratio: 5, total_cost: 90.0}
+          - {source_file: f, generated_at_utc: "2026-09-23 00:00:00", feature_version: "0.2.0", code_commit: c, method_version: learned_v1, review_min: 0.5, chosen_accept_threshold: 0.95, threshold: 0.90, accepts: 120, review_queue: 20, precision_labelled: 0.8, expected_false_accepts: 24.0, cost_ratio: 20, total_cost: 500.0}
+    expect:
+      rows:
+        - {method_version: learned_v1, threshold: 0.95, cost_ratio: 5, total_cost_recomputed: 90.0, is_chosen: true}
+        - {method_version: learned_v1, threshold: 0.90, cost_ratio: 20, total_cost_recomputed: 500.0, is_chosen: false}

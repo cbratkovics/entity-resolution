@@ -20,13 +20,13 @@ models:
               arguments:
                 values: ["fit", "calibrate", "test"]
       - name: a_records
-        description: Side-A records whose top candidate's B record falls in the fold.
-      - name: b_records
-        description: Side-B records assigned to the fold by sha256(master_id) mod 100.
+        description: Sampled A records assigned to the fold by the hash of their id (ADR 0003).
+      - name: labelled_a_records
+        description: Labelled A records in the fold.
       - name: candidate_pairs
-        description: Candidate pairs produced by blocking that inherit the fold from their B record.
-      - name: truth_pairs
-        description: Sampled truth pairs that inherit the fold from their B record.
+        description: Candidate pairs whose A record is in the fold.
+      - name: decisions
+        description: A records in the fold with at least one candidate, hence a decision.
 
   - name: slv_eval_metrics
     description: Every scalar metric of every evaluation artifact in long form, one row per (method_version, fold, metric), read verbatim from the artifact JSON. Empty until Phase 4 commits the first artifact.
@@ -51,3 +51,92 @@ models:
           - not_null
       - name: value
         description: The metric value exactly as the artifact carries it.
+
+  - name: slv_mapping
+    description: The committed mapping exhibits typed and deduplicated at (a_id, method_version); ties resolved by highest probability then lowest b_id. Test fold only (ADR 0005).
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [a_id, method_version]
+    columns:
+      - name: a_id
+        description: Side-A native id.
+        data_tests:
+          - not_null
+      - name: b_id
+        description: The decided side-B native id.
+        data_tests:
+          - not_null
+      - name: method_version
+        description: The method that made the decision.
+      - name: feature_version
+        description: FEATURE_VERSION the pair features were computed with.
+      - name: score
+        description: The method's raw score for the decided pair.
+      - name: probability
+        description: The probability the tier was assigned on.
+      - name: tier
+        description: auto_accept or review.
+      - name: block_keys
+        description: The blocking keys that produced the decided pair, pipe-joined.
+      - name: top2_gap
+        description: Probability gap to the runner-up candidate; null with a single candidate.
+      - name: fold
+        description: The A record's fold; always test.
+      - name: run_id
+        description: Identifier of the full-build run.
+      - name: decided_at_utc
+        description: When the decision was written.
+
+  - name: slv_tier_thresholds
+    description: The tier policy per method version, from the method records; one row per method_version.
+    columns:
+      - name: method_version
+        description: The method identifier.
+        data_tests:
+          - unique
+          - not_null
+      - name: auto_accept_min
+        description: Probability (or raw score for rules_v1) at or above which the method auto-accepts.
+      - name: review_min
+        description: Lower bound of the review tier.
+      - name: ambiguity_gap
+        description: Top-two gap below which a decision is reviewed regardless of probability.
+      - name: feature_version
+        description: FEATURE_VERSION the method was fitted with.
+      - name: code_commit
+        description: Git commit of the code that fitted the method.
+
+  - name: slv_calibration
+    description: Reliability tables per (method_version, level, bin_index) at decision level (top candidate per labelled test A record) and pair level (every labelled test pair), with the level's ECE and Brier score.
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [method_version, level, bin_index]
+    columns:
+      - name: method_version
+        description: The method the table belongs to.
+      - name: level
+        description: decision_level or pair_level.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["decision_level", "pair_level"]
+      - name: bin_index
+        description: Bin number 0 to 9 over equal-width probability intervals.
+      - name: lower_bound
+        description: Lower edge of the probability bin.
+      - name: upper_bound
+        description: Upper edge of the probability bin.
+      - name: n
+        description: Items in the bin.
+      - name: mean_probability
+        description: Mean predicted probability in the bin; null when empty.
+      - name: observed_rate
+        description: Observed share of correct items in the bin; null when empty.
+      - name: n_total
+        description: Items across every bin at this level.
+      - name: ece
+        description: Expected calibration error at this level.
+      - name: brier
+        description: Brier score at this level.

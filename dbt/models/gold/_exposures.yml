@@ -4,15 +4,22 @@ exposures:
   - name: docs_site
     label: Entity Resolution docs site (GitHub Pages)
     type: dashboard
-    maturity: low
+    maturity: medium
     url: https://cbratkovics.github.io/entity-resolution/
     description: >
-      The static site under docs/site/ renders the methods table, the reliability plot and the
-      review-cost curve from the CSV and JSON files export_gold writes to docs/site/data/. Plain
-      HTML and inline SVG; no build step. The dbt docs are published beside it.
+      The static site under docs/site/ renders the methods table, the reliability plot, the
+      review-cost curve and the review-floor curve from the JSON files export_gold writes to
+      docs/site/data/. Plain HTML and inline SVG; no build step; no number typed into HTML.
+      The dbt docs are published beside it.
     depends_on:
       - ref('fct_eval_metrics')
+      - ref('fct_calibration')
+      - ref('fct_review_queue')
+      - ref('fct_review_floor')
+      - ref('fct_blocking')
+      - ref('fct_mapping')
       - ref('dim_method_version')
+      - ref('dim_source')
     owner:
       name: cbratkovics
       email: cbratkovics@gmail.com
