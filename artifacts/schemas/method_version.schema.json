@@ -1,199 +1,45 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Model version metadata",
-  "description": "artifacts/models/<model_version>/metadata.json, written once by models.train.train_all: versions, split, input hash, code commit, per-cohort sample sizes, candidate metrics and the drift reference.",
+  "title": "Method version record (record_version 1.0)",
+  "description": "artifacts/methods/<method_version>.json: what a method is, its fixed parameters, what it was fitted on and the tier policy it was decided under (docs/BRIEF.md 2.7 and 2.8). Parameters and identifiers only.",
   "type": "object",
   "required": [
-    "model_version",
+    "record_version",
+    "method_version",
+    "definition",
+    "fitted_on",
     "feature_version",
-    "sklearn_version",
-    "data_library",
-    "trained_at_utc",
-    "data_through",
-    "seasons",
-    "target",
-    "input_sha256",
-    "input_rows",
+    "parameters",
+    "tier_policy",
     "code_commit",
-    "interval_method",
-    "candidates",
-    "cohorts"
+    "created_at_utc"
   ],
+  "additionalProperties": false,
   "properties": {
-    "model_version": {
-      "type": "string",
-      "pattern": "^[0-9]{8}-"
+    "record_version": {"const": "1.0"},
+    "method_version": {"type": "string", "enum": ["exact_v1", "rules_v1", "learned_v1"]},
+    "definition": {"type": "string"},
+    "fitted_on": {
+      "description": "Folds anything in this method was fitted on; null for a method with nothing fitted.",
+      "type": ["object", "null"],
+      "additionalProperties": {"type": "string", "enum": ["fit", "calibrate", "test"]}
     },
-    "feature_version": {
-      "type": "string"
+    "feature_version": {"type": "string"},
+    "parameters": {
+      "description": "Fixed a priori parameters (rule weights, hyperparameters) and fitted values (thresholds), each named.",
+      "type": "object"
     },
-    "sklearn_version": {
-      "type": "string"
-    },
-    "data_library": {
-      "type": "string"
-    },
-    "trained_at_utc": {
-      "type": "string"
-    },
-    "data_through": {
+    "tier_policy": {
       "type": "object",
-      "required": [
-        "season",
-        "period"
-      ],
+      "required": ["auto_accept_min", "review_min", "ambiguity_gap"],
+      "additionalProperties": false,
       "properties": {
-        "season": {
-          "type": "integer"
-        },
-        "period": {
-          "type": "integer"
-        }
+        "auto_accept_min": {"type": "number", "minimum": 0, "maximum": 1},
+        "review_min": {"type": "number", "minimum": 0, "maximum": 1},
+        "ambiguity_gap": {"type": "number", "minimum": 0, "maximum": 1}
       }
     },
-    "seasons": {
-      "type": "object",
-      "required": [
-        "train",
-        "val",
-        "test"
-      ]
-    },
-    "target": {
-      "type": "string"
-    },
-    "input_sha256": {
-      "type": "string",
-      "pattern": "^[0-9a-f]{64}$"
-    },
-    "input_rows": {
-      "type": "integer",
-      "minimum": 1
-    },
-    "code_commit": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "interval_method": {
-      "type": "string"
-    },
-    "candidates": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "minItems": 1
-    },
-    "cohorts": {
-      "type": "object",
-      "minProperties": 1,
-      "additionalProperties": {
-        "type": "object",
-        "required": [
-          "n_train",
-          "n_val",
-          "n_test",
-          "n_features",
-          "features",
-          "champion",
-          "candidates",
-          "drift_reference"
-        ],
-        "properties": {
-          "features": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "champion": {
-            "type": "string"
-          },
-          "challenger": {
-            "type": [
-              "string",
-              "null"
-            ]
-          },
-          "candidates": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "object",
-              "required": [
-                "val_mae",
-                "test_mae",
-                "residual_quantiles",
-                "top_feature_importance",
-                "hyperparameters"
-              ],
-              "properties": {
-                "val_mae": {
-                  "type": "number"
-                },
-                "test_mae": {
-                  "type": "number"
-                },
-                "residual_quantiles": {
-                  "type": "object",
-                  "required": [
-                    "q",
-                    "values"
-                  ]
-                },
-                "top_feature_importance": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "number"
-                  }
-                },
-                "hyperparameters": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "drift_reference": {
-            "type": "object",
-            "required": [
-              "bucket_periods",
-              "global",
-              "buckets"
-            ],
-            "properties": {
-              "bucket_periods": {
-                "type": "integer"
-              },
-              "global": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
-                  },
-                  "minItems": 11,
-                  "maxItems": 11
-                }
-              },
-              "buckets": {
-                "type": "object",
-                "additionalProperties": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "array",
-                    "items": {
-                      "type": "number"
-                    },
-                    "minItems": 11,
-                    "maxItems": 11
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+    "code_commit": {"type": "string"},
+    "created_at_utc": {"type": "string"}
   }
 }

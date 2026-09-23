@@ -1,6 +1,6 @@
 {#- True when at least one file matches the glob (DuckDB glob()). Optional artifact families
-    (out-of-sample predictions, scored-period files, rolling evaluations) do not exist before the
-    first scoring run; the bronze models for them select an empty, typed relation instead of
+    (method version records, evaluation artifacts) do not exist before the
+    first full build; the bronze models for them select an empty, typed relation instead of
     failing with "No files found". At parse time (execute = false) the source is referenced so
     lineage stays intact. -#}
 {% macro files_exist(pattern) %}

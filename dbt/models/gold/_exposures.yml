@@ -1,21 +1,18 @@
 version: 2
 
 exposures:
-  - name: api
-    label: Entity Resolution API (Hugging Face Space)
-    type: application
-    maturity: medium
-    url: https://-entity-resolution.hf.space
+  - name: docs_site
+    label: Entity Resolution docs site (GitHub Pages)
+    type: dashboard
+    maturity: low
+    url: https://cbratkovics.github.io/entity-resolution/
     description: >
-      The API serves the committed artifacts and, for /marts/{mart}, the parquet copies of these
-      gold tables exported by the scheduled build; it never connects to MotherDuck. /performance
-      returns the evaluation artifacts verbatim.
+      The static site under docs/site/ renders the methods table, the reliability plot and the
+      review-cost curve from the CSV and JSON files export_gold writes to docs/site/data/. Plain
+      HTML and inline SVG; no build step. The dbt docs are published beside it.
     depends_on:
-      - ref('fct_period_eval')
-      - ref('fct_entity_period')
-      - ref('fct_decision_policy', v=1)
-      - ref('dim_model_version')
+      - ref('fct_eval_metrics')
+      - ref('dim_method_version')
     owner:
       name: cbratkovics
-      email: 
-
+      email: cbratkovics@gmail.com

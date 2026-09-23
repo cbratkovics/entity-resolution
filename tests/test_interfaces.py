@@ -1,99 +1,48 @@
-"""The seams are satisfied by this project's implementations, and every committed artifact
-validates against its JSON Schema under artifacts/schemas/."""
+"""The seams are satisfied by the project's implementations and the registry enforces them."""
 
 from __future__ import annotations
 
-import json
+import dataclasses
+from pathlib import Path
 
-import jsonschema
-import numpy as np
-import pandas as pd
 import pytest
 
-from entity_resolution import interfaces, target
-from entity_resolution.config import ARTIFACTS_DIR, PROJECT, SCHEMAS_DIR
+from entity_resolution import interfaces
+from entity_resolution.config import PROJECT
 from entity_resolution.data import loader
-from entity_resolution.eval import drift
-from entity_resolution.features import asof
-
-SCHEMAS = {p.stem.removesuffix(".schema"): p for p in SCHEMAS_DIR.glob("*.schema.json")}
 
 
-def _schema(name: str) -> dict:
-    return json.loads(SCHEMAS[name].read_text(encoding="utf-8"))
+def test_fixture_adapter_satisfies_the_protocol() -> None:
+    adapter = loader.adapter("fixture")
+    assert isinstance(adapter, interfaces.SourceAdapter)
+    records = list(adapter.iter_records(Path("unused")))
+    assert records and all(isinstance(r, interfaces.Record) for r in records)
+    assert all(r.source == adapter.NAME for r in records)
+    links = list(adapter.truth_links(Path("unused")))
+    assert all(isinstance(t, interfaces.TruthLink) for t in links)
+    assert adapter.cache_path(Path("/x")).suffix == ".parquet"
 
 
-def test_every_schema_is_itself_valid() -> None:
-    assert set(SCHEMAS) == {
-        "eval_artifact",
-        "manifest",
-        "model_metadata",
-        "predictions_file",
-        "drift_report",
-    }
-    for name in SCHEMAS:
-        jsonschema.Draft202012Validator.check_schema(_schema(name))
-
-
-def test_loader_satisfies_source_loader() -> None:
-    assert isinstance(loader.LOADER, interfaces.SourceLoader)
-    assert PROJECT.entity_key in loader.ID_COLUMNS and PROJECT.target_column in loader.STAT_COLUMNS
-
-
-def test_target_spec_derives_and_reconciles(rows: pd.DataFrame) -> None:
-    spec = target.TARGET_SPEC
-    assert isinstance(spec, interfaces.TargetSpec)
-    np.testing.assert_allclose(
-        spec.derive(rows).to_numpy(), rows[spec.column].to_numpy(), atol=0.01
+def test_records_and_decisions_are_frozen() -> None:
+    r = interfaces.Record("fixture", "1", "t", "a", None)
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        r.title = "x"  # type: ignore[misc]
+    d = interfaces.Decision(
+        "a", "b", "exact_v1", "0.0.0", 1.0, None, "auto_accept", "test", None, ()
     )
-    assert spec.reconcile(rows).empty
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        d.tier = "review"  # type: ignore[misc]
+    assert d.method_version in PROJECT.method_versions and d.tier in PROJECT.tiers
 
 
-def test_asof_satisfies_feature_module() -> None:
-    assert isinstance(asof, interfaces.FeatureModule)
-    assert tuple(asof.KEY_COLUMNS) == PROJECT.grain
+def test_registry_rejects_non_adapters_and_bad_sides() -> None:
+    with pytest.raises(TypeError):
+        loader.register(object())  # type: ignore[arg-type]
 
+    class Sideways(loader.FixtureAdapter):
+        NAME = "sideways"
+        SIDE = "C"
 
-@pytest.mark.parametrize("path", sorted((ARTIFACTS_DIR / "eval").glob("eval-*.json")))
-def test_committed_eval_artifacts_validate(path) -> None:
-    jsonschema.validate(json.loads(path.read_text(encoding="utf-8")), _schema("eval_artifact"))
-
-
-def test_committed_manifest_validates() -> None:
-    p = ARTIFACTS_DIR / "manifest.json"
-    if not p.exists():
-        pytest.skip("no manifest yet")
-    jsonschema.validate(json.loads(p.read_text()), _schema("manifest"))
-
-
-@pytest.mark.parametrize("path", sorted((ARTIFACTS_DIR / "models").glob("*/metadata.json")))
-def test_committed_model_metadata_validates(path) -> None:
-    jsonschema.validate(json.loads(path.read_text(encoding="utf-8")), _schema("model_metadata"))
-
-
-@pytest.mark.parametrize("path", sorted((ARTIFACTS_DIR / "predictions").glob("*/period_*.json")))
-def test_committed_prediction_files_validate(path) -> None:
-    jsonschema.validate(json.loads(path.read_text(encoding="utf-8")), _schema("predictions_file"))
-
-
-def test_drift_run_report_matches_its_schema() -> None:
-    rng = np.random.default_rng(0)
-    ref = {"f1": [float(x) for x in np.quantile(rng.normal(size=500), np.linspace(0, 1, 11))]}
-    report = drift.drift_report(pd.DataFrame({"f1": rng.normal(size=200)}), ref, ["f1"])
-    schema = _schema("drift_report")
-    jsonschema.validate(report, {"$ref": "#/$defs/cohort_report", "$defs": schema["$defs"]})
-    run = drift.run_report(
-        run_id="run-20260101T000000Z",
-        at_utc="2026-01-01T00:00:00+00:00",
-        season=2026,
-        period=2,
-        model_version="m",
-        status=report["status"],
-        positions={PROJECT.cohorts[0]: report},
-    )
-    jsonschema.validate(run, schema)
-
-
-@pytest.mark.parametrize("path", sorted((ARTIFACTS_DIR / "drift").glob("run-*.json")))
-def test_committed_drift_reports_validate(path) -> None:
-    jsonschema.validate(json.loads(path.read_text(encoding="utf-8")), _schema("drift_report"))
+    with pytest.raises(ValueError):
+        loader.register(Sideways())
+    assert "sideways" not in loader.registered()

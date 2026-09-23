@@ -248,3 +248,4 @@ Commit: <sha> <message>
 | date | phase | ADR | change |
 |---|---|---|---|
 | 2026-09-22 | — | — | Brief created. |
+| 2026-09-22 | 0 | — | Chassis: Python pins move from `constraints.txt` to a committed `uv.lock` (`uv sync --frozen`); `constraints.txt` deleted. |

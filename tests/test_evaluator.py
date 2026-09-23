@@ -1,62 +1,69 @@
+"""The evaluation artifact writer: assembly, schema validation, round trip. Metric arithmetic
+is tested in Phase 4 on the hand-built pair fixture."""
+
 from __future__ import annotations
 
+from pathlib import Path
+
+import jsonschema
 import pytest
 
-from entity_resolution.config import PROJECT
 from entity_resolution.eval import evaluator
+from entity_resolution.features import FEATURE_VERSION
 
-_E, _S, _P, _C = PROJECT.entity_key, PROJECT.season_name, PROJECT.period_name, PROJECT.cohort_name
-
-
-def _row(e, s, p, c, pred, act):
-    return {_E: e, _S: s, _P: p, _C: c, "prediction": pred, "actual": act}
-
-
-def test_causal_baseline_never_sees_the_current_period() -> None:
-    rows = [
-        _row("a", 2023, 1, "A", 10, 12),
-        _row("a", 2023, 2, "A", 10, 8),
-        _row("b", 2023, 2, "A", 5, 6),
-    ]
-    out = {(r[_E], r[_P]): r["trailing_mean_baseline"] for r in evaluator.add_causal_baseline(rows)}
-    assert out[("a", 1)] == 10  # nothing earlier: the prediction itself
-    assert out[("a", 2)] == 12  # only period 1
-    assert out[("b", 2)] == 12  # cohort fallback from a's period 1
+FOLDS = {
+    f: {"a_records": 0, "b_records": 0, "candidate_pairs": 0, "truth_pairs": 0}
+    for f in ("fit", "calibrate", "test")
+}
 
 
-def test_history_seeds_the_baseline_before_the_window() -> None:
-    hist = [_row("a", 2022, 12, "A", 0, 20)]
-    rows = [_row("a", 2023, 1, "A", 10, 12)]
-    assert evaluator.add_causal_baseline(rows, hist)[0]["trailing_mean_baseline"] == 20
-
-
-def test_metrics_share_rows_and_bands_follow_config() -> None:
-    b1, b2 = PROJECT.within_k
-    rows = [_row("a", 2023, 1, "A", 10, 10 + b1), _row("b", 2023, 1, "A", 10, 10 + b2 + 1)]
-    rep = evaluator.evaluate_rows(rows, (2023, 1))
-    assert rep["metrics"]["n"] == 2
-    assert rep["metrics"]["within_band1_rate"] == 0.5 and rep["metrics"]["within_band2_rate"] == 0.5
-    assert set(rep["cohorts"]) == {"A"} and rep["baseline"]["name"] == evaluator.BASELINE_NAME
-
-
-def test_rejects_missing_columns_and_empty_window() -> None:
-    with pytest.raises(ValueError):
-        evaluator.evaluate_rows([{"x": 1}], (2023, 1))
-    with pytest.raises(ValueError):
-        evaluator.evaluate_rows([_row("a", 2022, 1, "A", 1, 1)], (2023, 1))
-
-
-def test_build_artifact_records_provenance(tmp_path) -> None:
-    p = tmp_path / "preds.csv"
-    p.write_text("x\n1\n")
-    rep = evaluator.evaluate_rows([_row("a", 2023, 1, "A", 1, 1)], (2023, 1))
-    art = evaluator.build_artifact(
-        rep,
-        input_path=p,
-        input_rows=1,
-        model={"version": "v", "candidate": "rf"},
-        kind="frozen_test",
+def _artifact(**kw):
+    return evaluator.new_artifact(
+        "exact_v1",
+        manifest_sha256="0" * 64,
+        code_commit="abc",
+        fold_counts=FOLDS,
+        generated_at_utc="2026-09-22T00:00:00+00:00",
+        **kw,
     )
-    assert art["artifact_version"] == evaluator.ARTIFACT_VERSION and art["input"]["sha256"]
-    assert not art["input"]["path"].startswith("/") and art["eval_id"].startswith("eval-")
-    assert "within_band1_rate" in art["metric_definitions"]
+
+
+def test_artifact_without_metrics_validates_and_round_trips(tmp_path: Path) -> None:
+    art = _artifact()
+    assert art["input"]["feature_version"] == FEATURE_VERSION
+    assert set(art["metric_definitions"]) == set(evaluator.METRIC_DEFINITIONS)
+    path = evaluator.write(art, tmp_path)
+    assert path.name == "eval_exact_v1.json"
+    assert evaluator.read_all(tmp_path) == [art]
+
+
+def test_missing_fold_is_rejected() -> None:
+    with pytest.raises(ValueError, match="missing folds"):
+        evaluator.new_artifact(
+            "exact_v1",
+            manifest_sha256="x",
+            code_commit="c",
+            fold_counts={"fit": FOLDS["fit"]},
+            generated_at_utc="t",
+        )
+
+
+def test_partial_metrics_block_fails_validation() -> None:
+    art = _artifact(metrics={"coverage": 0.5})
+    with pytest.raises(jsonschema.ValidationError):
+        evaluator.validate(art)
+
+
+def test_every_metric_has_a_definition() -> None:
+    for key in (
+        "pair_completeness",
+        "precision",
+        "recall_labelled",
+        "recall_overall",
+        "coverage",
+        "coverage_all_folds",
+        "tier_shares",
+        "calibration",
+        "confusion",
+    ):
+        assert evaluator.METRIC_DEFINITIONS[key].strip()

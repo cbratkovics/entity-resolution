@@ -2,11 +2,9 @@
 
 from __future__ import annotations
 
-import json
-
 import yaml
 
-from entity_resolution.config import PROJECT, REPO_ROOT, dbt_vars, frontend_config
+from entity_resolution.config import PROJECT, REPO_ROOT, dbt_vars
 
 
 def test_dbt_project_vars_mirror_the_config() -> None:
@@ -15,22 +13,16 @@ def test_dbt_project_vars_mirror_the_config() -> None:
     assert project["name"] == PROJECT.dbt_project_name
 
 
-def test_frontend_config_json_is_regenerated() -> None:
-    p = REPO_ROOT / "frontend" / "src" / "lib" / "project.config.json"
-    if not p.exists():
-        return  # frontend not generated
-    assert (
-        json.loads(p.read_text(encoding="utf-8")) == frontend_config()
-    ), "run: python -m entity_resolution.config --frontend > frontend/src/lib/project.config.json"
+def test_vocabulary_matches_the_brief() -> None:
+    assert PROJECT.side_b == "discogs"
+    assert PROJECT.side_a is None, "side A is decided in ADR 0001 after Phase 1"
+    assert PROJECT.side_a_candidates == ("musicbrainz", "wikidata")
+    assert PROJECT.method_versions == ("exact_v1", "rules_v1", "learned_v1")
+    assert PROJECT.folds == ("fit", "calibrate", "test")
+    assert PROJECT.tiers == ("auto_accept", "review", "reject")
 
 
-def test_scheduled_workflow_mirrors_the_config() -> None:
-    wf = (REPO_ROOT / ".github" / "workflows" / "scheduled.yml").read_text(encoding="utf-8")
-    assert f'cron: "{PROJECT.schedule_cron}"' in wf
-    assert 'hf upload "$(python -m entity_resolution.config hf_space)"' in wf
-
-
-def test_profiles_name_the_configured_database() -> None:
-    assert f"'{PROJECT.motherduck_database}'" in (REPO_ROOT / "dbt" / "profiles.yml").read_text(
-        encoding="utf-8"
-    )
+def test_no_frontend_or_serving_configuration() -> None:
+    fields = set(PROJECT.as_dict())
+    for forbidden in ("hf_space", "api_url", "site_url", "motherduck_database", "schedule_cron"):
+        assert forbidden not in fields

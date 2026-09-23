@@ -1,212 +1,100 @@
-"""Data contracts = the dbt silver tests, run by the scheduled job through this thin wrapper.
+"""Data contracts as pure functions returning reports (docs/BRIEF.md Phase 2).
 
-The checks live in ``dbt/models/silver/_silver.yml`` and ``dbt/tests/silver/`` (grain
-uniqueness, required columns, ranges, accepted cohorts, not-null, freshness through the expected
-period, newest-period row count versus the prior period, row-count monotonicity, target-rules
-reconciliation). This module runs ``dbt build --select +tag:silver`` with the run's parameters
-as dbt vars and maps ``target/run_results.json`` into ``{"ok", "checks", "summary"}`` so a
-failing silver test becomes a HOLD. ``summarise_run_results`` is pure and unit-tested.
+Each check takes a ``pandas.DataFrame`` and returns a :class:`Check`; :func:`run_contracts`
+bundles them into a report ``{"ok", "checks", "summary"}`` with only counts and rates inside, so
+the report can be committed without carrying a single row. The real adapters call these in
+Phase 2; ``tests/test_contracts.py`` proves they detect injected violations.
 """
 
 from __future__ import annotations
 
-import json
-import subprocess
-import sys
-from pathlib import Path
+import datetime as dt
+import re
+from collections.abc import Iterable, Mapping
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
-from entity_resolution.config import REPO_ROOT, env
+import pandas as pd
 
-DBT_PROJECT_DIR = REPO_ROOT / "dbt"
-DBT_SELECT = "+tag:silver"
-DEFAULT_TARGET = "dev"
-FAILING_STATUSES = frozenset({"fail", "error"})
-CHECK_NAME_HINTS: tuple[tuple[str, str], ...] = (
-    ("assert_rows_fresh_through_expected_period", "freshness"),
-    ("row_count_within_pct_of_prior_period", "newest_period_row_count"),
-    ("assert_rows_count_not_below_prior_run", "row_count_monotonic"),
-    ("assert_target_rules_reconcile_to_source", "target_reconciliation"),
-    ("unique_combination_of_columns_slv_period_rows", "grain_unique"),
-    ("expect_table_columns_to_contain_set", "required_columns"),
-    ("accepted_values_slv_period_rows", "cohorts_in_scope"),
-)
+YEAR_MIN = 1900
+ID_PATTERNS: dict[str, re.Pattern[str]] = {
+    "discogs": re.compile(r"^\d+$"),
+    "musicbrainz": re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"),
+    "wikidata": re.compile(r"^Q\d+$"),
+    "fixture": re.compile(r"^\d+$"),
+}
 
 
-def dbt_target() -> str:
-    return env("DBT_TARGET", DEFAULT_TARGET)
+@dataclass(frozen=True)
+class Check:
+    name: str
+    ok: bool
+    detail: dict[str, Any] = field(default_factory=dict)
 
 
-def dbt_full_refresh() -> bool:
-    return env("DBT_FULL_REFRESH").strip().lower() in {"1", "true", "yes"}
+def year_max(today: dt.date | None = None) -> int:
+    return (today or dt.date.today()).year + 1
 
 
-def _short_name(unique_id: str) -> str:
-    parts = unique_id.split(".")
-    if parts[0] == "test" and len(parts) >= 4:
-        return parts[2]
-    return parts[-1]
+def grain_unique(df: pd.DataFrame, keys: Iterable[str]) -> Check:
+    keys = list(keys)
+    dup = int(df.duplicated(keys).sum()) if len(df) else 0
+    return Check("grain_unique", dup == 0, {"keys": keys, "duplicate_rows": dup, "rows": len(df)})
 
 
-def check_name(unique_id: str) -> str:
-    short = _short_name(unique_id)
-    for needle, name in CHECK_NAME_HINTS:
-        if needle in short:
-            return name
-    return short
+def id_format(df: pd.DataFrame, source: str, column: str = "native_id") -> Check:
+    pattern = ID_PATTERNS[source]
+    ids = df[column].astype("string")
+    bad = int((~ids.fillna("").str.fullmatch(pattern.pattern)).sum())
+    return Check(
+        "id_format", bad == 0, {"source": source, "pattern": pattern.pattern, "bad_ids": bad}
+    )
 
 
-def summarise_run_results(run_results: dict[str, Any]) -> dict[str, Any]:
-    checks: list[dict[str, Any]] = []
-    counts: dict[str, int] = {}
-    for r in run_results.get("results", []):
-        uid = r.get("unique_id", "")
-        status = str(r.get("status", "")).lower()
-        kind = uid.split(".")[0]
-        counts[status] = counts.get(status, 0) + 1
-        if kind in ("test", "unit_test"):
-            checks.append(
-                {
-                    "name": check_name(uid),
-                    "ok": status not in FAILING_STATUSES,
-                    "detail": {
-                        "status": status,
-                        "failures": r.get("failures"),
-                        "message": r.get("message"),
-                        "node": uid,
-                    },
-                }
-            )
-        elif kind == "model" and status in FAILING_STATUSES:
-            checks.append(
-                {
-                    "name": f"model:{uid.split('.')[-1]}",
-                    "ok": False,
-                    "detail": {"status": status, "message": r.get("message"), "node": uid},
-                }
-            )
-    return {
-        "ok": all(c["ok"] for c in checks),
-        "checks": checks,
-        "summary": {
-            "dbt": {
-                "elapsed_s": run_results.get("elapsed_time"),
-                "invocation_id": (run_results.get("metadata") or {}).get("invocation_id"),
-                "status_counts": counts,
-                "n_checks": len(checks),
-            }
-        },
+def year_range(
+    df: pd.DataFrame, column: str = "year", *, today: dt.date | None = None
+) -> Check:
+    hi = year_max(today)
+    years = pd.to_numeric(df[column], errors="coerce")
+    present = years.dropna()
+    out_of_range = int(((present < YEAR_MIN) | (present > hi)).sum())
+    return Check(
+        "year_range",
+        out_of_range == 0,
+        {"min": YEAR_MIN, "max": hi, "out_of_range": out_of_range, "missing": int(years.isna().sum())},
+    )
+
+
+def null_rates(df: pd.DataFrame, max_rates: Mapping[str, float]) -> Check:
+    rates = {
+        c: (float(df[c].isna().mean()) if len(df) else 0.0) for c in max_rates if c in df.columns
     }
+    missing_cols = [c for c in max_rates if c not in df.columns]
+    over = {c: r for c, r in rates.items() if r > max_rates[c]}
+    return Check(
+        "null_rates",
+        not over and not missing_cols,
+        {"rates": rates, "max_rates": dict(max_rates), "over": over, "missing_columns": missing_cols},
+    )
 
 
-def dbt_vars(
+def run_contracts(
+    df: pd.DataFrame,
     *,
-    rows_path: str | Path | None = None,
-    target_season: int | None = None,
-    target_period: int | None = None,
-    expected_through: tuple[int, int] | None = None,
-    prior_row_count: int | None = None,
+    source: str,
+    keys: Iterable[str] = ("source", "native_id"),
+    max_null_rates: Mapping[str, float] | None = None,
+    today: dt.date | None = None,
 ) -> dict[str, Any]:
-    v: dict[str, Any] = {}
-    if rows_path is not None:
-        p = Path(rows_path)
-        v["rows_path"] = (
-            p.relative_to(REPO_ROOT).as_posix()
-            if p.is_absolute() and p.is_relative_to(REPO_ROOT)
-            else p.as_posix()
-        )
-    if target_season is not None and target_period is not None:
-        v["target_season"], v["target_period"] = int(target_season), int(target_period)
-    if expected_through is not None:
-        v["expected_season"], v["expected_period"] = int(expected_through[0]), int(
-            expected_through[1]
-        )
-    if prior_row_count is not None:
-        v["prior_row_count"] = int(prior_row_count)
-    return v
-
-
-def dbt_command(
-    vars_: dict[str, Any],
-    *,
-    target: str,
-    project_dir: Path = DBT_PROJECT_DIR,
-    full_refresh: bool = False,
-) -> list[str]:
-    cmd = [
-        sys.executable,
-        "-m",
-        "dbt.cli.main",
-        "build",
-        "--select",
-        DBT_SELECT,
-        "--indirect-selection",
-        "cautious",
-        "--project-dir",
-        str(project_dir),
-        "--profiles-dir",
-        str(project_dir),
-        "--target",
-        target,
-        "--vars",
-        json.dumps(vars_),
+    max_null_rates = dict(max_null_rates or {"title": 0.0, "artist_credit": 0.0, "year": 1.0})
+    checks = [
+        grain_unique(df, keys),
+        id_format(df, source),
+        year_range(df, today=today),
+        null_rates(df, max_null_rates),
     ]
-    if full_refresh:
-        cmd.append("--full-refresh")
-    return cmd
-
-
-def run_silver_contracts(
-    *,
-    rows_path: str | Path | None = None,
-    target_season: int | None = None,
-    target_period: int | None = None,
-    expected_through: tuple[int, int] | None = None,
-    prior_row_count: int | None = None,
-    target: str | None = None,
-    project_dir: Path = DBT_PROJECT_DIR,
-) -> dict[str, Any]:
-    target = target or dbt_target()
-    vars_ = dbt_vars(
-        rows_path=rows_path,
-        target_season=target_season,
-        target_period=target_period,
-        expected_through=expected_through,
-        prior_row_count=prior_row_count,
-    )
-    cmd = dbt_command(
-        vars_, target=target, project_dir=project_dir, full_refresh=dbt_full_refresh()
-    )
-    results_path = project_dir / "target" / "run_results.json"
-    results_path.unlink(missing_ok=True)
-    proc = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True)
-    if not results_path.exists():
-        return {
-            "ok": False,
-            "checks": [
-                {
-                    "name": "dbt",
-                    "ok": False,
-                    "detail": {
-                        "returncode": proc.returncode,
-                        "stderr": proc.stderr[-2000:],
-                        "stdout": proc.stdout[-2000:],
-                    },
-                }
-            ],
-            "summary": {"dbt": {"target": target, "vars": vars_}},
-        }
-    report = summarise_run_results(json.loads(results_path.read_text(encoding="utf-8")))
-    report["summary"]["dbt"].update(
-        {"target": target, "vars": vars_, "returncode": proc.returncode}
-    )
-    if proc.returncode not in (0, 1) and report["ok"]:
-        report["ok"] = False
-        report["checks"].append(
-            {
-                "name": "dbt",
-                "ok": False,
-                "detail": {"returncode": proc.returncode, "stderr": proc.stderr[-2000:]},
-            }
-        )
-    return report
+    return {
+        "ok": all(c.ok for c in checks),
+        "checks": [asdict(c) for c in checks],
+        "summary": {"source": source, "rows": int(len(df)), "n_checks": len(checks)},
+    }

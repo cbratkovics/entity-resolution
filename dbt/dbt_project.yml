@@ -1,6 +1,7 @@
-# entity_resolution_dbt — medallion warehouse over the repository's own files.
-# bronze: typed one-to-one copies of source files; silver: cleaned, grain-enforced, contracts as
-# tests; gold: contracted marts read by the API and the site. See docs/ARCHITECTURE.md.
+# entity_resolution_dbt — medallion warehouse over the repository's own committed artifacts.
+# bronze: typed one-to-one copies of the artifact files; silver: cleaned, grain-enforced, long
+# metric tables; gold: contracted marts the docs site reads. Bronze reads only committed
+# artifacts, so `dbt build` runs in slim CI without any download (docs/BRIEF.md 2.10).
 name: entity_resolution_dbt
 version: "1.0.0"
 config-version: 2
@@ -13,48 +14,18 @@ macro-paths: ["macros"]
 test-paths: ["tests"]
 analysis-paths: ["analyses"]
 seed-paths: ["seeds"]
-snapshot-paths: ["snapshots"]
 
 target-path: "target"
 clean-targets: ["target", "dbt_packages"]
 
 vars:
   # Project vocabulary, mirrored from entity_resolution/config.py (PROJECT);
-  # tests/test_project_config.py fails when these defaults drift from config.dbt_vars().
-  entity_key: record_id
-  season_column: batch
-  period_column: batch
-  cohort_column: source
-  cohorts: [ A,B ]
-  candidates: [rf, gbm]
-  target_column: 
-  within_k: [ 0,0 ]
-  min_season: 2019
-  periods_per_season: 1
-  # period_key = season * period_key_base + period (next power of ten above periods_per_season)
-  period_key_base: 10
-  # Every path is relative to the repository root; run dbt from there (Makefile, CI, scheduled job).
-  # The contracts wrapper passes the exact cache file it loaded; CI points this at the same file.
-  rows_path: "data/cache/period_rows_*.parquet"
-  # Rows of the period being scored (and anything later) are incomplete; the scheduled job drops
-  # them before the contracts. Null = keep everything.
-  target_season: null
-  target_period: null
-  # Freshness contract: the newest complete (season, period) the rows must reach. Null = not checked.
-  expected_season: null
-  expected_period: null
-  # Row-count contract versus the previous run (manifest.last_run.rows). Null = not checked.
-  prior_row_count: null
-  row_count_tolerance_pct: 0.35
-  # slv_period_rows is incremental: an incremental run reprocesses this many of the newest distinct
-  # periods already in the table so source restatements to recent periods are picked up without a
-  # full refresh. Chosen conservatively; calibrate by diffing consecutive source pulls
-  # (docs/ARCHITECTURE.md).
-  rows_lookback_periods: 4
-  # Decision marts: floor threshold, the sweep grid the API serves, replacement rank per cohort.
-  min_floor: 6.0
-  min_floor_grid: [0, 2, 4, 6, 8, 10, 12]
-  replacement_rank: { A: 10, B: 10 }
+  # tests/test_project_config.py fails when these defaults diverge from config.dbt_vars().
+  method_versions: [exact_v1, rules_v1, learned_v1]
+  folds: [fit, calibrate, test]
+  tiers: [auto_accept, review, reject]
+  # Every path is relative to the repository root; run dbt from there (Makefile, CI).
+  artifacts_dir: artifacts
 
 models:
   entity_resolution_dbt:

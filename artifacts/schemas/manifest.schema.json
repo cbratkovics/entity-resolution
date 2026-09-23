@@ -1,150 +1,85 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Artifact manifest (manifest_version 1.0)",
-  "description": "artifacts/manifest.json: the single source of truth for what the API serves and what the scheduled job promotes. Paths are relative to artifacts/.",
+  "title": "Artifact manifest (manifest_version 2.0)",
+  "description": "artifacts/manifest.json: the dumps a run was produced from, the deterministic sample rule and the counts per side (docs/BRIEF.md 2.2). Identifiers, hashes, parameters and counts only. An empty tree carries no sources and no sample.",
   "type": "object",
   "required": [
     "manifest_version",
     "updated_at_utc",
     "feature_version",
-    "champion",
-    "challenger",
-    "evaluations",
-    "data_through"
+    "code_commit",
+    "side_a",
+    "sources",
+    "sample",
+    "counts",
+    "run_id"
   ],
+  "additionalProperties": false,
   "properties": {
-    "manifest_version": {
-      "const": "1.0"
+    "manifest_version": {"const": "2.0"},
+    "updated_at_utc": {"type": "string"},
+    "feature_version": {"type": "string"},
+    "code_commit": {"type": "string"},
+    "side_a": {
+      "description": "The side-A source chosen in ADR 0001; null until decided.",
+      "type": ["string", "null"],
+      "enum": ["musicbrainz", "wikidata", null]
     },
-    "updated_at_utc": {
-      "type": "string"
-    },
-    "feature_version": {
-      "type": "string"
-    },
-    "champion": {
-      "$ref": "#/$defs/slot"
-    },
-    "challenger": {
-      "$ref": "#/$defs/slot"
-    },
-    "tiers_version": {
-      "type": [
-        "string",
-        "null"
-      ]
-    },
-    "eval_id": {
-      "type": "string"
-    },
-    "evaluations": {
+    "run_id": {"type": ["string", "null"]},
+    "sources": {
       "type": "array",
-      "minItems": 1,
-      "items": {
+      "items": {"$ref": "#/$defs/source"}
+    },
+    "sample": {
+      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/sample"}]
+    },
+    "counts": {
+      "description": "Record counts per source after loading and after sampling.",
+      "type": "object",
+      "additionalProperties": {
         "type": "object",
-        "required": [
-          "eval_id",
-          "kind",
-          "path"
-        ],
+        "required": ["loaded", "sampled"],
         "properties": {
-          "eval_id": {
-            "type": "string"
-          },
-          "kind": {
-            "enum": [
-              "frozen_test",
-              "out_of_sample_season"
-            ]
-          },
-          "season": {
-            "type": [
-              "integer",
-              "null"
-            ]
-          },
-          "path": {
-            "type": "string",
-            "pattern": "^eval/"
-          }
-        }
-      }
-    },
-    "data_through": {
-      "type": "object",
-      "required": [
-        "season",
-        "period"
-      ],
-      "properties": {
-        "season": {
-          "type": "integer"
-        },
-        "period": {
-          "type": "integer"
-        }
-      }
-    },
-    "predictions": {
-      "type": "object",
-      "properties": {
-        "latest": {
-          "type": "string",
-          "pattern": "^predictions/"
-        }
-      }
-    },
-    "last_run": {
-      "type": "object",
-      "required": [
-        "run_id",
-        "at_utc",
-        "action",
-        "reasons",
-        "season",
-        "period"
-      ],
-      "properties": {
-        "action": {
-          "enum": [
-            "PUBLISH",
-            "HOLD",
-            "PROMOTE"
-          ]
-        },
-        "reasons": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
+          "loaded": {"type": "integer", "minimum": 0},
+          "sampled": {"type": "integer", "minimum": 0}
         }
       }
     }
   },
   "$defs": {
-    "slot": {
+    "source": {
       "type": "object",
-      "required": [
-        "model_version",
-        "candidate"
-      ],
+      "required": ["name", "side", "dump_filename", "dump_bytes", "dump_sha256", "download_url", "licence_url", "dump_date"],
+      "additionalProperties": false,
       "properties": {
-        "model_version": {
+        "name": {"type": "string", "enum": ["discogs", "musicbrainz", "wikidata"]},
+        "side": {"type": "string", "enum": ["A", "B"]},
+        "dump_filename": {"type": "string"},
+        "dump_bytes": {"type": "integer", "minimum": 0},
+        "dump_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "download_url": {"type": "string"},
+        "licence_url": {"type": "string"},
+        "dump_date": {"type": "string"},
+        "response_sha256": {
+          "description": "For an endpoint (Wikidata SPARQL) rather than a dump: hash of the cached response.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "sample": {
+      "type": "object",
+      "required": ["rule", "threshold", "unlinked_share", "all_truth_pairs_in_scope"],
+      "additionalProperties": false,
+      "properties": {
+        "rule": {
+          "description": "The membership rule in words, e.g. sha256(source || native_id) as a fraction of 2^256 compared to threshold.",
           "type": "string"
         },
-        "candidate": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            }
-          ]
-        }
+        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "unlinked_share": {"type": "number", "minimum": 0, "maximum": 1},
+        "all_truth_pairs_in_scope": {"type": "boolean"},
+        "scope": {"type": "string"}
       }
     }
   }

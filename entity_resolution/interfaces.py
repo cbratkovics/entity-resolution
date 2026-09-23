@@ -1,80 +1,95 @@
-"""The seams a domain plugs into. Each is implemented once in this project.
+"""The seams the pipeline is built on (docs/BRIEF.md section 2).
 
-* :class:`SourceLoader` — ``<package>.data.loader.LOADER``. One row per
-  ``(entity_key, season, period)`` with the raw columns every feature and the target derive
-  from, cached as dated parquet, and the current period from the source's own calendar.
-* :class:`TargetSpec` — ``<package>.target.TARGET_SPEC``. Names the target and its units,
-  derives it from raw columns by explicit rules, and reconciles those rules against the value
-  the source publishes (a non-empty disagreement frame is a stop, never a fudge).
-* :class:`FeatureModule` — ``<package>.features.asof``. The one feature builder training,
-  evaluation and serving all call. Every feature of a row uses only rows strictly earlier
-  within the entity.
+* :class:`SourceAdapter` — one per catalogue. Discogs is side B; the side-A adapter is chosen by
+  ADR 0001 and selected by ``PROJECT.side_a``, so the decision is a config value, not a rewrite.
+  Adapters stream their dump into :class:`Record` values and cache them as parquet under
+  ``data/``; nothing they yield ever enters git.
+* :class:`Record` — one album-level work with its native identifier and the attributes every
+  feature derives from.
+* :class:`CandidatePair` — one ``(a_id, b_id)`` produced by blocking, with the keys that produced
+  it. The truth table is never consulted to build one.
+* :class:`Decision` — one method's verdict on an A record: the chosen B, its score, calibrated
+  probability, tier and the fold the pair inherited from its B record.
 
-The artifact shapes that flow between layers are JSON Schemas under ``artifacts/schemas/``.
-``tests/test_interfaces.py`` asserts the implementations satisfy these protocols and that every
-committed artifact validates against its schema.
+The artifact shapes that flow between layers are JSON Schemas under ``artifacts/schemas/``;
+``tests/test_artifact_schemas.py`` validates every committed artifact against them.
 """
 
 from __future__ import annotations
 
-from collections.abc import Callable, Iterable
-from dataclasses import dataclass
+from collections.abc import Iterator
+from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
-
-import pandas as pd
-
-
-@runtime_checkable
-class SourceLoader(Protocol):
-    LIBRARY: str
-    """``<client>==<version>`` recorded in training metadata for provenance."""
-    ID_COLUMNS: tuple[str, ...]
-    """Identifier / context columns: entity key, display name, cohort, season, period, ..."""
-    STAT_COLUMNS: tuple[str, ...]
-    """Raw numeric columns. Every feature and the target derive from these."""
-
-    def load_period_rows(
-        self, seasons: int | Iterable[int], *, refresh: bool = False
-    ) -> pd.DataFrame:
-        """One row per grain, ``ID_COLUMNS + STAT_COLUMNS``, sorted by grain, numeric columns
-        float64. Raises ``KeyError`` when the source lacks an expected column."""
-
-    def cache_path_for(self, name: str, seasons: int | Iterable[int]) -> Path:
-        """The dated cache file a same-day load reads or writes (dbt's source)."""
-
-    def current_period(self, today: Any = None) -> tuple[int, int]:
-        """``(season, next_period_to_play)`` from the source's calendar, not the clock."""
-
-    def periods_in_season(self, season: int) -> int:
-        """Number of periods in ``season`` (the freshness contract's ceiling)."""
+from typing import Protocol, runtime_checkable
 
 
 @dataclass(frozen=True)
-class TargetSpec:
-    column: str
-    units: str
-    required_columns: tuple[str, ...]
-    derive: Callable[[pd.DataFrame], pd.Series]
-    """``derive(df) -> Series`` of the target from raw columns, by explicit rules."""
-    reconcile: Callable[[pd.DataFrame], pd.DataFrame]
-    """Rows where the rules disagree with the source's own published value; empty = ok."""
+class Record:
+    """One album-level work as loaded from a source, before normalisation."""
+
+    source: str
+    """Adapter name: ``discogs`` or the side-A source."""
+    native_id: str
+    """The source's own identifier as a string (Discogs ``master_id``, MusicBrainz ``gid``,
+    Wikidata ``QID``)."""
+    title: str
+    artist_credit: str
+    year: int | None
+    extra: dict[str, str] = field(default_factory=dict)
+    """Source-specific attributes kept for profiling (``primary_type``, ``genres``); never
+    features."""
+
+
+@dataclass(frozen=True)
+class TruthLink:
+    """One labelled pair: a side-A record that the side-A source itself links to a Discogs
+    master. Loaded into its own table; never joined to the matcher's input."""
+
+    a_id: str
+    b_id: str
+
+
+@dataclass(frozen=True)
+class CandidatePair:
+    """One pair produced by blocking. ``block_keys`` names every key that produced it."""
+
+    a_id: str
+    b_id: str
+    block_keys: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class Decision:
+    """One method's verdict for an A record (grain ``(a_id, method_version)``)."""
+
+    a_id: str
+    b_id: str
+    method_version: str
+    feature_version: str
+    score: float
+    probability: float | None
+    tier: str
+    fold: str
+    top2_gap: float | None
+    block_keys: tuple[str, ...]
 
 
 @runtime_checkable
-class FeatureModule(Protocol):
-    FEATURE_VERSION: str
-    KEY_COLUMNS: tuple[str, ...]
-    CONTEXT_COLUMNS: tuple[str, ...]
-    HISTORY_FLAG: str
-    TARGET_FLAG: str
+class SourceAdapter(Protocol):
+    """A catalogue dump turned into :class:`Record` values, one adapter per source."""
 
-    def all_feature_names(self) -> list[str]: ...
+    NAME: str
+    """Registry key and the ``source`` value on every record."""
+    SIDE: str
+    """``"A"`` or ``"B"``."""
+    LICENCE_URL: str
+    """Where the licence text recorded in docs/DATA_SOURCES.md was read from."""
 
-    def features_for_cohort(self, cohort: str) -> list[str]: ...
+    def iter_records(self, dump_path: Path) -> Iterator[Record]:
+        """Stream the dump; never materialise it whole."""
 
-    def build_features(
-        self, rows: pd.DataFrame, targets: pd.DataFrame | None = None
-    ) -> pd.DataFrame: ...
+    def cache_path(self, data_dir: Path) -> Path:
+        """The parquet cache this adapter reads or writes under ``data/``."""
 
-    def training_frame(self, features: pd.DataFrame) -> pd.DataFrame: ...
+    def truth_links(self, dump_path: Path) -> Iterator[TruthLink]:
+        """Labelled links to Discogs masters. Side B yields nothing."""

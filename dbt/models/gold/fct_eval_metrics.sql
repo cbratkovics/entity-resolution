@@ -1,40 +1,22 @@
--- Grain: one row per (eval_window, batch, batch, model_version, candidate, cohort),
--- cohort = 'ALL' or a source. Metrics computed in SQL from fct_entity_period over rows
--- with a realised actual; definitions match the evaluation artifacts.
-with rows_with_actual as (
-    select * from {{ ref('fct_entity_period') }}
-    where actual is not null
-),
+-- Grain: one row per method_version, every test-fold metric as a column (the results table).
+-- Values are the evaluation artifacts verbatim, pivoted from slv_eval_metrics;
+-- assert_marts_reconcile_to_eval_artifacts proves it. Empty until Phase 4.
+{% set metrics = [
+    'pair_completeness', 'precision_auto_accept', 'recall_labelled_auto_accept', 'f1_auto_accept',
+    'precision_auto_accept_or_review', 'recall_labelled_auto_accept_or_review',
+    'f1_auto_accept_or_review', 'recall_overall', 'coverage', 'coverage_all_folds',
+    'tier_share_auto_accept', 'tier_share_review', 'tier_share_reject', 'ece', 'brier'
+] %}
 
-cohorts as (
-    select
-        'ALL' as cohort,
-        *
-    from rows_with_actual
-    union all
-    select
-        source as cohort,
-        *
-    from rows_with_actual
+with long as (
+    select * from {{ ref('slv_eval_metrics') }}
 )
 
 select
-    cast(eval_window as varchar) as eval_window,
-    cast(batch as integer) as batch,
-    cast(batch as integer) as batch,
-    cast(period_key as integer) as period_key,
-    cast(model_version as varchar) as model_version,
-    cast(candidate as varchar) as candidate,
-    cast(cohort as varchar) as cohort,
-    cast(count(*) as integer) as n,
-    cast(avg(abs_error) as double) as mae,
-    cast(median(abs_error) as double) as median_ae,
-    cast(sqrt(avg(abs_error * abs_error)) as double) as rmse,
-    cast(avg(case when within_band1 then 1.0 else 0.0 end) as double) as within_band1_rate,
-    cast(avg(case when within_band2 then 1.0 else 0.0 end) as double) as within_band2_rate,
-    cast(avg(case when interval_hit then 1.0 else 0.0 end) as double) as interval_coverage,
-    cast(avg(baseline_abs_error) as double) as baseline_mae,
-    cast(avg(case when baseline_within_band1 then 1.0 else 0.0 end) as double) as baseline_within_band1_rate,
-    cast(avg(abs_error) - avg(baseline_abs_error) as double) as mae_minus_baseline
-from cohorts
-group by 1, 2, 3, 4, 5, 6, 7
+    cast(l.method_version as varchar) as method_version,
+    {% for m in metrics %}
+    cast(max(case when l.metric = '{{ m }}' then l.value end) as double) as {{ m }},
+    {% endfor %}
+    cast('test' as varchar) as fold
+from long as l
+group by l.method_version

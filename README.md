@@ -1,66 +1,73 @@
-# Entity Resolution
+# entity-resolution
 
-Links records of the same organisation across public registers, scored against labelled ground truth.
+Record linkage between two open music catalogues, measured against labelled ground truth.
 
-Every published number traces to a committed evaluation artifact; the pipeline runs unattended
-for $0/month: a frozen scikit-learn model, a dbt medallion warehouse (DuckDB locally, MotherDuck
-in production), a FastAPI service on a Hugging Face Space,
-and dbt docs on GitHub Pages.
+Discogs masters (side B) are matched to album-level works in a second open catalogue (side A:
+MusicBrainz release groups or Wikidata album items; the choice is made after profiling both and
+recorded in `docs/adr/0001-*.md`). Because side A publishes its own links to Discogs, every
+method here is scored on real labelled pairs: precision, recall against labelled pairs, pair
+completeness of the blocking step, calibration of the probabilities, and the size of the human
+review queue at the chosen thresholds. Coverage (how many records got a match) is reported
+beside precision (how many of those matches are right), because in this data they are not the
+same number.
 
-> Generated from [ds-dbt-stack-template](https://github.com/cbratkovics/ds-dbt-stack-template).
-> Until the stub loader is replaced (docs/TEMPLATE_GUIDE.md) every number below describes
-> synthetic data and is illustrative.
+**Status.** Phase 0 of `docs/BRIEF.md`: the chassis. No data has been acquired and no
+method has been run, so there are no results yet. The results table below is filled from
+`artifacts/eval_<method_version>.json` once Phase 4 has run; until then it reads from an empty
+artifact tree on purpose.
 
-## Architecture
+## Why ground truth matters
 
-```mermaid
-flowchart LR
-  S["source loader"] --> C["data contracts + drift"]
-  C --> F["as-of features"]
-  F --> T["train · RF champion, GBM challenger, per source"]
-  F --> P["score upcoming batch"]
-  T --> A[("artifacts/ · manifest, models, eval, predictions, marts")]
-  P --> A
-  A --> D["dbt · bronze → silver → gold"]
-  D -- "reconcile to 1e-4" --> A
-  D -- "export_gold" --> A
-  A --> API["FastAPI · Hugging Face Space"]
-  W["scheduled.yml"] -. runs .-> C
-  W -. commits .-> A
-```
+A matcher that reports "linked most records" has said nothing about how many of those links
+are right. This project separates the two claims: `coverage` is a volume measure, `precision`
+is an accuracy measure, and `recall_labelled` is recall against the pairs the source itself
+labels, stated as such because an unlinked record is not evidence of a non-match. Every number
+is read from a committed artifact and cited by key; `scripts/check_numbers.py` fails CI when a
+number in this file has no citation or does not match its artifact.
 
-```
-entity_resolution/    config.py (PROJECT) · interfaces.py · data/ (loader, contracts) · target.py · features/asof.py
-                 models/ (train, registry) · eval/ (evaluator, drift, model_card) · pipeline/ (score, scheduled) · serve/
-dbt/             entity_resolution_dbt — bronze / silver / gold, snapshot, tests, macros, exposures
-artifacts/       committed: manifest.json · models/<version>/ · eval/<eval_id>.json · predictions/<season>/ · marts/*.parquet · schemas/
-tests/           leakage, loader, evaluator, drift, policy, contracts wrapper, API contract, interfaces, config mirrors, dbt incremental equivalence
-docs/            MODEL_CARD (generated) · ARCHITECTURE · DATA_SOURCES · REPRODUCIBILITY · TEMPLATE_GUIDE · SECOND_USE_CHECKLIST · adr/
-```
+## Methods compared
+
+| method_version | definition | fitted on |
+|---|---|---|
+| `exact_v1` | normalised title and full artist credit equal, year equal or missing | nothing |
+| `rules_v1` | fixed-weight score over title, artist and year agreement; thresholds chosen on the `fit` fold | thresholds: `fit` |
+| `learned_v1` | gradient-boosted classifier on the pair features; isotonic calibration on the `calibrate` fold | model: `fit`; calibrator: `calibrate` |
+
+All three share the same blocking, pair features, folds and tiering step, so the comparison is
+fair. Every reported metric comes from the `test` fold.
 
 ## Results
 
-Numbers live in [docs/MODEL_CARD.md](docs/MODEL_CARD.md), generated from `artifacts/eval/*.json`;
-`scripts/check_model_card.py` fails CI while the card is a placeholder. Cite the `eval_id`.
+<!-- generated:results start -->
+No run has been recorded yet (`artifacts/manifest.json#run_id` is null). The table is rendered
+from `artifacts/eval_*.json` by Phase 6.
+<!-- generated:results end -->
 
-## Run locally
+See `docs/METHODS_CARD.md` for the method records and metric definitions, and
+`docs/FINDINGS.md` (Phase 6) for the narrative and the numbered limitations.
 
-```bash
-make install        # uv venv + pinned toolchain
-make bootstrap      # train + evaluate + score one period (stub loader)
-make test           # pytest
-make dbt-dev        # dbt deps + build the warehouse (.duckdb/dev.duckdb)
-make api            # http://127.0.0.1:7860/docs
+## How to run
+
+```
+make setup    # uv sync --frozen (Python 3.12, runtime + dev)
+make lint     # ruff check, ruff format --check, sqlfluff
+make test     # pytest; real-data tests skip when data/ is absent
+make dbt      # dbt build against the committed artifacts, docs generate, description check
+make docs     # regenerate docs/METHODS_CARD.md and run the number and placeholder checks
+make smoke    # all of the above from a fresh clone in a temp dir
+make full     # the full build over the real dumps (network, hours; not built before Phase 4)
 ```
 
-## What runs on a schedule
+`data/` holds the dumps and every derived row and is git-ignored. Committed data is limited
+to aggregates, hashes, native identifiers, scores, tiers and JSON artifacts.
 
-`scheduled.yml` (`0 10 * * 2`): pull → contracts → drift → score → shadow challenger →
-publish / hold / promote → dbt prod build → export marts → commit → mirror the Space. HOLD opens an
-Issue and fails the job. See docs/ARCHITECTURE.md.
+## What is and is not proven
 
-## Limitations
+- Proven by tests on the committed tree: artifacts validate against their schemas, the
+  warehouse reconciles to the artifacts, no record attribute is tracked by git.
+- Not yet proven: anything about matching quality. There is no run.
 
-* Synthetic stub data until the loader is replaced.
-* Drift thresholds are uncalibrated (`entity_resolution/eval/drift.py`); the job cannot HOLD on drift until they are.
-* One feature scheme (`asof_v1`); intervals are empirical residual quantiles, not guarantees.
+## Data and licences
+
+Sources, verbatim licence text and what is loaded from each dump are recorded in
+`docs/DATA_SOURCES.md`. All sources are CC0.

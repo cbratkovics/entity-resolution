@@ -1,18 +1,25 @@
 #!/usr/bin/env python
-"""Fail when docs/MODEL_CARD.md (or the README results section) still carries placeholders.
+"""Regenerate docs/METHODS_CARD.md from the committed artifacts, or fail when it carries a
+placeholder or differs from what the artifacts render.
 
-The shipped MODEL_CARD.md is a placeholder until `python scripts/evaluate.py` regenerates it
-from artifacts; any of the markers below means a number is not backed by an artifact:
+    python scripts/check_model_card.py --write     # render the card from artifacts/
+    python scripts/check_model_card.py             # check: no placeholder markers, byte-equal to a fresh render
 
-    python scripts/check_model_card.py [--paths docs/MODEL_CARD.md README.md]
+The rendering is a pure function of the artifacts (entity_resolution.eval.methods_card), so the
+check is exact: a hand edit or a stale card fails CI.
 """
 
 from __future__ import annotations
 
-import argparse
-import re
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))  # run without installing
+
+import argparse
+import re
+
+from entity_resolution.eval import methods_card
 
 MARKERS = (
     re.compile(r"\bTBD\b"),
@@ -35,30 +42,30 @@ def find_placeholders(text: str) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    p.add_argument("--paths", nargs="*", default=["docs/MODEL_CARD.md"])
+    p.add_argument("--path", type=Path, default=methods_card.CARD_PATH)
+    p.add_argument("--write", action="store_true", help="render the card instead of checking it")
     a = p.parse_args(argv)
-    bad = 0
-    for path in a.paths:
-        text = Path(path).read_text(encoding="utf-8")
-        hits = find_placeholders(text)
-        if "Generated" not in text.splitlines()[2] if len(text.splitlines()) > 2 else True:
-            hits.insert(0, "header: not a generated card (run python scripts/evaluate.py)")
-        for h in hits:
-            print(f"{path}:{h}")
-        bad += len(hits)
-    print("ok: no placeholder numbers" if not bad else f"{bad} placeholder(s) found")
-    try:
-        sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-        from entity_resolution.eval import drift
-
-        if not drift.CALIBRATED:
-            print(
-                "WARNING: drift thresholds are NOT calibrated (entity_resolution/eval/drift.py: CALIBRATED = False); "
-                "the scheduled job cannot HOLD on drift until the calibration recipe has been followed"
-            )
-    except ImportError:
-        pass
-    return 1 if bad else 0
+    rendered = methods_card.render_from_tree()
+    if a.write:
+        a.path.parent.mkdir(parents=True, exist_ok=True)
+        a.path.write_text(rendered, encoding="utf-8")
+        print(f"wrote {a.path}")
+        return 0
+    if not a.path.exists():
+        print(f"{a.path}: missing; run with --write")
+        return 1
+    text = a.path.read_text(encoding="utf-8")
+    hits = find_placeholders(text)
+    for h in hits:
+        print(f"{a.path}:{h}")
+    if text != rendered:
+        print(f"{a.path}: differs from a fresh render of the artifacts; run with --write")
+        return 1
+    if hits:
+        print(f"{a.path}: {len(hits)} placeholder line(s)")
+        return 1
+    print(f"ok: {a.path} has no placeholders and matches the artifacts")
+    return 0
 
 
 if __name__ == "__main__":

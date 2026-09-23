@@ -1,42 +1,34 @@
 {% docs __overview__ %}
 
-# entity_resolution_dbt — analytics warehouse for Entity Resolution
+# entity_resolution_dbt — warehouse over the committed artifacts
 
-Links records of the same organisation across public registers, scored against labelled ground truth. This is the analytics layer: a bronze / silver / gold medallion built with dbt
-Core and dbt-duckdb, DuckDB locally and in CI, MotherDuck in production, built by the scheduled
-job after every scoring run. Every source is a file the repository already owns.
+Record linkage between open music catalogues, measured against labelled ground truth. This is
+the analytics layer: a bronze / silver / gold medallion built with dbt Core and dbt-duckdb on a
+local DuckDB file. Every source is a committed artifact under `artifacts/` (identifiers, hashes,
+parameters, metrics; never a title or an artist credit), so the warehouse builds in CI with no
+download and no secret.
 
 ## Layers
 
-**Bronze** (`brz_*`) — typed one-to-one copies of the source files; every row carries `source_file`.
+**Bronze** (`brz_*`) — typed one-to-one copies of the artifact files; every row carries
+`source_file`. Families that do not exist yet build as empty, typed relations.
 
-**Silver** (`slv_*`) — conformed, deduplicated, grain-enforced; the data contracts are its tests.
-`slv_period_rows` is incremental (delete+insert with a restatement lookback).
+**Silver** (`slv_*`) — grain-enforced long tables: fold counts and metrics per method.
 
-**Snapshot** (`snp_entity`) — SCD2 history of the entity dimension.
-
-**Gold** — contracted marts the API and the site read: `dim_entity`, `dim_model_version`,
-`fct_entity_period` (prediction, actual, error, causal baseline), `fct_period_eval` (metrics per
-window / period / cohort), `fct_decision_policy` (versioned floor-policy sweep), plus the
-snapshot-backed views `dim_entity_current` / `dim_entity_asof`.
+**Gold** — contracted marts the docs site reads: `dim_method_version` and `fct_eval_metrics`
+(the results table). Phase 5 adds the mapping, review-queue and blocking marts
+(docs/BRIEF.md 2.10).
 
 ## How trust is established
 
-- **Artifact reconciliation.** `assert_marts_reconcile_to_eval_artifacts` recomputes n, MAE and
-  the tolerance bands from `fct_period_eval` for every committed evaluation artifact and fails the
-  build on any disagreement above 1e-4. The warehouse cannot publish a number the artifacts do
-  not already carry.
-- **Contracts** on every gold model; **unit tests** on the target rules, the prediction dedup rule
-  and the metric aggregation; **versions** on the public decisions mart; **slim CI** on pull requests.
-
-## From model to mart to API
-
-scored-period file → `brz_predictions_periodic` → `slv_predictions` → `fct_entity_period` →
-`fct_period_eval` / `fct_decision_policy` → `export_gold` → `artifacts/marts/<alias>.parquet` →
-FastAPI `/marts/{mart}`. Evaluation numbers on the site come from `artifacts/eval/*.json` through
-`/performance`; the reconciliation test is what lets the two paths coexist.
+- **Artifact reconciliation.** `assert_marts_reconcile_to_eval_artifacts` compares every value
+  of `fct_eval_metrics` with the evaluation artifact it came from and fails the build on any
+  disagreement above 1e-9. The warehouse cannot publish a number the artifacts do not carry.
+- **Baselines present.** `assert_baseline_reconciles_to_eval_artifacts` refuses a build in which
+  the learned method is evaluated without `exact_v1` and `rules_v1` beside it.
+- **Contracts** on every gold model; every model and column described
+  (`scripts/check_dbt_descriptions.py`).
 
 - Repository: https://github.com/cbratkovics/entity-resolution
-- API docs: https://-entity-resolution.hf.space/docs
 
 {% enddocs %}

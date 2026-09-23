@@ -1,50 +1,33 @@
-"""Every branch of the pure publish / hold / promote policy, plus the promotion rule."""
+"""The tier boundaries partition [0, 1], are monotone, and match docs/BRIEF.md 2.8."""
 
 from __future__ import annotations
 
-from entity_resolution.models import registry
-from entity_resolution.pipeline import scheduled
+import pytest
+
+from entity_resolution.config import PROJECT
+from entity_resolution.models import tiering
 
 
-def test_contract_failure_holds() -> None:
-    action, reasons = scheduled.decide(
-        contract_ok=False, drift_status="ok", promote_ok=False, contract_failures=["freshness"]
-    )
-    assert action == "HOLD" and "freshness" in reasons[0]
+def test_constants_match_the_brief() -> None:
+    assert tiering.AMBIGUITY_GAP == 0.10
+    assert tiering.AUTO_ACCEPT_MIN == 0.95 and tiering.REVIEW_MIN == 0.50
+    assert tiering.REVIEW_COST_UNITS == 1.0
+    assert tiering.FALSE_ACCEPT_COST_RATIOS == (1, 5, 20)
+    assert tiering.SWEEP_THRESHOLDS[0] == 0.50 and tiering.SWEEP_THRESHOLDS[-1] == 0.99
+    assert len(tiering.SWEEP_THRESHOLDS) == 50
 
 
-def test_drift_hold_holds_and_warn_publishes_with_reason() -> None:
-    assert (
-        scheduled.decide(
-            contract_ok=True, drift_status="hold", promote_ok=False, drift_features=["A:x"]
-        )[0]
-        == "HOLD"
-    )
-    action, reasons = scheduled.decide(
-        contract_ok=True, drift_status="warn", promote_ok=False, promote_reason="n/a"
-    )
-    assert action == "PUBLISH" and any("warning" in r for r in reasons)
+def test_tiers_partition_the_unit_interval_and_are_monotone() -> None:
+    grid = [i / 1000 for i in range(1001)]
+    tiers = [tiering.tier_for(p) for p in grid]
+    assert set(tiers) == set(PROJECT.tiers)
+    order = {"reject": 0, "review": 1, "auto_accept": 2}
+    ranks = [order[t] for t in tiers]
+    assert ranks == sorted(ranks)
+    assert tiering.tier_for(0.95) == "auto_accept" and tiering.tier_for(0.9499) == "review"
+    assert tiering.tier_for(0.50) == "review" and tiering.tier_for(0.4999) == "reject"
 
 
-def test_promotion() -> None:
-    action, _ = scheduled.decide(
-        contract_ok=True, drift_status="ok", promote_ok=True, promote_reason="won"
-    )
-    assert action == "PROMOTE"
-
-
-def test_should_promote_needs_four_wins_and_frozen_test() -> None:
-    assert registry.should_promote([1, 1, 1], [0.5] * 3, 1.0, 0.9)[0] is False
-    assert registry.should_promote([1] * 4, [0.5, 0.5, 1.5, 0.5], 1.0, 0.9)[0] is False
-    assert registry.should_promote([1] * 4, [0.5] * 4, 1.0, 1.1)[0] is False
-    assert registry.should_promote([1] * 4, [0.5] * 4, 1.0, 0.9)[0] is True
-
-
-def test_manifest_roundtrip(tmp_path) -> None:
-    p = tmp_path / "manifest.json"
-    registry.write_manifest({"champion": {"model_version": "v", "candidate": "rf"}}, p)
-    m = registry.read_manifest(p)
-    assert m["manifest_version"] == registry.MANIFEST_VERSION and registry.slot(m, "champion") == (
-        "v",
-        "rf",
-    )
+def test_probability_outside_unit_interval_is_rejected() -> None:
+    with pytest.raises(ValueError):
+        tiering.tier_for(1.01)

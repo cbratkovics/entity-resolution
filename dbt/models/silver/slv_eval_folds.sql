@@ -1,16 +1,17 @@
--- Grain: one row per (eval_id, season, period): the rolling-origin folds of each artifact.
+-- Grain: one row per (method_version, fold). The fold counts of each evaluation artifact,
+-- flattened from the fold_counts JSON block. Empty until the first artifact is committed.
 with artifacts as (
     select * from {{ ref('brz_eval_artifacts') }}
 )
 
+{% for fold in var('folds') %}
 select
-    a.eval_id,
-    a.kind,
-    a.model.version as model_version,
-    a.rolling_origin.candidate as candidate,
-    cast(f.season as integer) as season,
-    cast(f.period as integer) as period,
-    cast(f.n as integer) as n,
-    f.mae,
-    f.baseline_mae
-from artifacts as a, unnest(a.rolling_origin.folds) as u (f)
+    a.method_version,
+    '{{ fold }}' as fold,
+    cast(json_extract(a.fold_counts, '$.{{ fold }}.a_records') as integer) as a_records,
+    cast(json_extract(a.fold_counts, '$.{{ fold }}.b_records') as integer) as b_records,
+    cast(json_extract(a.fold_counts, '$.{{ fold }}.candidate_pairs') as integer) as candidate_pairs,
+    cast(json_extract(a.fold_counts, '$.{{ fold }}.truth_pairs') as integer) as truth_pairs
+from artifacts as a
+{% if not loop.last %}union all{% endif %}
+{% endfor %}

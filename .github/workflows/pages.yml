@@ -1,0 +1,55 @@
+name: pages
+
+# Publishes the dbt docs and docs/site/ to GitHub Pages on every push to main
+# (docs/BRIEF.md 2.12). Builds the warehouse from the committed artifacts only.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Setup (uv sync --frozen + dbt deps)
+        run: make setup
+      - name: dbt build + docs generate + export gold to docs/site/data
+        run: |
+          make dbt
+          mkdir -p docs/site/data
+          .venv/bin/dbt run-operation export_gold --project-dir dbt --profiles-dir dbt --target dev
+      - name: Assemble the site (docs/site + dbt docs under /dbt/)
+        run: |
+          mkdir -p site/dbt
+          cp -R docs/site/. site/
+          cp dbt/target/static_index.html site/dbt/index.html
+          cp dbt/target/manifest.json site/dbt/manifest.json
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

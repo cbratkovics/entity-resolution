@@ -1,431 +1,158 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Evaluation artifact (artifact_version 2.1)",
-  "description": "One JSON per evaluation under artifacts/eval/<eval_id>.json, listed in manifest.evaluations. The API serves it verbatim; the model card, the site and the dbt marts reconcile to it. Every metric is computed on the same rows; input.path is repository-relative.",
+  "title": "Evaluation artifact (artifact_version 1.0)",
+  "description": "artifacts/eval_<method_version>.json: one method's evaluation on the test fold (docs/BRIEF.md 2.9). Every published number is read from here. `metrics` is null until Phase 4 computes it; when present its structure is enforced.",
   "type": "object",
   "required": [
     "artifact_version",
-    "eval_id",
-    "kind",
-    "season",
+    "method_version",
     "generated_at_utc",
-    "code_commit",
     "input",
-    "model",
+    "fold_counts",
     "metric_definitions",
-    "split",
-    "metrics",
-    "baseline",
-    "cohorts"
+    "metrics"
   ],
+  "additionalProperties": false,
   "properties": {
-    "artifact_version": {
-      "type": "string",
-      "pattern": "^2\\.[0-9]+$"
-    },
-    "eval_id": {
-      "type": "string",
-      "pattern": "^eval-"
-    },
-    "kind": {
-      "enum": [
-        "frozen_test",
-        "out_of_sample_season"
-      ]
-    },
-    "season": {
-      "type": "integer"
-    },
-    "generated_at_utc": {
-      "type": "string"
-    },
-    "code_commit": {
-      "type": [
-        "string",
-        "null"
-      ],
-      "pattern": "^[0-9a-f]{40}$"
-    },
+    "artifact_version": {"const": "1.0"},
+    "method_version": {"type": "string", "enum": ["exact_v1", "rules_v1", "learned_v1"]},
+    "generated_at_utc": {"type": "string"},
     "input": {
       "type": "object",
-      "required": [
-        "path",
-        "sha256",
-        "n_rows"
-      ],
+      "required": ["manifest_sha256", "feature_version", "code_commit"],
+      "additionalProperties": false,
       "properties": {
-        "path": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "pattern": "^(?!/)(?![A-Za-z]:)"
-        },
-        "sha256": {
-          "type": [
-            "string",
-            "null"
-          ],
-          "pattern": "^[0-9a-f]{64}$"
-        },
-        "n_rows": {
-          "type": "integer",
-          "minimum": 1
-        }
+        "manifest_sha256": {"type": "string"},
+        "feature_version": {"type": "string"},
+        "code_commit": {"type": "string"}
       }
     },
-    "model": {
+    "fold_counts": {
+      "description": "Per fold: A records, B records, candidate pairs and sampled truth pairs.",
       "type": "object",
-      "required": [
-        "version",
-        "feature_version",
-        "candidate"
-      ],
+      "required": ["fit", "calibrate", "test"],
+      "additionalProperties": false,
       "properties": {
-        "version": {
-          "type": "string"
-        },
-        "feature_version": {
-          "type": "string"
-        },
-        "candidate": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            }
-          ]
-        },
-        "challenger": {
-          "oneOf": [
-            {
-              "type": "string"
-            },
-            {
-              "type": "object",
-              "additionalProperties": {
-                "type": "string"
-              }
-            },
-            {
-              "type": "null"
-            }
-          ]
-        },
-        "trained_at_utc": {
-          "type": "string"
-        },
-        "input_sha256": {
-          "type": "string"
-        }
+        "fit": {"$ref": "#/$defs/fold_count"},
+        "calibrate": {"$ref": "#/$defs/fold_count"},
+        "test": {"$ref": "#/$defs/fold_count"}
       }
     },
     "metric_definitions": {
       "type": "object",
-      "required": [
-        "mae",
-        "within_band1_rate",
-        "baseline"
-      ],
-      "additionalProperties": {
-        "type": "string"
+      "additionalProperties": {"type": "string"}
+    },
+    "metrics": {
+      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/metrics"}]
+    }
+  },
+  "$defs": {
+    "fold_count": {
+      "type": "object",
+      "required": ["a_records", "b_records", "candidate_pairs", "truth_pairs"],
+      "additionalProperties": false,
+      "properties": {
+        "a_records": {"type": "integer", "minimum": 0},
+        "b_records": {"type": "integer", "minimum": 0},
+        "candidate_pairs": {"type": "integer", "minimum": 0},
+        "truth_pairs": {"type": "integer", "minimum": 0}
       }
     },
-    "split": {
+    "unit": {"type": "number", "minimum": 0, "maximum": 1},
+    "tier_metrics": {
       "type": "object",
-      "required": [
-        "strategy",
-        "test_start_season",
-        "test_start_period"
-      ],
+      "required": ["precision", "recall_labelled", "f1"],
+      "additionalProperties": false,
       "properties": {
-        "strategy": {
-          "const": "forward_time_holdout"
-        },
-        "test_start_season": {
-          "type": "integer"
-        },
-        "test_start_period": {
-          "type": "integer",
-          "minimum": 1
-        }
+        "precision": {"$ref": "#/$defs/unit"},
+        "recall_labelled": {"$ref": "#/$defs/unit"},
+        "f1": {"$ref": "#/$defs/unit"}
+      }
+    },
+    "confusion_cell": {
+      "type": "object",
+      "required": ["tp", "fp", "fn", "tn"],
+      "additionalProperties": false,
+      "properties": {
+        "tp": {"type": "integer", "minimum": 0},
+        "fp": {"type": "integer", "minimum": 0},
+        "fn": {"type": "integer", "minimum": 0},
+        "tn": {"type": "integer", "minimum": 0}
       }
     },
     "metrics": {
       "type": "object",
       "required": [
-        "n",
-        "mae",
-        "median_ae",
-        "rmse",
-        "within_band1_rate",
-        "within_band2_rate"
+        "pair_completeness",
+        "at_auto_accept",
+        "at_auto_accept_or_review",
+        "recall_overall",
+        "coverage",
+        "coverage_all_folds",
+        "tier_shares",
+        "calibration",
+        "confusion"
       ],
+      "additionalProperties": false,
       "properties": {
-        "n": {
-          "type": "integer",
-          "minimum": 0
-        },
-        "mae": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "median_ae": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "rmse": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "within_band1_rate": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "minimum": 0,
-          "maximum": 1
-        },
-        "within_band2_rate": {
-          "type": [
-            "number",
-            "null"
-          ],
-          "minimum": 0,
-          "maximum": 1
-        }
-      }
-    },
-    "baseline": {
-      "allOf": [
-        {
+        "pair_completeness": {
           "type": "object",
-          "required": [
-            "n",
-            "mae",
-            "median_ae",
-            "rmse",
-            "within_band1_rate",
-            "within_band2_rate"
-          ],
+          "required": ["union", "per_key"],
+          "additionalProperties": false,
           "properties": {
-            "n": {
-              "type": "integer",
-              "minimum": 0
-            },
-            "mae": {
-              "type": [
-                "number",
-                "null"
-              ]
-            },
-            "median_ae": {
-              "type": [
-                "number",
-                "null"
-              ]
-            },
-            "rmse": {
-              "type": [
-                "number",
-                "null"
-              ]
-            },
-            "within_band1_rate": {
-              "type": [
-                "number",
-                "null"
-              ],
-              "minimum": 0,
-              "maximum": 1
-            },
-            "within_band2_rate": {
-              "type": [
-                "number",
-                "null"
-              ],
-              "minimum": 0,
-              "maximum": 1
-            }
+            "union": {"$ref": "#/$defs/unit"},
+            "per_key": {"type": "object", "additionalProperties": {"$ref": "#/$defs/unit"}}
           }
-        }
-      ],
-      "required": [
-        "name"
-      ],
-      "properties": {
-        "name": {
-          "type": "string"
-        }
-      }
-    },
-    "cohorts": {
-      "type": "object",
-      "minProperties": 1,
-      "additionalProperties": {
-        "type": "object",
-        "allOf": [
-          {
-            "type": "object",
-            "required": [
-              "n",
-              "mae",
-              "median_ae",
-              "rmse",
-              "within_band1_rate",
-              "within_band2_rate"
-            ],
-            "properties": {
-              "n": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "mae": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "median_ae": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "rmse": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "within_band1_rate": {
-                "type": [
-                  "number",
-                  "null"
-                ],
-                "minimum": 0,
-                "maximum": 1
-              },
-              "within_band2_rate": {
-                "type": [
-                  "number",
-                  "null"
-                ],
-                "minimum": 0,
-                "maximum": 1
+        },
+        "at_auto_accept": {"$ref": "#/$defs/tier_metrics"},
+        "at_auto_accept_or_review": {"$ref": "#/$defs/tier_metrics"},
+        "recall_overall": {"$ref": "#/$defs/unit"},
+        "coverage": {"$ref": "#/$defs/unit"},
+        "coverage_all_folds": {"$ref": "#/$defs/unit"},
+        "tier_shares": {
+          "type": "object",
+          "required": ["auto_accept", "review", "reject"],
+          "additionalProperties": false,
+          "properties": {
+            "auto_accept": {"$ref": "#/$defs/unit"},
+            "review": {"$ref": "#/$defs/unit"},
+            "reject": {"$ref": "#/$defs/unit"}
+          }
+        },
+        "calibration": {
+          "type": "object",
+          "required": ["bins", "ece", "brier"],
+          "additionalProperties": false,
+          "properties": {
+            "bins": {
+              "type": "array",
+              "minItems": 10,
+              "maxItems": 10,
+              "items": {
+                "type": "object",
+                "required": ["lower", "upper", "n", "mean_probability", "observed_rate"],
+                "additionalProperties": false,
+                "properties": {
+                  "lower": {"$ref": "#/$defs/unit"},
+                  "upper": {"$ref": "#/$defs/unit"},
+                  "n": {"type": "integer", "minimum": 0},
+                  "mean_probability": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/unit"}]},
+                  "observed_rate": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/unit"}]}
+                }
               }
-            }
-          }
-        ],
-        "required": [
-          "baseline"
-        ],
-        "properties": {
-          "baseline": {
-            "type": "object",
-            "required": [
-              "n",
-              "mae",
-              "median_ae",
-              "rmse",
-              "within_band1_rate",
-              "within_band2_rate"
-            ],
-            "properties": {
-              "n": {
-                "type": "integer",
-                "minimum": 0
-              },
-              "mae": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "median_ae": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "rmse": {
-                "type": [
-                  "number",
-                  "null"
-                ]
-              },
-              "within_band1_rate": {
-                "type": [
-                  "number",
-                  "null"
-                ],
-                "minimum": 0,
-                "maximum": 1
-              },
-              "within_band2_rate": {
-                "type": [
-                  "number",
-                  "null"
-                ],
-                "minimum": 0,
-                "maximum": 1
-              }
-            }
-          }
-        }
-      }
-    },
-    "rolling_origin": {
-      "type": "object",
-      "required": [
-        "candidate",
-        "strategy",
-        "folds",
-        "mean_mae",
-        "mean_baseline_mae"
-      ],
-      "properties": {
-        "candidate": {
-          "type": "string"
-        },
-        "strategy": {
-          "type": "string"
-        },
-        "folds": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "required": [
-              "season",
-              "period",
-              "n",
-              "mae",
-              "baseline_mae"
-            ]
+            },
+            "ece": {"$ref": "#/$defs/unit"},
+            "brier": {"$ref": "#/$defs/unit"}
           }
         },
-        "mean_mae": {
-          "type": [
-            "number",
-            "null"
-          ]
-        },
-        "mean_baseline_mae": {
-          "type": [
-            "number",
-            "null"
-          ]
+        "confusion": {
+          "type": "object",
+          "required": ["auto_accept", "review"],
+          "additionalProperties": false,
+          "properties": {
+            "auto_accept": {"$ref": "#/$defs/confusion_cell"},
+            "review": {"$ref": "#/$defs/confusion_cell"}
+          }
         }
       }
     }

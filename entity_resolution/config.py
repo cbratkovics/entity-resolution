@@ -1,13 +1,12 @@
 """Paths and the one project configuration shared by every layer.
 
 Nothing here depends on the environment; there are no secrets. ``PROJECT`` is the single source
-of the project-wide constants. dbt and the site cannot import Python, so they carry mirrors and
-``tests/test_project_config.py`` fails when a mirror drifts:
+of the project-wide vocabulary (docs/BRIEF.md section 2). dbt cannot import Python, so
+``dbt/dbt_project.yml`` carries a mirror of :func:`dbt_vars` and ``tests/test_project_config.py``
+fails when the mirror diverges.
 
-* ``dbt/dbt_project.yml`` ``vars`` must equal :func:`dbt_vars`
-* ``frontend/src/lib/project.config.json`` must equal :func:`frontend_config`
-  (regenerate with ``python -m entity_resolution.config --frontend``)
-* the workflows read deployment names with ``python -m entity_resolution.config <field>``
+Side A (``PROJECT.side_a``) is ``None`` until the owner's decision after Phase 1 is recorded in
+ADR 0001; every consumer must refuse to run while it is unset.
 """
 
 from __future__ import annotations
@@ -23,9 +22,19 @@ from typing import Any
 ENV_PREFIX = "ENTITY_RESOLUTION_"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS_DIR = Path(os.environ.get(ENV_PREFIX + "ARTIFACTS_DIR", REPO_ROOT / "artifacts"))
-CACHE_DIR = Path(os.environ.get(ENV_PREFIX + "CACHE_DIR", REPO_ROOT / "data" / "cache"))
+DATA_DIR = Path(os.environ.get(ENV_PREFIX + "DATA_DIR", REPO_ROOT / "data"))
 MANIFEST_PATH = ARTIFACTS_DIR / "manifest.json"
 SCHEMAS_DIR = ARTIFACTS_DIR / "schemas"
+METHODS_DIR = ARTIFACTS_DIR / "methods"
+SITE_DATA_DIR = REPO_ROOT / "docs" / "site" / "data"
+
+SIDE_B = "discogs"
+"""Side B is fixed by the brief: Discogs masters."""
+SIDE_A_CANDIDATES: tuple[str, ...] = ("musicbrainz", "wikidata")
+"""The two side-A candidates profiled in Phase 1; one is chosen in ADR 0001."""
+METHOD_VERSIONS: tuple[str, ...] = ("exact_v1", "rules_v1", "learned_v1")
+FOLDS: tuple[str, ...] = ("fit", "calibrate", "test")
+TIERS: tuple[str, ...] = ("auto_accept", "review", "reject")
 
 
 @dataclass(frozen=True)
@@ -36,109 +45,54 @@ class ProjectConfig:
     display_name: str
     package_name: str
     domain_summary: str
-    entity_name: str
-    entity_key: str
-    entity_display_column: str
-    period_name: str
-    season_name: str
-    cohort_name: str
-    cohorts: tuple[str, ...]
-    target_column: str
-    target_units: str
-    within_k: tuple[float, ...]
-    candidates: tuple[str, ...]
-    source_name: str
-    min_season: int
-    train_seasons: tuple[int, ...]
-    val_season: int
-    test_season: int
-    periods_per_season: int
+    side_b: str
+    side_a: str | None
+    side_a_candidates: tuple[str, ...]
+    method_versions: tuple[str, ...]
+    folds: tuple[str, ...]
+    tiers: tuple[str, ...]
     dbt_project_name: str
-    motherduck_database: str
     github_owner: str
     repo_url: str
-    hf_space: str
-    api_url: str
-    site_url: str
-    site_origins: tuple[str, ...]
     pages_url: str
-    schedule_cron: str
     python_version: str
-    node_version: str
-    include_tiers: bool
 
     def as_dict(self) -> dict[str, Any]:
         return dataclasses.asdict(self)
 
     @property
-    def period_columns(self) -> tuple[str, str]:
-        return (self.season_name, self.period_name)
+    def sides(self) -> tuple[str, str | None]:
+        """``(side_b, side_a)``; side A is ``None`` before ADR 0001."""
+        return (self.side_b, self.side_a)
 
-    @property
-    def grain(self) -> tuple[str, ...]:
-        return (self.entity_key, *self.period_columns)
-
-    @property
-    def period_width(self) -> int:
-        """Digits needed for a period ordinal (file-name padding)."""
-        return len(str(self.periods_per_season))
-
-    @property
-    def period_key_base(self) -> int:
-        """period_key = season * period_key_base + period; the next power of ten above N."""
-        return 10**self.period_width
-
-    def period_key(self, season: int, period: int) -> int:
-        return int(season) * self.period_key_base + int(period)
+    def require_side_a(self) -> str:
+        if self.side_a is None:
+            raise RuntimeError(
+                "side A is not decided yet: Phase 1 ends with a stop-and-present and the "
+                "owner's choice is recorded in docs/adr/0001-*.md before any matching code runs"
+            )
+        return self.side_a
 
 
 PROJECT = ProjectConfig(
     slug="entity-resolution",
     display_name="Entity Resolution",
     package_name="entity_resolution",
-    domain_summary="Links records of the same organisation across public registers, scored against labelled ground truth.",
-    entity_name="record",
-    entity_key="record_id",
-    entity_display_column="record_name",
-    period_name="batch",
-    season_name="batch",
-    cohort_name="source",
-    cohorts=(
-        "A",
-        "B",
+    domain_summary=(
+        "Record linkage between open music catalogues, measured against labelled ground truth."
     ),
-    target_column="",
-    target_units="",
-    within_k=(0, 0),
-    candidates=("rf", "gbm"),
-    source_name="synthetic stub (replace: docs/TEMPLATE_GUIDE.md)",
-    # Synthetic fixture design; keep whole seasons forward in time when you plug in real data.
-    min_season=2019,
-    train_seasons=(2019, 2020, 2021),
-    val_season=2022,
-    test_season=2023,
-    periods_per_season=1,
+    side_b=SIDE_B,
+    side_a=None,
+    side_a_candidates=SIDE_A_CANDIDATES,
+    method_versions=METHOD_VERSIONS,
+    folds=FOLDS,
+    tiers=TIERS,
     dbt_project_name="entity_resolution_dbt",
-    motherduck_database="entity_resolution",
     github_owner="cbratkovics",
     repo_url="https://github.com/cbratkovics/entity-resolution",
-    hf_space="/entity-resolution",
-    api_url="https://-entity-resolution.hf.space",
-    site_url="https://entity-resolution.vercel.app",
-    site_origins=("https://entity-resolution.vercel.app",),
     pages_url="https://cbratkovics.github.io/entity-resolution/",
-    schedule_cron="0 10 * * 2",
     python_version="3.12",
-    node_version="20",
-    include_tiers=False,
 )
-
-RANDOM_STATE = 42
-LOCAL_ORIGINS: tuple[str, ...] = ("http://localhost:3000", "http://127.0.0.1:3000")
-
-
-def cors_origins() -> list[str]:
-    return [*LOCAL_ORIGINS, *PROJECT.site_origins]
 
 
 def env(name: str, default: str = "") -> str:
@@ -149,46 +103,19 @@ def env(name: str, default: str = "") -> str:
 def dbt_vars() -> dict[str, Any]:
     """The project vars ``dbt/dbt_project.yml`` must declare with exactly these defaults."""
     return {
-        "entity_key": PROJECT.entity_key,
-        "season_column": PROJECT.season_name,
-        "period_column": PROJECT.period_name,
-        "cohort_column": PROJECT.cohort_name,
-        "cohorts": list(PROJECT.cohorts),
-        "candidates": list(PROJECT.candidates),
-        "target_column": PROJECT.target_column,
-        "within_k": list(PROJECT.within_k),
-        "min_season": PROJECT.min_season,
-        "periods_per_season": PROJECT.periods_per_season,
-        "period_key_base": PROJECT.period_key_base,
-    }
-
-
-def frontend_config() -> dict[str, Any]:
-    """Labels and names the site reads instead of string literals."""
-    return {
-        "slug": PROJECT.slug,
-        "displayName": PROJECT.display_name,
-        "domainSummary": PROJECT.domain_summary,
-        "repoUrl": PROJECT.repo_url,
-        "apiUrl": PROJECT.api_url,
-        "pagesUrl": PROJECT.pages_url,
-        "entity": {"name": PROJECT.entity_name, "key": PROJECT.entity_key},
-        "period": {"name": PROJECT.period_name, "season": PROJECT.season_name},
-        "cohort": {"name": PROJECT.cohort_name, "values": list(PROJECT.cohorts)},
-        "target": {"column": PROJECT.target_column, "units": PROJECT.target_units},
-        "withinK": list(PROJECT.within_k),
-        "candidates": list(PROJECT.candidates),
+        "method_versions": list(PROJECT.method_versions),
+        "folds": list(PROJECT.folds),
+        "tiers": list(PROJECT.tiers),
+        "artifacts_dir": "artifacts",
     }
 
 
 def _main(argv: list[str]) -> int:  # pragma: no cover - thin CLI
-    """python -m entity_resolution.config --frontend | --dbt-vars | --json | <field>"""
+    """python -m entity_resolution.config --dbt-vars | --json | <field>"""
     if not argv or argv[0] in {"-h", "--help"}:
         print(_main.__doc__)
         return 0
-    if argv[0] == "--frontend":
-        print(json.dumps(frontend_config(), indent=2, ensure_ascii=False))
-    elif argv[0] == "--dbt-vars":
+    if argv[0] == "--dbt-vars":
         print(json.dumps(dbt_vars()))
     elif argv[0] == "--json":
         print(json.dumps(PROJECT.as_dict(), indent=2, default=list))
