@@ -4,6 +4,7 @@ feature parquet files by file bytes and by content hash, the manifest minus time
 and runtime, and the truth audit, blocking report and split minus their timestamps.
 
     python scripts/check_reproducibility.py <snapshot_dir>
+    python scripts/check_reproducibility.py --committed   # the committed artifacts alone (verify.yml)
 
 ``snapshot_dir`` holds the earlier run's manifest.json, truth_audit.json, contracts.json and
 a.parquet / b.parquet / truth.parquet. Exit 0 when content is identical; a byte difference with
@@ -53,8 +54,89 @@ def _diff_keys(a: dict, b: dict, prefix: str = "") -> list[str]:
     return out
 
 
+def check_committed() -> int:
+    """``--committed``: the committed artifacts are internally consistent. Every artifact
+    validates against its schema; each mapping exhibit's sha256 equals the one in its method
+    record; the manifest hash the evaluation ran against recomputes from the manifest; every
+    artifact of the run carries the same feature version and code commit."""
+    import hashlib
+
+    import jsonschema
+
+    from entity_resolution.config import ARTIFACTS_DIR, METHODS_DIR, REPO_ROOT, SCHEMAS_DIR
+
+    problems: list[str] = []
+    checked = 0
+
+    def schema(name: str) -> dict:
+        return json.loads((SCHEMAS_DIR / f"{name}.schema.json").read_text())
+
+    pairs = [
+        (MANIFEST_PATH, "manifest"),
+        (TRUTH_AUDIT_PATH, "truth_audit"),
+        (CONTRACTS_PATH, "contracts"),
+        (BLOCKING_REPORT_PATH, "blocking_report"),
+        (SPLIT_PATH, "split"),
+        (ARTIFACTS_DIR / "review_sensitivity.json", "review_sensitivity"),
+    ]
+    pairs += [(p, "eval_artifact") for p in sorted(ARTIFACTS_DIR.glob("eval_*.json"))]
+    pairs += [(p, "method_version") for p in sorted(METHODS_DIR.glob("*.json"))]
+    pairs += [(p, "profile") for p in sorted((ARTIFACTS_DIR / "profile").glob("*.json"))]
+    for path, name in pairs:
+        if not path.exists():
+            continue
+        try:
+            jsonschema.validate(json.loads(path.read_text()), schema(name))
+            checked += 1
+        except jsonschema.ValidationError as e:
+            problems.append(f"{path.relative_to(REPO_ROOT)}: {e.message[:120]}")
+    manifest = json.loads(MANIFEST_PATH.read_text())
+    if manifest.get("manifest_sha256_at_evaluation"):
+        # the evaluation hashed the manifest as it stood before runtime, methods and the
+        # final timestamp were added: every other key, with the placeholder timestamp of
+        # registry.empty_manifest (pipeline/match.py, methods stage)
+        before = {
+            k: v
+            for k, v in manifest.items()
+            if k not in ("runtime", "methods", "manifest_sha256_at_evaluation")
+        }
+        before["updated_at_utc"] = "1970-01-01T00:00:00+00:00"
+        recomputed = hashlib.sha256(json.dumps(before, sort_keys=True).encode()).hexdigest()
+        if recomputed != manifest["manifest_sha256_at_evaluation"]:
+            problems.append("manifest_sha256_at_evaluation does not recompute from the manifest")
+        else:
+            checked += 1
+    versions: set[tuple[str, str]] = set()
+    for rec in sorted(METHODS_DIR.glob("*.json")):
+        r = json.loads(rec.read_text())
+        versions.add((r["feature_version"], r["code_commit"]))
+        exhibit = REPO_ROOT / r["parameters"]["mapping"]["test_exhibit"]
+        if not exhibit.exists():
+            problems.append(f"{rec.name}: exhibit {exhibit.name} missing")
+            continue
+        _, digest = acquire.file_sha256(exhibit)
+        if digest != r["parameters"]["mapping"]["test_exhibit_sha256"]:
+            problems.append(f"{rec.name}: exhibit sha256 differs from the record")
+        else:
+            checked += 1
+    for ev in sorted(ARTIFACTS_DIR.glob("eval_*.json")):
+        e = json.loads(ev.read_text())
+        versions.add((e["input"]["feature_version"], e["input"]["code_commit"]))
+    versions.add((manifest["feature_version"], manifest["code_commit"]))
+    if len(versions) > 1:
+        problems.append(f"artifacts disagree on feature version or code commit: {sorted(versions)}")
+    for pr in problems:
+        print("PROBLEM:", pr)
+    print(
+        f"{'FAIL' if problems else 'ok'}: {checked} checks on the committed artifacts, {len(problems)} problem(s)"
+    )
+    return 1 if problems else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     argv = argv if argv is not None else sys.argv[1:]
+    if argv == ["--committed"]:
+        return check_committed()
     if len(argv) != 1:
         print(__doc__)
         return 2

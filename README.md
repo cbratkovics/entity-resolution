@@ -11,13 +11,9 @@ review queue at the chosen thresholds. Coverage (how many records got a match) i
 beside precision (how many of those matches are right), because in this data they are not the
 same number.
 
-**Status.** Phase 5 of `docs/BRIEF.md`: the methods are evaluated, the dbt warehouse builds
-silver and gold marts from the committed artifacts with reconciliation tests, and the docs
-site renders the results from the exported JSON. The results table below and the narrative in
-`docs/FINDINGS.md` are filled in Phase 6; until then `docs/METHODS_CARD.md` carries the
-figures with their keys. The results table below is filled from
-`artifacts/eval_<method_version>.json` once Phase 4 has run; until then it reads from an empty
-artifact tree on purpose.
+**Status.** Complete for v1 (`docs/BRIEF.md` Phase 6): three methods evaluated on a held-out
+test fold of labelled pairs, a dbt warehouse that reconciles to the artifacts, a docs site
+rendered from the exported marts, and a findings document with numbered limitations.
 
 ## Why ground truth matters
 
@@ -42,12 +38,29 @@ fair. Every reported metric comes from the `test` fold.
 ## Results
 
 <!-- generated:results start -->
-No run has been recorded yet (`artifacts/manifest.json#run_id` is null). The table is rendered
-from `artifacts/eval_*.json` by Phase 6.
+| method | pair completeness (test) | precision | recall (labelled) | recall (overall) | F1 | coverage | unverified accepts | review queue | ECE (decisions) |
+|---|---|---|---|---|---|---|---|---|---|
+| `exact_v1` | 0.963884 | 0.998733 | 0.760858 | 0.733379 | 0.863717 | 0.378315 | 1,009 (0.027622 of accepts) | 207 | 0.093735 |
+| `rules_v1` | 0.963884 | 0.994615 | 0.930917 | 0.897296 | 0.961712 | 0.498566 | 4,501 (0.093498 of accepts) | 25,076 | 0.012978 |
+| `learned_v1` | 0.963884 | 0.999344 | 0.849952 | 0.819255 | 0.918614 | 0.422113 | 1,103 (0.027062 of accepts) | 6,016 | 0.047858 |
+
+Keys, per method, in `artifacts/eval_<method_version>.json#metrics`: `pair_completeness_test`, `at_auto_accept.precision`, `at_auto_accept.recall_labelled`, `recall_overall`, `at_auto_accept.f1`, `coverage`, `unverified_accepts.count`, `unverified_accepts.share_of_accepts`, `ambiguity_rule.review_queue`, `calibration.decision_level.ece`. Every metric is on the test fold; precision, recall and F1 are over labelled A records; coverage counts every test-fold A record.
 <!-- generated:results end -->
 
-See `docs/METHODS_CARD.md` for the method records and metric definitions, and
-`docs/FINDINGS.md` (Phase 6) for the narrative and the numbered limitations.
+Every metric is on the test fold; precision, recall and F1 are over labelled A records; the
+rendered block is checked byte for byte against the artifacts in CI.
+
+## Coverage is not precision
+
+Half of the sampled A records carry no MusicBrainz link to Discogs, so nothing they are matched
+to can be verified. <!-- cite: artifacts/manifest.json#sample.thresholds.a.unlinked_share_actual -->
+Coverage counts them; precision does not. `rules_v1` auto-accepts 4,501
+unlabelled test-fold records, 0.093498 of its accepts, and `learned_v1` 1,103, 0.027062 of its
+accepts; those accepts lift coverage and are excluded from every accuracy figure by
+construction. <!-- cite: artifacts/eval_rules_v1.json#metrics.unverified_accepts.count; artifacts/eval_rules_v1.json#metrics.unverified_accepts.share_of_accepts; artifacts/eval_learned_v1.json#metrics.unverified_accepts.count; artifacts/eval_learned_v1.json#metrics.unverified_accepts.share_of_accepts -->
+`docs/FINDINGS.md` carries the narrative, the review-budget table and the numbered limitations;
+`docs/METHODS_CARD.md` the method records and metric definitions; the site the same figures as
+charts.
 
 ## How to run
 
@@ -62,15 +75,27 @@ make full     # the full build over the real dumps (network, hours; not built be
 ```
 
 `data/` holds the dumps and every derived row and is git-ignored. Committed data is limited
-to aggregates, hashes, native identifiers, scores, tiers and JSON artifacts.
+to aggregates, hashes, native identifiers, scores, tiers and JSON artifacts. The full build is
+owner-run: it needs about `14 GiB` of disk for the dumps and extracted tables and about `10 GiB`
+of memory in the feature stage (`docs/REPRODUCIBILITY.md`); the `verify` workflow checks the
+committed artifacts without it.
 
 ## What is and is not proven
 
-- Proven by tests on the committed tree: artifacts validate against their schemas, the
-  warehouse reconciles to the artifacts, no record attribute is tracked by git.
-- Not yet proven: anything about matching quality. There is no run.
+- Proven by tests on the committed tree: every artifact validates against its schema, the
+  warehouse reconciles to the artifacts to 1e-9, the mapping exhibits match the hashes in the
+  method records, no record attribute is tracked by git, and every number in the docs cites an
+  artifact key whose value matches.
+- Proven on the real sample, on the owner's machine: fitted objects saw only their folds (no
+  test-fold A record in any fitted index; thresholds recompute from the fit fold alone), two
+  full runs are byte-identical, and 200 stored pairs recompute exactly from the raw fields.
+- Not proven: anything about records outside the Album scope or without a label (unlinked is
+  not non-match), the stability of the learned model under refitting, and the equality of the
+  derived first-release year with MusicBrainz's own. `docs/FINDINGS.md` lists every limitation.
 
 ## Data and licences
 
-Sources, verbatim licence text and what is loaded from each dump are recorded in
-`docs/DATA_SOURCES.md`. All sources are CC0.
+Discogs monthly data dump (masters), CC0, from data.discogs.com; MusicBrainz core database
+dump, CC0, from data.metabrainz.org; Wikidata (profiled, not used as a side), CC0. Verbatim
+licence text, URLs, dump dates and what is loaded from each are in `docs/DATA_SOURCES.md`.
+This repository's own code is the author's; the data stays under `data/` and never enters git.

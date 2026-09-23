@@ -69,13 +69,16 @@ hashes and pattern codes only, schema `profile.schema.json`) and renders `docs/P
 
 ## Checks
 
-`scripts/check_numbers.py` (every number in README, FINDINGS, METHODS_CARD and the ADRs cites
-an artifact key and matches it), `scripts/check_model_card.py` (the card equals a fresh render
+`scripts/check_numbers.py` (every number in README, FINDINGS, METHODS_CARD, PROFILE,
+REPRODUCIBILITY, the ADRs and the site cites an artifact key and matches it), `scripts/render_findings.py --check`
+(the results and review-floor tables are rendered from the artifacts), `scripts/check_model_card.py` (the card equals a fresh render
 and carries no placeholder), `scripts/check_dbt_descriptions.py` (every model, column, source
 and exposure described), `scripts/smoke.sh` (all of it from a fresh clone).
 
 ## Workflows
 
-`ci.yml` on every push and pull request (offline); `full-build.yml` on dispatch and monthly
-(downloads the dumps, runs `make full`, uploads artifacts, commits nothing); `pages.yml`
-publishes the dbt docs and `docs/site/` on push to `main`.
+`ci.yml` on every push and pull request (offline: lint, tests, warehouse, exports, docs checks,
+smoke from a fresh clone); `verify.yml` on dispatch checks the committed artifacts alone
+(schemas, exhibit hashes, the manifest hash the evaluation ran against, warehouse
+reconciliation, docs citations); `pages.yml` publishes the site and the dbt docs on push to
+`main`. The full build is owner-run (`docs/REPRODUCIBILITY.md`).

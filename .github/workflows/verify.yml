@@ -1,0 +1,33 @@
+name: verify
+
+# The full build is owner-run (docs/REPRODUCIBILITY.md): the measured data/ peak of about
+# 13.8 GiB and the 9 GiB resident set do not fit a hosted runner, so no download job exists here.
+# This job verifies the committed artifacts instead: every artifact validates against its
+# schema, the mapping exhibits match the hashes in the method records, the manifest hash the
+# evaluation was run against recomputes from the manifest, the warehouse reconciles, and the
+# docs cite what the artifacts carry.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Setup (uv sync --frozen + dbt deps)
+        run: make setup
+      - name: Committed artifacts are internally consistent
+        run: .venv/bin/python scripts/check_reproducibility.py --committed
+      - name: Warehouse reconciles to the artifacts
+        run: make dbt
+      - name: Docs cite what the artifacts carry
+        run: make docs
