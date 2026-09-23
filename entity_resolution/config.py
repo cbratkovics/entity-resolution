@@ -5,8 +5,8 @@ of the project-wide vocabulary (docs/BRIEF.md section 2). dbt cannot import Pyth
 ``dbt/dbt_project.yml`` carries a mirror of :func:`dbt_vars` and ``tests/test_project_config.py``
 fails when the mirror diverges.
 
-Side A (``PROJECT.side_a``) is ``None`` until the owner's decision after Phase 1 is recorded in
-ADR 0001; every consumer must refuse to run while it is unset.
+Side A is MusicBrainz release groups (ADR 0001); the sample scope and share are the
+constants below, also from ADR 0001.
 """
 
 from __future__ import annotations
@@ -23,7 +23,12 @@ ENV_PREFIX = "ENTITY_RESOLUTION_"
 REPO_ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS_DIR = Path(os.environ.get(ENV_PREFIX + "ARTIFACTS_DIR", REPO_ROOT / "artifacts"))
 DATA_DIR = Path(os.environ.get(ENV_PREFIX + "DATA_DIR", REPO_ROOT / "data"))
+RAW_DIR = DATA_DIR / "raw"
+CACHE_DIR = DATA_DIR / "cache"
+SAMPLE_DIR = DATA_DIR / "sample"
 MANIFEST_PATH = ARTIFACTS_DIR / "manifest.json"
+TRUTH_AUDIT_PATH = ARTIFACTS_DIR / "truth_audit.json"
+CONTRACTS_PATH = ARTIFACTS_DIR / "contracts.json"
 SCHEMAS_DIR = ARTIFACTS_DIR / "schemas"
 METHODS_DIR = ARTIFACTS_DIR / "methods"
 SITE_DATA_DIR = REPO_ROOT / "docs" / "site" / "data"
@@ -35,6 +40,11 @@ SIDE_A_CANDIDATES: tuple[str, ...] = ("musicbrainz", "wikidata")
 METHOD_VERSIONS: tuple[str, ...] = ("exact_v1", "rules_v1", "learned_v1")
 FOLDS: tuple[str, ...] = ("fit", "calibrate", "test")
 TIERS: tuple[str, ...] = ("auto_accept", "review", "reject")
+
+UNLINKED_SHARE = 0.50
+"""ADR 0001: share of each sampled side that is unlinked (unlinked count equals linked count)."""
+A_SCOPE_PRIMARY_TYPE = "Album"
+"""ADR 0001: side A is restricted to release groups of this primary type."""
 
 
 @dataclass(frozen=True)
@@ -82,7 +92,7 @@ PROJECT = ProjectConfig(
         "Record linkage between open music catalogues, measured against labelled ground truth."
     ),
     side_b=SIDE_B,
-    side_a=None,
+    side_a="musicbrainz",
     side_a_candidates=SIDE_A_CANDIDATES,
     method_versions=METHOD_VERSIONS,
     folds=FOLDS,

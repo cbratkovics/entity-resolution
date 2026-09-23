@@ -51,9 +51,7 @@ def id_format(df: pd.DataFrame, source: str, column: str = "native_id") -> Check
     )
 
 
-def year_range(
-    df: pd.DataFrame, column: str = "year", *, today: dt.date | None = None
-) -> Check:
+def year_range(df: pd.DataFrame, column: str = "year", *, today: dt.date | None = None) -> Check:
     hi = year_max(today)
     years = pd.to_numeric(df[column], errors="coerce")
     present = years.dropna()
@@ -61,7 +59,12 @@ def year_range(
     return Check(
         "year_range",
         out_of_range == 0,
-        {"min": YEAR_MIN, "max": hi, "out_of_range": out_of_range, "missing": int(years.isna().sum())},
+        {
+            "min": YEAR_MIN,
+            "max": hi,
+            "out_of_range": out_of_range,
+            "missing": int(years.isna().sum()),
+        },
     )
 
 
@@ -74,7 +77,12 @@ def null_rates(df: pd.DataFrame, max_rates: Mapping[str, float]) -> Check:
     return Check(
         "null_rates",
         not over and not missing_cols,
-        {"rates": rates, "max_rates": dict(max_rates), "over": over, "missing_columns": missing_cols},
+        {
+            "rates": rates,
+            "max_rates": dict(max_rates),
+            "over": over,
+            "missing_columns": missing_cols,
+        },
     )
 
 

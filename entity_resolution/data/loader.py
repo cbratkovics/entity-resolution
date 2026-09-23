@@ -1,7 +1,5 @@
-"""Adapter registry and the offline fixture adapter.
-
-Real adapters (Discogs masters, and the side-A source chosen in ADR 0001) are added in Phase 2
-and registered here by name. ``FixtureAdapter`` is an in-memory :class:`SourceAdapter` that
+"""Adapter registry, the two real adapters (Discogs masters on side B, MusicBrainz release
+groups on side A per ADR 0001) and the offline fixture adapter. ``FixtureAdapter`` is an in-memory :class:`SourceAdapter` that
 tests use to exercise the seams offline; its records are inline synthetic values, never rows
 from a real dump, and nothing about it is written under ``artifacts/``.
 """
@@ -76,3 +74,14 @@ def side_a_adapter() -> SourceAdapter:
 
 
 register(FixtureAdapter())
+
+
+def _register_real_adapters() -> None:
+    from entity_resolution.data.discogs import DiscogsAdapter
+    from entity_resolution.data.musicbrainz import MusicBrainzAdapter
+
+    register(DiscogsAdapter())
+    register(MusicBrainzAdapter())
+
+
+_register_real_adapters()

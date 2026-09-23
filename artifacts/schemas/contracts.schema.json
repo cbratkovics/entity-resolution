@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Contracts report (contracts_version 1.0)",
+  "description": "artifacts/contracts.json: the data-contract report over both sampled sides (grain uniqueness, id format, year range, null rates). Counts and rates only.",
+  "type": "object",
+  "required": ["contracts_version", "generated_at_utc", "ok", "sides"],
+  "additionalProperties": false,
+  "properties": {
+    "contracts_version": {"const": "1.0"},
+    "generated_at_utc": {"type": "string"},
+    "ok": {"type": "boolean"},
+    "sides": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["ok", "checks", "summary"],
+        "additionalProperties": false,
+        "properties": {
+          "ok": {"type": "boolean"},
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["name", "ok", "detail"],
+              "additionalProperties": false,
+              "properties": {
+                "name": {"type": "string", "enum": ["grain_unique", "id_format", "year_range", "null_rates"]},
+                "ok": {"type": "boolean"},
+                "detail": {"type": "object"}
+              }
+            }
+          },
+          "summary": {"type": "object", "required": ["source", "rows", "n_checks"], "properties": {"source": {"type": "string"}, "rows": {"type": "integer", "minimum": 0}, "n_checks": {"type": "integer", "minimum": 0}}}
+        }
+      }
+    }
+  }
+}

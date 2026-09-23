@@ -1,0 +1,125 @@
+{
+  "contracts_version": "1.0",
+  "generated_at_utc": "2026-09-23T09:42:57+00:00",
+  "ok": true,
+  "sides": {
+    "discogs": {
+      "checks": [
+        {
+          "detail": {
+            "duplicate_rows": 0,
+            "keys": [
+              "source",
+              "native_id"
+            ],
+            "rows": 481860
+          },
+          "name": "grain_unique",
+          "ok": true
+        },
+        {
+          "detail": {
+            "bad_ids": 0,
+            "pattern": "^\\d+$",
+            "source": "discogs"
+          },
+          "name": "id_format",
+          "ok": true
+        },
+        {
+          "detail": {
+            "max": 2027,
+            "min": 1900,
+            "missing": 20587,
+            "out_of_range": 0
+          },
+          "name": "year_range",
+          "ok": true
+        },
+        {
+          "detail": {
+            "max_rates": {
+              "artist_credit": 0.0,
+              "title": 0.0,
+              "year": 0.1
+            },
+            "missing_columns": [],
+            "over": {},
+            "rates": {
+              "artist_credit": 0.0,
+              "title": 0.0,
+              "year": 0.04272402772589549
+            }
+          },
+          "name": "null_rates",
+          "ok": true
+        }
+      ],
+      "ok": true,
+      "summary": {
+        "n_checks": 4,
+        "rows": 481860,
+        "source": "discogs"
+      }
+    },
+    "musicbrainz": {
+      "checks": [
+        {
+          "detail": {
+            "duplicate_rows": 0,
+            "keys": [
+              "source",
+              "native_id"
+            ],
+            "rows": 482514
+          },
+          "name": "grain_unique",
+          "ok": true
+        },
+        {
+          "detail": {
+            "bad_ids": 0,
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "source": "musicbrainz"
+          },
+          "name": "id_format",
+          "ok": true
+        },
+        {
+          "detail": {
+            "max": 2027,
+            "min": 1900,
+            "missing": 15668,
+            "out_of_range": 0
+          },
+          "name": "year_range",
+          "ok": true
+        },
+        {
+          "detail": {
+            "max_rates": {
+              "artist_credit": 0.0,
+              "title": 0.0,
+              "year": 0.1
+            },
+            "missing_columns": [],
+            "over": {},
+            "rates": {
+              "artist_credit": 0.0,
+              "title": 0.0,
+              "year": 0.03247159667906009
+            }
+          },
+          "name": "null_rates",
+          "ok": true
+        }
+      ],
+      "ok": true,
+      "summary": {
+        "n_checks": 4,
+        "rows": 482514,
+        "source": "musicbrainz"
+      }
+    }
+  }
+}

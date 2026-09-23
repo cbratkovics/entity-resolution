@@ -17,6 +17,7 @@ def test_registry_lookup_and_unknown_name() -> None:
         loader.adapter("nope")
 
 
-def test_side_a_adapter_refuses_while_undecided() -> None:
-    with pytest.raises(RuntimeError, match="docs/adr"):
-        loader.side_a_adapter()
+def test_side_a_adapter_is_musicbrainz_and_side_b_is_discogs() -> None:
+    assert loader.side_a_adapter().NAME == "musicbrainz" and loader.side_a_adapter().SIDE == "A"
+    assert loader.adapter("discogs").SIDE == "B"
+    assert set(loader.registered()) == {"fixture", "discogs", "musicbrainz"}

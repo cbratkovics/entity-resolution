@@ -28,7 +28,17 @@ def test_path_is_ignored(path: str) -> None:
     assert proc.returncode == 0, f"{path} is not ignored"
 
 
-@pytest.mark.parametrize("path", ["artifacts/manifest.json", "artifacts/schemas/x.schema.json"])
+@pytest.mark.parametrize(
+    "path",
+    [
+        "artifacts/manifest.json",
+        "artifacts/schemas/x.schema.json",
+        # the data/ rule is anchored to the repository root: package modules under
+        # entity_resolution/data/ must never be ignored (a new adapter was once left unstaged)
+        "entity_resolution/data/new_adapter.py",
+        "tests/data/fixture.py",
+    ],
+)
 def test_artifacts_are_not_ignored(path: str) -> None:
     proc = subprocess.run(
         ["git", "check-ignore", "-q", path], cwd=REPO_ROOT, capture_output=True, text=True

@@ -84,3 +84,79 @@ models:
         description: JSON block of prose definitions, one per metric key.
       - name: metrics
         description: JSON block of the test-fold metrics; null until Phase 4 computes them.
+
+  - name: brz_truth_audit
+    description: "artifacts/truth_audit.json as one typed row: link counts, the four truth statuses and the one-to-many rates of the current run. Empty until the first full build."
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: audit_version
+        description: Schema version of the audit (truth_audit.schema.json).
+      - name: generated_at_utc
+        description: When the audit was written.
+      - name: feature_version
+        description: FEATURE_VERSION of the run.
+      - name: code_commit
+        description: Git commit of the code that produced the run.
+      - name: scope_primary_type
+        description: The release-group primary type that defines side A's scope (ADR 0001).
+      - name: links_raw
+        description: Release-group-to-master links read from the dump, before deduplication.
+      - name: links_distinct
+        description: Distinct (a_id, b_id) links.
+      - name: duplicate_links
+        description: Links removed as exact duplicates.
+      - name: truth_dead
+        description: Links whose master is absent from the current Discogs dump.
+      - name: truth_out_of_scope
+        description: Links whose release group is not of the scope primary type.
+      - name: truth_unsampled
+        description: Alive in-scope links whose A or B record the hash sample excluded (zero by construction).
+      - name: truth_in_sample
+        description: Links that are labelled pairs in the sample.
+      - name: truth_dead_rate
+        description: truth_dead over links_distinct.
+      - name: in_sample_pairs
+        description: Number of in-sample truth pairs.
+      - name: in_sample_a_records
+        description: Distinct labelled A records.
+      - name: in_sample_b_records
+        description: Distinct B records in an in-sample pair.
+      - name: one_to_many_a
+        description: Labelled A records linked to more than one master.
+      - name: one_to_many_a_rate
+        description: one_to_many_a over in_sample_a_records.
+      - name: one_to_many_b
+        description: In-sample masters linked from more than one A record.
+      - name: one_to_many_b_rate
+        description: one_to_many_b over in_sample_b_records.
+
+  - name: brz_contracts
+    description: "artifacts/contracts.json flattened to one row per (side, check). Grain (side, check_name). Empty until the first full build."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [side, check_name]
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: contracts_version
+        description: Schema version of the report (contracts.schema.json).
+      - name: generated_at_utc
+        description: When the report was written.
+      - name: report_ok
+        description: Whether every check on every side passed.
+      - name: side
+        description: The source the checks ran on (musicbrainz or discogs).
+      - name: side_ok
+        description: Whether every check on this side passed.
+      - name: rows
+        description: Sampled records the checks ran over.
+      - name: check_name
+        description: The contract (grain_unique, id_format, year_range, null_rates).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["grain_unique", "id_format", "year_range", "null_rates"]
+      - name: check_ok
+        description: Whether this check passed.

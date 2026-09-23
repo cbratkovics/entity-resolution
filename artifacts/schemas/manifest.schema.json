@@ -1,52 +1,40 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Artifact manifest (manifest_version 2.0)",
-  "description": "artifacts/manifest.json: the dumps a run was produced from, the deterministic sample rule and the counts per side (docs/BRIEF.md 2.2). Identifiers, hashes, parameters and counts only. An empty tree carries no sources and no sample.",
+  "description": "artifacts/manifest.json: the dumps a run was produced from, the deterministic sample rule with its solved thresholds and pool sizes, the counts per side and the runtime measurements (docs/BRIEF.md 2.2, ADR 0001). Identifiers, hashes, parameters and counts only. An empty tree carries no sources and no sample.",
   "type": "object",
-  "required": [
-    "manifest_version",
-    "updated_at_utc",
-    "feature_version",
-    "code_commit",
-    "side_a",
-    "sources",
-    "sample",
-    "counts",
-    "run_id"
-  ],
+  "required": ["manifest_version", "updated_at_utc", "feature_version", "code_commit", "side_a", "sources", "sample", "counts", "run_id"],
   "additionalProperties": false,
   "properties": {
     "manifest_version": {"const": "2.0"},
     "updated_at_utc": {"type": "string"},
     "feature_version": {"type": "string"},
     "code_commit": {"type": "string"},
-    "side_a": {
-      "description": "The side-A source chosen in ADR 0001; null until decided.",
-      "type": ["string", "null"],
-      "enum": ["musicbrainz", "wikidata", null]
-    },
+    "side_a": {"description": "The side-A source chosen in ADR 0001.", "type": ["string", "null"], "enum": ["musicbrainz", "wikidata", null]},
     "run_id": {"type": ["string", "null"]},
-    "sources": {
-      "type": "array",
-      "items": {"$ref": "#/$defs/source"}
-    },
-    "sample": {
-      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/sample"}]
-    },
+    "sources": {"type": "array", "items": {"$ref": "#/$defs/source"}},
+    "sample": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/sample"}]},
     "counts": {
-      "description": "Record counts per source after loading and after sampling.",
+      "description": "Record counts per source: loaded from the dump, in scope, sampled, labelled (in an in-sample truth pair).",
       "type": "object",
       "additionalProperties": {
         "type": "object",
-        "required": ["loaded", "sampled"],
+        "required": ["loaded", "in_scope", "sampled", "labelled"],
         "properties": {
-          "loaded": {"type": "integer", "minimum": 0},
-          "sampled": {"type": "integer", "minimum": 0}
+          "loaded": {"$ref": "#/$defs/count"},
+          "in_scope": {"$ref": "#/$defs/count"},
+          "sampled": {"$ref": "#/$defs/count"},
+          "labelled": {"$ref": "#/$defs/count"},
+          "linked_out_of_scope_in_sample": {"$ref": "#/$defs/count"},
+          "year_out_of_range_nulled": {"$ref": "#/$defs/count"}
         }
       }
-    }
+    },
+    "runtime": {"$ref": "#/$defs/runtime"}
   },
   "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "source": {
       "type": "object",
       "required": ["name", "side", "dump_filename", "dump_bytes", "dump_sha256", "download_url", "licence_url", "dump_date"],
@@ -55,31 +43,94 @@
         "name": {"type": "string", "enum": ["discogs", "musicbrainz", "wikidata"]},
         "side": {"type": "string", "enum": ["A", "B"]},
         "dump_filename": {"type": "string"},
-        "dump_bytes": {"type": "integer", "minimum": 0},
-        "dump_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "dump_bytes": {"$ref": "#/$defs/count"},
+        "dump_sha256": {"$ref": "#/$defs/sha256"},
         "download_url": {"type": "string"},
         "licence_url": {"type": "string"},
         "dump_date": {"type": "string"},
-        "response_sha256": {
-          "description": "For an endpoint (Wikidata SPARQL) rather than a dump: hash of the cached response.",
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
+        "download_seconds": {"type": "number", "minimum": 0},
+        "response_sha256": {"$ref": "#/$defs/sha256"},
+        "extract": {
+          "type": "object",
+          "required": ["tables", "extract_seconds", "extract_passes", "extracted_bytes"],
+          "additionalProperties": false,
+          "properties": {
+            "tables": {"type": "object", "additionalProperties": {"$ref": "#/$defs/count"}},
+            "extract_seconds": {"type": "number", "minimum": 0},
+            "extract_passes": {"$ref": "#/$defs/count"},
+            "extracted_bytes": {"$ref": "#/$defs/count"}
+          }
         }
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "required": ["threshold_hex", "threshold_fraction", "pool_size", "selected", "linked", "unlinked_share_target", "sampled", "unlinked_share_actual"],
+      "additionalProperties": false,
+      "properties": {
+        "threshold_hex": {"$ref": "#/$defs/sha256"},
+        "threshold_fraction": {"type": "number", "minimum": 0, "maximum": 1},
+        "pool_size": {"$ref": "#/$defs/count"},
+        "selected": {"$ref": "#/$defs/count"},
+        "linked": {"$ref": "#/$defs/count"},
+        "unlinked_share_target": {"type": "number", "minimum": 0, "maximum": 1},
+        "sampled": {"$ref": "#/$defs/count"},
+        "unlinked_share_actual": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+      }
+    },
+    "file": {
+      "type": "object",
+      "required": ["path", "rows", "file_sha256", "content_sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {"type": "string"},
+        "rows": {"$ref": "#/$defs/count"},
+        "file_sha256": {"$ref": "#/$defs/sha256"},
+        "content_sha256": {"$ref": "#/$defs/sha256"}
       }
     },
     "sample": {
       "type": "object",
-      "required": ["rule", "threshold", "unlinked_share", "all_truth_pairs_in_scope"],
+      "required": ["rule", "unlinked_share", "scope", "all_truth_pairs_in_scope", "thresholds", "pools", "files"],
       "additionalProperties": false,
       "properties": {
-        "rule": {
-          "description": "The membership rule in words, e.g. sha256(source || native_id) as a fraction of 2^256 compared to threshold.",
-          "type": "string"
-        },
-        "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+        "rule": {"type": "string"},
         "unlinked_share": {"type": "number", "minimum": 0, "maximum": 1},
+        "scope": {"type": "object", "required": ["a_primary_type", "b"], "additionalProperties": false, "properties": {"a_primary_type": {"type": "string"}, "b": {"type": "string"}}},
         "all_truth_pairs_in_scope": {"type": "boolean"},
-        "scope": {"type": "string"}
+        "thresholds": {"type": "object", "required": ["a", "b"], "additionalProperties": false, "properties": {"a": {"$ref": "#/$defs/threshold"}, "b": {"$ref": "#/$defs/threshold"}}},
+        "pools": {"type": "object", "required": ["a", "b"], "additionalProperties": false, "properties": {"a": {"type": "string"}, "b": {"type": "string"}}},
+        "files": {"type": "object", "required": ["a", "b", "truth"], "additionalProperties": false, "properties": {"a": {"$ref": "#/$defs/file"}, "b": {"$ref": "#/$defs/file"}, "truth": {"$ref": "#/$defs/file"}}}
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "required": ["stages", "total_seconds", "data_dir_bytes_start", "data_dir_bytes_peak", "free_disk_bytes_start", "free_disk_bytes_min", "disk_used_peak_bytes", "peak_rss_bytes", "platform"],
+      "additionalProperties": false,
+      "properties": {
+        "stages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "seconds", "data_dir_bytes_after", "free_disk_bytes_after", "peak_rss_bytes_so_far"],
+            "additionalProperties": false,
+            "properties": {
+              "name": {"type": "string"},
+              "seconds": {"type": "number", "minimum": 0},
+              "data_dir_bytes_after": {"$ref": "#/$defs/count"},
+              "free_disk_bytes_after": {"$ref": "#/$defs/count"},
+              "peak_rss_bytes_so_far": {"$ref": "#/$defs/count"}
+            }
+          }
+        },
+        "total_seconds": {"type": "number", "minimum": 0},
+        "data_dir_bytes_start": {"$ref": "#/$defs/count"},
+        "data_dir_bytes_peak": {"$ref": "#/$defs/count"},
+        "free_disk_bytes_start": {"$ref": "#/$defs/count"},
+        "free_disk_bytes_min": {"$ref": "#/$defs/count"},
+        "disk_used_peak_bytes": {"$ref": "#/$defs/count"},
+        "peak_rss_bytes": {"$ref": "#/$defs/count"},
+        "platform": {"type": "string"}
       }
     }
   }

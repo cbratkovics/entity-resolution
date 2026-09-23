@@ -8,7 +8,7 @@ __pycache__/
 .mypy_cache/
 
 # Source dumps and every derived row live under data/ and never enter git (docs/BRIEF.md rule 2)
-data/
+/data/
 *.xml.gz
 *.tar.bz2
 

@@ -29,8 +29,6 @@ import gzip
 import hashlib
 import json
 import re
-import shutil
-import tarfile
 import time
 import urllib.error
 import urllib.parse
@@ -44,52 +42,31 @@ import jsonschema
 import pandas as pd
 
 from entity_resolution.config import ARTIFACTS_DIR, DATA_DIR, REPO_ROOT, SCHEMAS_DIR
+from entity_resolution.data import acquire
+from entity_resolution.data import musicbrainz as mb
 from entity_resolution.features import FEATURE_VERSION
 from entity_resolution.features import normalize as norm
 from entity_resolution.models.registry import code_commit
 
-USER_AGENT = (
-    "entity-resolution-profile/0.1 (https://github.com/cbratkovics/entity-resolution; "
-    "cbratkovics@gmail.com)"
-)
-RAW_DIR = DATA_DIR / "raw"
+USER_AGENT = acquire.USER_AGENT
+RAW_DIR = acquire.RAW_DIR
 PROFILE_CACHE = DATA_DIR / "profile"
 PROFILE_DIR = ARTIFACTS_DIR / "profile"
 PROFILE_VERSION = "1.0"
 
-DISCOGS_DUMP = "discogs_20260901_masters.xml.gz"
-DISCOGS_URL = f"https://data.discogs.com/?download=data%2F2026%2F{DISCOGS_DUMP}"
-DISCOGS_LICENCE_URL = "https://data.discogs.com/"
-MB_EXPORT = "20260919-002047"
-MB_DUMP = "mbdump.tar.bz2"
-MB_URL = f"https://data.metabrainz.org/pub/musicbrainz/data/fullexport/{MB_EXPORT}/{MB_DUMP}"
-MB_LICENCE_URL = "https://musicbrainz.org/doc/About/Data_License"
-MB_TABLES = (
-    "release_group",
-    "artist_credit",
-    "release_group_primary_type",
-    "l_release_group_url",
-    "url",
-    "link",
-    "link_type",
-    # first-release year: release_group_meta is not in the core archive (it ships in
-    # mbdump-derived.tar.bz2 with user ratings, CC BY-NC-SA), so the year is derived from the
-    # core release dates instead (ADR 0002)
-    "release",
-    "release_country",
-    "release_unknown_country",
-)
+DISCOGS_DUMP = acquire.DISCOGS.filename
+DISCOGS_LICENCE_URL = acquire.DISCOGS.licence_url
+MB_DUMP = acquire.MUSICBRAINZ.filename
+MB_LICENCE_URL = acquire.MUSICBRAINZ.licence_url
+MB_TABLES = mb.TABLES
+SOURCES = {"discogs": acquire.DISCOGS, "musicbrainz": acquire.MUSICBRAINZ}
 WD_ENDPOINT = "https://query.wikidata.org/sparql"
 WD_LICENCE_URL = "https://www.wikidata.org/wiki/Wikidata:Licensing"
 WD_PAGE_SIZE = 2000
 WD_MIN_PAGE_SIZE = 250
 WD_BACKOFF_SECONDS = (5, 10, 20, 40, 80)
-SOURCES = {
-    "discogs": {"filename": DISCOGS_DUMP, "url": DISCOGS_URL, "dump_date": "2026-09-01"},
-    "musicbrainz": {"filename": MB_DUMP, "url": MB_URL, "dump_date": "2026-09-19"},
-}
-MIN_FREE_FACTOR = 2.0
-"""Refuse a download unless free disk is at least this many times the file size."""
+SOURCES = {"discogs": acquire.DISCOGS, "musicbrainz": acquire.MUSICBRAINZ}
+_request = acquire.request
 DISCOGS_MASTER_URL_RE = re.compile(r"^https?://(www\.)?discogs\.com/master/(\d+)")
 N_EXAMPLES = 15
 YEAR_MIN, YEAR_MAX = 1900, dt.date.today().year + 1
@@ -142,159 +119,15 @@ def rate(n: int, d: int) -> float | None:
 # ----------------------------------------------------------------------------- acquisition
 
 
-def _request(url: str, method: str = "GET", data: bytes | None = None) -> urllib.request.Request:
-    return urllib.request.Request(url, method=method, data=data, headers={"User-Agent": USER_AGENT})
-
-
-def check_free_disk(path: Path, needed_bytes: int | None) -> int:
-    path.mkdir(parents=True, exist_ok=True)
-    free = shutil.disk_usage(path).free
-    need = needed_bytes or 0
-    print(
-        f"free disk at {path}: {gib(free)} GiB; download size "
-        f"{gib(need) if needed_bytes else 'unknown'} GiB; required {gib(int(need * MIN_FREE_FACTOR))} GiB"
-    )
-    if needed_bytes and free < needed_bytes * MIN_FREE_FACTOR:
-        raise SystemExit("not enough free disk; aborting before any download")
-    return free
-
-
 def download(source: str) -> Path:
     spec = SOURCES[source]
-    dest = RAW_DIR / spec["filename"]
-    meta_path = RAW_DIR / (spec["filename"] + ".meta.json")
-    if dest.exists() and meta_path.exists():
-        print(f"{source}: already downloaded ({dest})")
-        return dest
-    sha = hashlib.sha256()
-    n = 0
-    started = utc_now()
-    tmp = dest.with_suffix(dest.suffix + ".part")
-    # the response headers carry the size; the disk check runs before the first byte is written
-    with urllib.request.urlopen(_request(spec["url"]), timeout=120) as r:
-        expected = int(r.headers["Content-Length"]) if r.headers.get("Content-Length") else None
-        free_before = check_free_disk(RAW_DIR, expected)
-        print(f"{source}: downloading {spec['url']} -> {dest}")
-        t0 = time.monotonic()
-        with tmp.open("wb") as fh:
-            while True:
-                chunk = r.read(1 << 20)
-                if not chunk:
-                    break
-                fh.write(chunk)
-                sha.update(chunk)
-                n += len(chunk)
-    seconds = round(time.monotonic() - t0, 1)
-    if expected is not None and n != expected:
-        tmp.unlink(missing_ok=True)
-        raise SystemExit(f"{source}: downloaded {n} bytes, expected {expected}")
-    tmp.rename(dest)
-    meta = {
-        "source": source,
-        "filename": spec["filename"],
-        "url": spec["url"],
-        "dump_date": spec["dump_date"],
-        "bytes": n,
-        "sha256": sha.hexdigest(),
-        "download_seconds": seconds,
-        "started_at_utc": started,
-        "finished_at_utc": utc_now(),
-        "free_disk_before_bytes": free_before,
-    }
-    write_json(meta, meta_path)
-    print(f"{source}: {gib(n)} GiB in {seconds}s, sha256 {meta['sha256'][:12]}…")
-    return dest
-
-
-def _file_stats(path: Path) -> dict[str, Any]:
-    sha = hashlib.sha256()
-    n = 0
-    with path.open("rb") as fh:
-        while True:
-            chunk = fh.read(1 << 20)
-            if not chunk:
-                break
-            sha.update(chunk)
-            n += len(chunk)
-    return {"bytes": n, "sha256": sha.hexdigest()}
+    acquire.download(spec, RAW_DIR)
+    return RAW_DIR / spec.filename
 
 
 def extract_musicbrainz() -> Path:
-    """Stream mbdump.tar.bz2 and write only the listed tables to data/raw/mbdump/. Tables
-    already on disk are skipped, so a second pass (added tables) streams the archive again
-    without unpacking anything else; every pass is timed and recorded."""
-    archive = RAW_DIR / MB_DUMP
     out_dir = RAW_DIR / "mbdump"
-    meta_path = out_dir / "_extract.meta.json"
-    passes_path = out_dir / "_extract_passes.json"
-    if meta_path.exists():
-        print(f"musicbrainz: already extracted ({out_dir})")
-        return out_dir
-    out_dir.mkdir(parents=True, exist_ok=True)
-    passes: list[dict[str, Any]] = (
-        json.loads(passes_path.read_text()) if passes_path.exists() else []
-    )
-    wanted = {f"mbdump/{t}": t for t in MB_TABLES if not (out_dir / t).exists()}
-    found: dict[str, dict[str, Any]] = {}
-    members_seen = 0
-    t0 = time.monotonic()
-    started = utc_now()
-    if wanted:
-        print(f"musicbrainz: streaming the archive for {sorted(wanted.values())}")
-        with tarfile.open(archive, mode="r|bz2") as tar:
-            for member in tar:
-                members_seen += 1
-                table = wanted.get(member.name)
-                if table is None or not member.isfile():
-                    continue
-                src = tar.extractfile(member)
-                assert src is not None
-                dest = out_dir / table
-                sha = hashlib.sha256()
-                n = 0
-                with dest.open("wb") as fh:
-                    while True:
-                        chunk = src.read(1 << 20)
-                        if not chunk:
-                            break
-                        fh.write(chunk)
-                        sha.update(chunk)
-                        n += len(chunk)
-                found[table] = {"bytes": n, "sha256": sha.hexdigest()}
-                print(
-                    f"  extracted {table}: {gib(n)} GiB ({round(time.monotonic() - t0)}s elapsed)"
-                )
-                if len(found) == len(wanted):
-                    break
-    seconds = round(time.monotonic() - t0, 1)
-    passes.append(
-        {
-            "tables": sorted(found),
-            "members_scanned": members_seen,
-            "extract_seconds": seconds,
-            "started_at_utc": started,
-            "finished_at_utc": utc_now(),
-        }
-    )
-    passes_path.write_text(json.dumps(passes, indent=2) + "\n")
-    missing = sorted(t for t in MB_TABLES if not (out_dir / t).exists())
-    if missing:
-        raise SystemExit(f"musicbrainz: tables missing from the archive: {missing}")
-    tables = {t: found.get(t) or _file_stats(out_dir / t) for t in MB_TABLES}
-    meta = {
-        "archive": MB_DUMP,
-        "tables": tables,
-        "passes": passes,
-        "extract_passes": len(passes),
-        "extract_seconds": round(sum(p["extract_seconds"] for p in passes), 1),
-        "extracted_bytes": sum(v["bytes"] for v in tables.values()),
-        "finished_at_utc": utc_now(),
-    }
-    write_json(meta, meta_path)
-    print(
-        f"musicbrainz: {len(tables)} tables, {gib(meta['extracted_bytes'])} GiB, "
-        f"{meta['extract_seconds']}s over {len(passes)} pass(es)"
-    )
+    acquire.extract_tables(RAW_DIR / MB_DUMP, MB_TABLES, out_dir)
     return out_dir
 
 
@@ -606,7 +439,7 @@ def _mb_table(con: duckdb.DuckDBPyConnection, table: str, columns: list[str]) ->
     cols = ", ".join(f"'{c}': 'VARCHAR'" for c in columns)
     con.execute(
         f"create or replace table {table} as select * from read_csv('{path}', delim='\\t', "
-        f"header=false, quote='', escape='', null_padding=true, nullstr='\\\\N', "
+        f"header=false, quote='', escape='', null_padding=true, nullstr='\\N', "
         f"columns={{{cols}}})"
     )
 

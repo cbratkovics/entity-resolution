@@ -176,3 +176,39 @@ def normalize_record(title: str, artist_credit: str, year: int | None) -> Normal
         title_metaphone=metaphone_first(title_norm),
         artist_metaphone=metaphone_first(artist_norm),
     )
+
+
+NORMALIZED_COLUMNS: tuple[str, ...] = (
+    "title_norm",
+    "title_norm_full",
+    "title_qualifiers",
+    "artist_norm",
+    "artist_norm_full",
+    "is_various_artists",
+    "is_self_titled",
+    "year_missing",
+    "title_tokens",
+    "artist_tokens",
+    "title_metaphone",
+    "artist_metaphone",
+)
+"""Columns :func:`normalize_frame` adds, in this order (list columns hold tuples)."""
+
+
+def normalize_frame(df):  # type: ignore[no-untyped-def]
+    """Add every :class:`Normalized` field to a frame with ``title``, ``artist_credit`` and
+    ``year`` columns. The only frame-level normalisation entry point (rule 5); the profiler,
+    the sample and the pair features all call it."""
+    import pandas as pd
+
+    rows = [
+        normalize_record(title or "", credit or "", None if pd.isna(year) else int(year))
+        for title, credit, year in zip(df["title"], df["artist_credit"], df["year"], strict=True)
+    ]
+    out = df.copy()
+    for col in NORMALIZED_COLUMNS:
+        values = [getattr(r, col) for r in rows]
+        if col in ("title_qualifiers", "title_tokens", "artist_tokens"):
+            values = [list(v) for v in values]
+        out[col] = values
+    return out

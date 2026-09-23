@@ -15,7 +15,7 @@ def test_dbt_project_vars_mirror_the_config() -> None:
 
 def test_vocabulary_matches_the_brief() -> None:
     assert PROJECT.side_b == "discogs"
-    assert PROJECT.side_a is None, "side A is decided in ADR 0001 after Phase 1"
+    assert PROJECT.side_a == "musicbrainz", "ADR 0001"
     assert PROJECT.side_a_candidates == ("musicbrainz", "wikidata")
     assert PROJECT.method_versions == ("exact_v1", "rules_v1", "learned_v1")
     assert PROJECT.folds == ("fit", "calibrate", "test")

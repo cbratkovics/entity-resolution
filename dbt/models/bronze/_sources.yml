@@ -31,3 +31,15 @@ sources:
         meta:
           formatter: template
           external_location: "read_json_auto('{{ var('artifacts_dir') }}/eval_*.json', filename = true, union_by_name = true)"
+
+      - name: truth_audit
+        description: artifacts/truth_audit.json — link counts, the four truth statuses, one-to-many rates and hashed anomaly samples of the current run (schema truth_audit.schema.json).
+        meta:
+          formatter: template
+          external_location: "read_json_auto('{{ var('artifacts_dir') }}/truth_audit.json', filename = true)"
+
+      - name: contracts
+        description: artifacts/contracts.json — the data-contract report over both sampled sides (schema contracts.schema.json).
+        meta:
+          formatter: template
+          external_location: "read_json_auto('{{ var('artifacts_dir') }}/contracts.json', filename = true)"

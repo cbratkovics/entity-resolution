@@ -20,6 +20,19 @@ phase it is waiting for. The deterministic sample (`sha256(source || native_id)`
 threshold in the manifest) and the hash-based fold split mean that a rerun on the same dumps
 reproduces the artifacts byte for byte, apart from timestamps.
 
+## The two-run gate
+
+Phase 2 is accepted only when `make full` run twice, with the parquet caches deleted between
+runs so the loaders execute again, produces `data/sample/a.parquet`, `b.parquet` and
+`truth.parquet` that are identical both by file bytes and by content hash (rows sorted by every
+column, list columns joined, hashed with pandas' row hasher; `manifest.json#sample.files`).
+The manifest records both hashes; `tests/test_features_no_leakage.py` recomputes the content
+hash and the membership thresholds from the files on disk, and
+`scripts/check_reproducibility.py <snapshot_dir>` compares a saved run with the current one
+(a byte difference with identical content is reported as writer metadata; a content
+difference fails). Parquet is written with fixed
+options (pyarrow, zstd, no index).
+
 ## Warehouse determinism
 
 DuckDB's parallel aggregation order is not deterministic, so exported values can differ at the

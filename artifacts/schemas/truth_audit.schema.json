@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Truth audit (audit_version 1.0)",
+  "description": "artifacts/truth_audit.json: link counts, the four truth statuses (dead, out of scope, unsampled, in sample), one-to-many rates on each side, duplicate links, and up to twenty hashed pair ids per anomaly class (docs/BRIEF.md 2.2 and 2.9, ADR 0001). Counts, rates and sha256 hashes only.",
+  "type": "object",
+  "required": ["audit_version", "generated_at_utc", "feature_version", "code_commit", "links_raw", "links_distinct", "duplicate_links", "scope_primary_type", "truth_dead", "truth_out_of_scope", "truth_unsampled", "truth_in_sample", "truth_dead_rate", "truth_out_of_scope_by_primary_type", "in_sample", "anomaly_samples"],
+  "additionalProperties": false,
+  "properties": {
+    "audit_version": {"const": "1.0"},
+    "generated_at_utc": {"type": "string"},
+    "feature_version": {"type": "string"},
+    "code_commit": {"type": "string"},
+    "links_raw": {"$ref": "#/$defs/count"},
+    "links_distinct": {"$ref": "#/$defs/count"},
+    "duplicate_links": {"$ref": "#/$defs/count"},
+    "scope_primary_type": {"type": "string"},
+    "truth_dead": {"$ref": "#/$defs/count"},
+    "truth_out_of_scope": {"$ref": "#/$defs/count"},
+    "truth_unsampled": {"$ref": "#/$defs/count"},
+    "truth_in_sample": {"$ref": "#/$defs/count"},
+    "truth_dead_rate": {"$ref": "#/$defs/rate"},
+    "truth_out_of_scope_by_primary_type": {"type": "object", "additionalProperties": {"$ref": "#/$defs/count"}},
+    "in_sample": {
+      "type": "object",
+      "required": ["pairs", "a_records", "b_records", "one_to_many_a", "one_to_many_a_rate", "one_to_many_b", "one_to_many_b_rate"],
+      "additionalProperties": false,
+      "properties": {
+        "pairs": {"$ref": "#/$defs/count"},
+        "a_records": {"$ref": "#/$defs/count"},
+        "b_records": {"$ref": "#/$defs/count"},
+        "one_to_many_a": {"$ref": "#/$defs/count"},
+        "one_to_many_a_rate": {"$ref": "#/$defs/rate"},
+        "one_to_many_b": {"$ref": "#/$defs/count"},
+        "one_to_many_b_rate": {"$ref": "#/$defs/rate"}
+      }
+    },
+    "anomaly_samples": {
+      "type": "object",
+      "required": ["truth_dead", "truth_out_of_scope", "truth_unsampled", "one_to_many_a", "one_to_many_b", "duplicate_links"],
+      "additionalProperties": false,
+      "properties": {
+        "truth_dead": {"$ref": "#/$defs/hashes"},
+        "truth_out_of_scope": {"$ref": "#/$defs/hashes"},
+        "truth_unsampled": {"$ref": "#/$defs/hashes"},
+        "one_to_many_a": {"$ref": "#/$defs/hashes"},
+        "one_to_many_b": {"$ref": "#/$defs/hashes"},
+        "duplicate_links": {"$ref": "#/$defs/hashes"}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "hashes": {"type": "array", "maxItems": 20, "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}
+  }
+}

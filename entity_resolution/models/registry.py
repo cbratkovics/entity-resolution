@@ -15,7 +15,15 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-from entity_resolution.config import ARTIFACTS_DIR, MANIFEST_PATH, METHODS_DIR, REPO_ROOT
+import jsonschema
+
+from entity_resolution.config import (
+    ARTIFACTS_DIR,
+    MANIFEST_PATH,
+    METHODS_DIR,
+    REPO_ROOT,
+    SCHEMAS_DIR,
+)
 from entity_resolution.features import FEATURE_VERSION
 
 MANIFEST_VERSION = "2.0"
@@ -61,8 +69,23 @@ def read_manifest(path: Path = MANIFEST_PATH) -> dict[str, Any]:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def write_manifest(manifest: dict[str, Any], path: Path = MANIFEST_PATH) -> None:
+def schema(name: str) -> dict[str, Any]:
+    return json.loads((SCHEMAS_DIR / f"{name}.schema.json").read_text(encoding="utf-8"))
+
+
+def validate_and_write(obj: dict[str, Any], schema_name: str, path: Path) -> Path:
+    """Validate against ``artifacts/schemas/<name>.schema.json`` before anything is written."""
+    jsonschema.validate(obj, schema(schema_name))
+    _dump_json(obj, path)
+    return path
+
+
+def write_manifest(
+    manifest: dict[str, Any], path: Path = MANIFEST_PATH, *, validate: bool = False
+) -> None:
     manifest = {**manifest, "manifest_version": MANIFEST_VERSION, "updated_at_utc": utc_now_iso()}
+    if validate:
+        jsonschema.validate(manifest, schema("manifest"))
     _dump_json(manifest, path)
 
 

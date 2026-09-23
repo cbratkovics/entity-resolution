@@ -8,14 +8,19 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 |---|---|
 | `config.py` | `PROJECT`: sides, method versions, folds, tiers, paths. `side_a` is `None` until ADR 0001. |
 | `interfaces.py` | `SourceAdapter` protocol; `Record`, `TruthLink`, `CandidatePair`, `Decision` dataclasses. |
-| `data/loader.py` | adapter registry; `FixtureAdapter` for offline tests. Real adapters arrive in Phase 2. |
+| `data/loader.py` | adapter registry: `discogs` (side B), `musicbrainz` (side A, ADR 0001) and `fixture` for offline tests. |
+| `data/acquire.py` | dump specs, timed and hashed downloads behind a free-disk check, streaming extraction of named tar members. |
+| `data/discogs.py` | `DiscogsAdapter`: iterparse over the masters XML, year 0 as missing, joins only between artists, parquet cache. |
+| `data/musicbrainz.py` | `MusicBrainzAdapter`: ten core tables read positionally through DuckDB with fixed projections (release is `(id, release_group)` only), first-release year from release events (ADR 0002), truth links from master URLs. |
+| `data/truth.py` | truth links in their own frame with the statuses dead, out of scope, unsampled, in sample; the audit block. |
+| `data/sample.py` | deterministic membership hash, solved per-side thresholds, unlinked share, content hashes for the reproducibility gate. |
 | `data/contracts.py` | pure contract checks (grain, id format, year range, null rates) returning count-only reports. |
 | `features/` | the one normalisation and pair-feature module; `FEATURE_VERSION`. Filled in Phase 3. |
 | `eval/evaluator.py` | the evaluation artifact writer and metric definitions. Metric computation in Phase 4. |
 | `eval/methods_card.py` | renders `docs/METHODS_CARD.md` from artifacts; byte-stable. |
 | `models/registry.py` | manifest and method version records. |
 | `models/tiering.py` | tier thresholds, ambiguity gap and review-cost constants. |
-| `pipeline/match.py` | `make full` entry point; refuses to run until the pipeline exists. |
+| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`. Phases 3 and 4 add the later stages. |
 | `citations.py` | the number checker's rules, shared verbatim with demo 1. |
 | `features/normalize.py` | section 2.3 in full: the one normaliser (rule 5); the profiler already calls it. |
 

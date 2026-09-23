@@ -24,9 +24,16 @@ def _tracked() -> list[Path]:
 
 
 def _json_keys(obj, keys: set[str]) -> None:
+    """Forbidden keys whose value could be a record attribute: a string with whitespace or a
+    list of such strings. A key named ``name`` labelling a source, or ``artist_credit`` holding
+    a null rate, is metadata about columns, not a value from a record."""
     if isinstance(obj, dict):
         for k, v in obj.items():
-            keys.add(str(k).lower())
+            values = v if isinstance(v, list) else [v]
+            if str(k).lower() in FORBIDDEN_COLUMNS and any(
+                isinstance(x, str) and " " in x.strip() for x in values
+            ):
+                keys.add(str(k).lower())
             _json_keys(v, keys)
     elif isinstance(obj, list):
         for v in obj:
