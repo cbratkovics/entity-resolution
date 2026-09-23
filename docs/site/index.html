@@ -34,7 +34,8 @@
 <body>
 <main>
   <h1>Entity resolution: Discogs masters against MusicBrainz release groups</h1>
-  <p>Three methods score the same candidate pairs and are judged on the same test fold against labelled ground truth. Every figure here is read from the JSON files the dbt project exports into <code>data/</code>; the page types no number of its own. Keys are named under each table.</p>
+  <p>Three methods score the same blocked candidate pairs and are judged on the same test fold against labelled ground truth. Unlinked MusicBrainz records are unlabelled, not known non-matches: they count toward coverage and unverified accepts, never precision, recall or F1. Every figure here is read from the JSON files the dbt project exports into <code>data/</code>; the page types no number of its own.</p>
+  <div class="panel" id="takeaway"><strong>Decision summary</strong><p>Loading the artifact-backed comparison…</p></div>
 
   <h2>Methods on the test fold</h2>
   <div class="panel"><table id="methods"><thead><tr>
@@ -130,6 +131,14 @@
       body.appendChild(tr);
     });
   }
+  function takeaway(methodRows, blockingRows) {
+    var by = byMethod(methodRows), rules = (by.rules_v1 || [])[0], learned = (by.learned_v1 || [])[0];
+    if (!rules || !learned) { return; }
+    var p = document.querySelector('#takeaway p');
+    var blocking = blockingRows && blockingRows[0];
+    var lead = blocking ? 'Blocking retains ' + fmt(blocking.union_pair_completeness) + ' of in-scope truth pairs before the per-record cap and ' + fmt(blocking.after_cap_pair_completeness) + ' after it, leaving ' + fmt(blocking.candidate_pairs_after_cap) + ' candidate pairs. ' : '';
+    p.textContent = lead + 'At the selected tiers, fixed weighted rules have the higher F1 (' + fmt(rules.f1_auto_accept) + ' versus ' + fmt(learned.f1_auto_accept) + '). The learned classifier raises auto-accept precision (' + fmt(learned.precision_auto_accept) + ' versus ' + fmt(rules.precision_auto_accept) + ') and sends fewer records to review (' + fmt(learned.review_queue) + ' versus ' + fmt(rules.review_queue) + '), but has lower labelled recall (' + fmt(learned.recall_labelled_auto_accept) + ' versus ' + fmt(rules.recall_labelled_auto_accept) + '). The queue difference is therefore not an improvement at equal recall.';
+  }
   function reliability(rows) {
     var svg = document.getElementById('reliability');
     var plot = frame(svg, 'mean predicted probability of the top candidate', 'observed share correct');
@@ -217,7 +226,7 @@
     var p = document.createElement('p'); p.className = 'missing'; p.textContent = 'data/' + name + '.json is not exported yet (run make dbt).';
     document.getElementById(id).parentNode.appendChild(p);
   }
-  load('fct_eval_metrics').then(methodsTable).catch(function () { missing('methods', 'fct_eval_metrics'); });
+  Promise.all([load('fct_eval_metrics'), load('fct_blocking')]).then(function (all) { methodsTable(all[0]); takeaway(all[0], all[1]); }).catch(function () { missing('methods', 'fct_eval_metrics or fct_blocking'); });
   load('fct_calibration').then(reliability).catch(function () { missing('reliability', 'fct_calibration'); });
   load('fct_review_queue').then(cost).catch(function () { missing('cost', 'fct_review_queue'); });
   load('fct_review_floor').then(floor).catch(function () { missing('floor', 'fct_review_floor'); });

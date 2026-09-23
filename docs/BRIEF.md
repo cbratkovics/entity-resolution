@@ -1,8 +1,8 @@
 # Build brief — `entity-resolution`
 
-Independent portfolio project. Rebuilds a hybrid SQL/Python record-linkage pattern on open music catalogue data with labelled ground truth, so precision, recall, pair completeness and calibration are measured rather than asserted, and the difference between coverage and accuracy is shown with numbers.
+Open-data project that builds a hybrid SQL/Python record-linkage pattern on music catalogue data with labelled ground truth, so precision, recall, pair completeness and calibration are measured rather than asserted, and the difference between coverage and accuracy is shown with numbers.
 
-This file is the contract for every Claude Code session on this repo. Read it fully before any phase. It lives at `docs/BRIEF.md` and has an amendments log at the bottom; the log is the only part that changes after Phase 0.
+This file is the implementation contract for the repo. Read it fully before any phase. It lives at `docs/BRIEF.md` and has an amendments log at the bottom; the log is the only part that changes after Phase 0.
 
 ---
 

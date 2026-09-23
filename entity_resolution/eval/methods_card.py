@@ -8,6 +8,7 @@ that plainly; ``scripts/check_model_card.py`` fails on placeholder markers, neve
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +29,7 @@ def render(
     manifest: dict[str, Any],
     method_records: list[dict[str, Any]],
     eval_artifacts: list[dict[str, Any]],
+    blocking_report: dict[str, Any] | None = None,
 ) -> str:
     lines = [HEADER]
     lines.append("## Run")
@@ -57,6 +59,42 @@ def render(
         lines.append("")
         lines.append(FOOTER)
         return "\n".join(lines) + "\n"
+    eval_by_method = {e["method_version"]: e for e in eval_artifacts}
+    rules = eval_by_method.get("rules_v1", {}).get("metrics")
+    learned = eval_by_method.get("learned_v1", {}).get("metrics")
+    if rules and learned:
+        lines.append("## Decision summary")
+        lines.append("")
+        lines.append(
+            "At the selected tiers, the fixed weighted rules have the higher test-fold F1 "
+            f"(`{rules['at_auto_accept']['f1']}` versus `{learned['at_auto_accept']['f1']}`). "
+            "The learned classifier is the precision-first alternative: its auto-accept precision is "
+            f"`{learned['at_auto_accept']['precision']}` versus `{rules['at_auto_accept']['precision']}`, "
+            f"and its review queue is `{learned['ambiguity_rule']['review_queue']:,}` rather than "
+            f"`{rules['ambiguity_rule']['review_queue']:,}`, at the cost of lower labelled recall "
+            f"(`{learned['at_auto_accept']['recall_labelled']}` versus "
+            f"`{rules['at_auto_accept']['recall_labelled']}`). These are different tier policies, not "
+            "an equal-recall queue comparison. All accuracy metrics are over labelled test-fold A "
+            "records; unlinked records are unlabelled and appear only in coverage and unverified-accept "
+            "counts."
+        )
+        lines.append("")
+    if blocking_report:
+        pc = blocking_report["pair_completeness"]
+        lines.append("## Evaluation population and blocking")
+        lines.append("")
+        lines.append(
+            f"The manifest contains `{manifest['counts']['musicbrainz']['sampled']:,}` sampled "
+            "MusicBrainz release groups. Blocking is evaluated over "
+            f"`{pc['truth_pairs']:,}` in-scope truth pairs: completeness is `{pc['union']}` before "
+            f"the per-record candidate cap and `{pc['after_cap']}` after it, leaving "
+            f"`{blocking_report['candidate_pairs_after_cap']:,}` candidate pairs. Sources: "
+            "`artifacts/manifest.json#counts.musicbrainz.sampled`, "
+            "`artifacts/blocking_report.json#pair_completeness.truth_pairs`, "
+            "`#pair_completeness.union`, `#pair_completeness.after_cap`, and "
+            "`#candidate_pairs_after_cap`."
+        )
+        lines.append("")
     lines.append("## Methods")
     lines.append("")
     lines.append("| Method version | Definition | Fitted on | Source |")
@@ -150,8 +188,15 @@ def render(
 
 def render_from_tree(*, artifacts: Path = ARTIFACTS_DIR, methods_dir: Path = METHODS_DIR) -> str:
     manifest = registry.read_manifest(artifacts / "manifest.json")
+    blocking_path = artifacts / "blocking_report.json"
+    blocking_report = (
+        json.loads(blocking_path.read_text(encoding="utf-8")) if blocking_path.exists() else None
+    )
     return render(
-        manifest, registry.read_method_records(methods_dir), evaluator.read_all(artifacts)
+        manifest,
+        registry.read_method_records(methods_dir),
+        evaluator.read_all(artifacts),
+        blocking_report,
     )
 
 

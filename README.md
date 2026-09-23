@@ -6,10 +6,22 @@ Record linkage between two open music catalogues, measured against labelled grou
 
 ## What the numbers say
 
-- **Rules is the best single method at fixed tiers.** `rules_v1` auto-accepts with precision
-  0.994615 and recall 0.930917 against labelled pairs, F1 0.961712; `learned_v1` trades recall
-  for precision, 0.999344 at 0.849952, F1 0.918614; the exact rule stops at recall 0.760858.
-  <!-- cite: artifacts/eval_rules_v1.json#metrics.at_auto_accept.precision; artifacts/eval_rules_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_rules_v1.json#metrics.at_auto_accept.f1; artifacts/eval_learned_v1.json#metrics.at_auto_accept.precision; artifacts/eval_learned_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_learned_v1.json#metrics.at_auto_accept.f1; artifacts/eval_exact_v1.json#metrics.at_auto_accept.recall_labelled -->
+- **What was linked.** The run sampled 482,514 MusicBrainz Album release groups and compared
+  them with Discogs masters; 241,752 in-scope truth pairs measure blocking. <!-- cite: artifacts/manifest.json#counts.musicbrainz.sampled; artifacts/blocking_report.json#pair_completeness.truth_pairs -->
+  Unlinked MusicBrainz records are unlabelled—not known non-matches—so they inform coverage,
+  not the accuracy metrics.
+- **Blocking made the comparison tractable.** Five keys recover about 96.3% of those truth
+  pairs before the per-record candidate cap and about 96.2% after it, reducing the candidate
+  set to 7,595,477 pairs rather than scoring the full cross-product. <!-- cite: artifacts/blocking_report.json#pair_completeness.union; artifacts/blocking_report.json#pair_completeness.after_cap; artifacts/blocking_report.json#candidate_pairs_after_cap -->
+- **Fixed weighted rules have the highest F1 at the selected tiers.** On labelled test-fold
+  records, `rules_v1` has precision 0.994615 and recall 0.930917, for F1 0.961712;
+  `learned_v1` trades recall for higher precision, reaching 0.999344 precision at 0.849952
+  recall and F1 0.918614.
+  <!-- cite: artifacts/eval_rules_v1.json#metrics.at_auto_accept.precision; artifacts/eval_rules_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_rules_v1.json#metrics.at_auto_accept.f1; artifacts/eval_learned_v1.json#metrics.at_auto_accept.precision; artifacts/eval_learned_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_learned_v1.json#metrics.at_auto_accept.f1 -->
+- **The learned method can suit precision-first workflows.** At its specified tier settings it
+  sends 6,016 test-fold records to review, versus 25,076 for rules. <!-- cite: artifacts/eval_learned_v1.json#metrics.ambiguity_rule.review_queue; artifacts/eval_rules_v1.json#metrics.ambiguity_rule.review_queue -->
+  That smaller queue is not a free improvement: the learned method also has lower labelled
+  recall and coverage at its different thresholds.
 - **Unverified accepts are the coverage-versus-accuracy exhibit.** `rules_v1` auto-accepts 4,501
   unlabelled test-fold records, 0.093498 of its accepts, against 1,103 and 0.027062 for
   `learned_v1`; they lift coverage and are excluded from every accuracy figure.
@@ -26,11 +38,11 @@ Record linkage between two open music catalogues, measured against labelled grou
 
 Discogs masters (side B) are matched to MusicBrainz release groups (side A, chosen after
 profiling both candidates, ADR-0001). Because side A publishes its own links to Discogs, every
-method here is scored on real labelled pairs: precision, recall against labelled pairs, pair
-completeness of the blocking step, calibration of the probabilities, and the size of the human
-review queue at the chosen thresholds. Coverage (how many records got a match) is reported
-beside precision (how many of those matches are right), because in this data they are not the
-same number.
+method is compared on the same held-out labelled test-fold records: precision, recall against
+labelled pairs, pair completeness of the blocking step, calibration of the probabilities, and
+the size of the human review queue at the chosen thresholds. Coverage (how many records got a
+match) is reported beside precision (how many of those matches are right), because in this data
+they are not the same number.
 
 **Status.** Complete for v1 (`docs/BRIEF.md` Phase 6): three methods evaluated on a held-out
 test fold of labelled pairs, a dbt warehouse that reconciles to the artifacts, a docs site
@@ -38,16 +50,13 @@ rendered from the exported marts, and a findings document with numbered limitati
 
 ## How this was built
 
-An independent project on open data: no employer code or data is involved, and every source is
-CC0 (`docs/DATA_SOURCES.md`). It was built with Claude Code under `docs/BRIEF.md`, a contract
-with phase gates and checkpoints the owner reviewed at every phase, an ADR for every departure
+The implementation follows `docs/BRIEF.md`, with phase gates and an ADR for every departure
 ([0001](docs/adr/0001-side-a-musicbrainz-and-album-sample-scope.md),
 [0002](docs/adr/0002-musicbrainz-first-release-year-from-core-tables.md),
 [0003](docs/adr/0003-fold-by-a-record.md),
 [0004](docs/adr/0004-various-artists-canonical-token.md),
 [0005](docs/adr/0005-mapping-table-scope.md)), and CI that fails on any number in the docs
-without an artifact citation whose value matches. That is why a Claude model is listed as a
-co-author on the commits.
+without an artifact citation whose value matches.
 
 ## Pipeline
 
@@ -81,7 +90,8 @@ number in this file has no citation or does not match its artifact.
 | `learned_v1` | gradient-boosted classifier on the pair features; isotonic calibration on the `calibrate` fold | model: `fit`; calibrator: `calibrate` |
 
 All three share the same blocking, pair features, folds and tiering step, so the comparison is
-fair. Every reported metric comes from the `test` fold.
+controlled even though each method has its documented thresholds. Every reported metric comes
+from the `test` fold.
 
 ## Results
 

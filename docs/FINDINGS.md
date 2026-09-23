@@ -4,7 +4,9 @@ Every number below is read from a committed artifact and cited by key; the two t
 rendered from the artifacts by `scripts/render_findings.py` and checked byte for byte in CI.
 The unit of evaluation is the A record (a MusicBrainz release group of primary type Album):
 each gets one decision, its top Discogs master and a tier. Accuracy is measured over labelled
-A records on the test fold; coverage counts every test-fold A record.
+A records on the test fold; coverage counts every test-fold A record. The checked run contains
+482,514 sampled MusicBrainz release groups, while the blocking evaluation uses 241,752 in-scope
+truth pairs. <!-- cite: artifacts/manifest.json#counts.musicbrainz.sampled; artifacts/blocking_report.json#pair_completeness.truth_pairs -->
 
 ## Results on the test fold
 
@@ -25,6 +27,11 @@ fit-fold decisions, `rules_v1` auto-accepts with precision 0.994615 and recall 0
 against labelled pairs, F1 0.961712; the learned model reaches higher precision, 0.999344, at
 lower recall, 0.849952, F1 0.918614; the exact rule stops at recall 0.760858.
 <!-- cite: artifacts/eval_rules_v1.json#metrics.at_auto_accept.precision; artifacts/eval_rules_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_rules_v1.json#metrics.at_auto_accept.f1; artifacts/eval_learned_v1.json#metrics.at_auto_accept.precision; artifacts/eval_learned_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_learned_v1.json#metrics.at_auto_accept.f1; artifacts/eval_exact_v1.json#metrics.at_auto_accept.recall_labelled -->
+At the documented settings, the learned method's 6,016-record review queue is smaller than the
+rules queue of 25,076, which can be useful when auto-accept precision and review capacity matter
+more than recall. <!-- cite: artifacts/eval_learned_v1.json#metrics.ambiguity_rule.review_queue; artifacts/eval_rules_v1.json#metrics.ambiguity_rule.review_queue -->
+It is not an equal-recall queue reduction: learned recall and coverage are
+lower, and the methods use different tier thresholds.
 The price of the rules recall is its review tier: 25,076 of the 96,557 test-fold A records
 are queued, because the review floor searched under the precision rule lands at 0.075676 and
 almost every record with a candidate clears it. <!-- cite: artifacts/eval_rules_v1.json#metrics.ambiguity_rule.review_queue; artifacts/eval_rules_v1.json#metrics.test_a; artifacts/methods/rules_v1.json#parameters.thresholds.t_review -->
@@ -73,8 +80,8 @@ Keys: `artifacts/review_sensitivity.json#methods.<method_version>.review_floor_s
 
 ## Blocking
 
-The five blocking keys recover 96.3% of the sampled truth pairs before the per-A cap and 96.2%
-after it. <!-- cite: artifacts/blocking_report.json#pair_completeness.union; artifacts/blocking_report.json#pair_completeness.after_cap -->
+The five blocking keys recover about 96.3% of the 241,752 in-scope truth pairs in the blocking
+report before the per-A cap and about 96.2% after it. <!-- cite: artifacts/blocking_report.json#pair_completeness.truth_pairs; artifacts/blocking_report.json#pair_completeness.union; artifacts/blocking_report.json#pair_completeness.after_cap -->
 The cap keeps, for each A record, the 200 candidates with the most block keys (ties broken by
 B id); it dropped 6,035,571 of the 13,631,048 union pairs and lost 240 truth pairs, so the
 ordering costs almost nothing in pair completeness and removes most of the pairs from generic

@@ -13,6 +13,14 @@ _Generated from committed artifacts by `scripts/check_model_card.py --write`; do
 | Side B | discogs | fixed by `docs/BRIEF.md` (section `2.1`) |
 | Run id | `20260923T140606+0000` | `artifacts/manifest.json#run_id` |
 
+## Decision summary
+
+At the selected tiers, the fixed weighted rules have the higher test-fold F1 (`0.961712` versus `0.918614`). The learned classifier is the precision-first alternative: its auto-accept precision is `0.999344` versus `0.994615`, and its review queue is `6,016` rather than `25,076`, at the cost of lower labelled recall (`0.849952` versus `0.930917`). These are different tier policies, not an equal-recall queue comparison. All accuracy metrics are over labelled test-fold A records; unlinked records are unlabelled and appear only in coverage and unverified-accept counts.
+
+## Evaluation population and blocking
+
+The manifest contains `482,514` sampled MusicBrainz release groups. Blocking is evaluated over `241,752` in-scope truth pairs: completeness is `0.963355` before the per-record candidate cap and `0.962362` after it, leaving `7,595,477` candidate pairs. Sources: `artifacts/manifest.json#counts.musicbrainz.sampled`, `artifacts/blocking_report.json#pair_completeness.truth_pairs`, `#pair_completeness.union`, `#pair_completeness.after_cap`, and `#candidate_pairs_after_cap`.
+
 ## Methods
 
 | Method version | Definition | Fitted on | Source |
