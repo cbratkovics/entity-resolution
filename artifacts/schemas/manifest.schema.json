@@ -31,6 +31,12 @@
       }
     },
     "runtime": {"$ref": "#/$defs/runtime"},
+    "manifest_sha256_at_evaluation": {"$ref": "#/$defs/sha256"},
+    "methods": {
+      "type": "object",
+      "propertyNames": {"enum": ["exact_v1", "rules_v1", "learned_v1"]},
+      "additionalProperties": {"type": "object", "required": ["eval_artifact", "record"], "additionalProperties": false, "properties": {"eval_artifact": {"type": "string"}, "record": {"type": "string"}}}
+    },
     "pairs": {
       "type": "object",
       "required": ["candidates", "features", "pair_features"],

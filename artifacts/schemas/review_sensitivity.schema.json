@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Review sensitivity (sensitivity_version 1.0)",
+  "description": "artifacts/review_sensitivity.json: per method, the accept-threshold sweep from 0.50 to 0.99 with review queue size, expected false accepts and total cost per false-accept cost ratio, and the chosen thresholds beside the curve (docs/BRIEF.md 2.8). Test fold. Counts and numbers only.",
+  "type": "object",
+  "required": ["sensitivity_version", "generated_at_utc", "feature_version", "code_commit", "methods"],
+  "additionalProperties": false,
+  "properties": {
+    "sensitivity_version": {"const": "1.0"},
+    "generated_at_utc": {"type": "string"},
+    "feature_version": {"type": "string"},
+    "code_commit": {"type": "string"},
+    "methods": {
+      "type": "object",
+      "propertyNames": {"enum": ["exact_v1", "rules_v1", "learned_v1"]},
+      "additionalProperties": {
+        "type": "object",
+        "required": ["review_cost_units", "false_accept_cost_ratios", "review_min", "chosen_accept_threshold", "points"],
+        "additionalProperties": false,
+        "properties": {
+          "review_cost_units": {"type": "number", "minimum": 0},
+          "false_accept_cost_ratios": {"type": "array", "items": {"type": "number", "minimum": 0}},
+          "review_min": {"type": "number", "minimum": 0, "maximum": 1},
+          "chosen_accept_threshold": {"type": "number", "minimum": 0, "maximum": 1},
+          "points": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["threshold", "accepts", "review_queue", "precision_labelled", "expected_false_accepts", "total_cost"],
+              "additionalProperties": false,
+              "properties": {
+                "threshold": {"type": "number", "minimum": 0, "maximum": 1},
+                "accepts": {"type": "integer", "minimum": 0},
+                "review_queue": {"type": "integer", "minimum": 0},
+                "precision_labelled": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+                "expected_false_accepts": {"type": ["number", "null"], "minimum": 0},
+                "total_cost": {"type": "object", "additionalProperties": {"type": ["number", "null"], "minimum": 0}}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

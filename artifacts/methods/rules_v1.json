@@ -1,0 +1,41 @@
+{
+  "code_commit": "7eda8839df8d4e421a82fa398d460b73b24619e9",
+  "created_at_utc": "2026-09-23T12:25:26+00:00",
+  "definition": "score = 0.45*title_token_set + 0.35*artist_token_set + 0.20*year_agreement, year_agreement = 1 if year_diff == 0, 0.5 if 1, 0.25 if missing, else 0; weights fixed a priori; t_accept maximises F1 over labelled fit-fold A-record decisions, t_review is the score below which their cumulative precision falls under 0.50; raw score used as the probability (uncalibrated)",
+  "feature_version": "0.2.0",
+  "fitted_on": {
+    "thresholds": "fit"
+  },
+  "method_version": "rules_v1",
+  "parameters": {
+    "fit_decision_index_sha256": "d9be2bb0c459de2acee815f395b26c50ed40447d21ff66d2eedb14207cf7f56f",
+    "mapping": {
+      "full_path": "data/mapping/mapping_rules_v1.parquet",
+      "full_rows": 365264,
+      "test_exhibit": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+      "test_exhibit_sha256": "14bdd6888c008ec1ffd7f6b1dce54ce5da9b13072b05afedabec342c745c0884",
+      "test_rows": 73216
+    },
+    "thresholds": {
+      "decisions_searched": 141624,
+      "f1_at_t_accept": 0.9750403211354431,
+      "precision_at_t_accept": 0.9723638027293068,
+      "recall_at_t_accept": 0.9777316149251372,
+      "recall_base": 139121,
+      "review_precision_floor": 0.5,
+      "t_accept": 0.65,
+      "t_review": 0.0756756772994995
+    },
+    "weights": {
+      "artist_token_set": 0.35,
+      "title_token_set": 0.45,
+      "year_agreement": 0.2
+    }
+  },
+  "record_version": "1.0",
+  "tier_policy": {
+    "ambiguity_gap": 0.1,
+    "auto_accept_min": 0.65,
+    "review_min": 0.0756756772994995
+  }
+}

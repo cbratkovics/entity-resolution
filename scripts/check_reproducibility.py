@@ -34,7 +34,7 @@ from entity_resolution.config import (
 )
 from entity_resolution.data import acquire, sample
 
-VOLATILE_MANIFEST = ("updated_at_utc", "run_id", "runtime")
+VOLATILE_MANIFEST = ("updated_at_utc", "run_id", "runtime", "manifest_sha256_at_evaluation")
 VOLATILE_AUDIT = ("generated_at_utc",)
 
 
@@ -97,6 +97,46 @@ def main(argv: list[str] | None = None) -> int:
     old_c = _strip(json.loads((snap / "contracts.json").read_text()), VOLATILE_AUDIT)
     new_c = _strip(json.loads(CONTRACTS_PATH.read_text()), VOLATILE_AUDIT)
     problems += [f"contracts {d}" for d in _diff_keys(old_c, new_c)]
+    import gzip
+
+    from entity_resolution.config import MAPPING_ARTIFACT_DIR
+
+    for exhibit in sorted(MAPPING_ARTIFACT_DIR.glob("mapping_*.test.csv.gz")):
+        old_e = snap / exhibit.name
+        if not old_e.exists():
+            notes.append(f"{exhibit.name}: not in the snapshot; skipped")
+            continue
+        with gzip.open(old_e, "rt") as fh:
+            a_ = pd.read_csv(fh, dtype=str).drop(columns=["run_id", "decided_at_utc"])
+        with gzip.open(exhibit, "rt") as fh:
+            b_ = pd.read_csv(fh, dtype=str).drop(columns=["run_id", "decided_at_utc"])
+        if a_.equals(b_):
+            notes.append(
+                f"{exhibit.name}: identical content ({len(b_)} rows; run_id and decided_at_utc ignored)"
+            )
+        else:
+            problems.append(f"{exhibit.name}: content differs ({len(a_)} vs {len(b_)} rows)")
+    from entity_resolution.config import ARTIFACTS_DIR, METHODS_DIR
+
+    volatile_method = ("created_at_utc", "mapping")
+    for rec in sorted(METHODS_DIR.glob("*.json")):
+        old_r = snap / rec.name
+        if old_r.exists():
+            a_ = _strip(json.loads(old_r.read_text()), volatile_method)
+            b_ = _strip(json.loads(rec.read_text()), volatile_method)
+            # the exhibit's gzip hash changes with run_id and decided_at_utc inside the CSV;
+            # the exhibit content itself is compared above
+            a_["parameters"] = _strip(a_["parameters"], ("mapping",))
+            b_["parameters"] = _strip(b_["parameters"], ("mapping",))
+            problems += [f"method {rec.stem} {d}" for d in _diff_keys(a_, b_)]
+    for ev in sorted(ARTIFACTS_DIR.glob("eval_*.json")):
+        old_e = snap / ev.name
+        if old_e.exists():
+            a_ = _strip(json.loads(old_e.read_text()), VOLATILE_AUDIT)
+            b_ = _strip(json.loads(ev.read_text()), VOLATILE_AUDIT)
+            a_["input"] = {k: v for k, v in a_["input"].items() if k != "manifest_sha256"}
+            b_["input"] = {k: v for k, v in b_["input"].items() if k != "manifest_sha256"}
+            problems += [f"{ev.stem} {d}" for d in _diff_keys(a_, b_)]
     for label, path in (("blocking_report", BLOCKING_REPORT_PATH), ("split", SPLIT_PATH)):
         old_p = snap / path.name
         if old_p.exists() and path.exists():

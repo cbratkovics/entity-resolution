@@ -9,10 +9,10 @@
     "max_candidates_per_a": 2756,
     "pairs_dropped": 6035571
   },
-  "code_commit": "c599c1e91793e1aefbf33dcfd0f9af1c6c6cf286",
+  "code_commit": "7eda8839df8d4e421a82fa398d460b73b24619e9",
   "cross_product": 232504196040,
   "feature_version": "0.2.0",
-  "generated_at_utc": "2026-09-23T10:57:57+00:00",
+  "generated_at_utc": "2026-09-23T12:20:21+00:00",
   "keys": [
     "k_title3",
     "k_artist_year",

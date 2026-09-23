@@ -239,3 +239,85 @@ models:
         description: In-sample truth pairs whose A record is in the fold.
       - name: candidate_pairs
         description: Candidate pairs whose A record is in the fold.
+
+  - name: brz_review_sensitivity
+    description: "artifacts/review_sensitivity.json flattened to one row per (method_version, threshold, cost_ratio): the review-cost curve on the test fold. Empty until the first full build reaches the methods stage."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [method_version, threshold, cost_ratio]
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: generated_at_utc
+        description: When the sweep was written.
+      - name: feature_version
+        description: FEATURE_VERSION of the run.
+      - name: code_commit
+        description: Git commit of the code that produced the run.
+      - name: method_version
+        description: The method the curve belongs to.
+      - name: review_min
+        description: The method's review lower bound.
+      - name: chosen_accept_threshold
+        description: The method's chosen auto-accept threshold, reported beside the curve.
+      - name: threshold
+        description: The swept accept threshold (0.50 to 0.99).
+      - name: accepts
+        description: Test-fold A records accepted at this threshold.
+      - name: review_queue
+        description: Test-fold A records between review_min and the threshold.
+      - name: precision_labelled
+        description: Precision at this threshold over labelled test-fold decisions.
+      - name: expected_false_accepts
+        description: accepts times one minus precision_labelled.
+      - name: cost_ratio
+        description: Cost of one false accept relative to one review row (1, 5 or 20).
+      - name: total_cost
+        description: review_queue plus expected_false_accepts times cost_ratio, in review-row units.
+
+  - name: brz_mapping
+    description: "The committed mapping exhibits: test-fold A records with a non-reject decision, one row per (a_id, method_version) (ADR 0005). Identifiers and numbers only. Empty until the first full build reaches the methods stage."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [a_id, method_version]
+    columns:
+      - name: source_file
+        description: Path of the CSV file the row was read from.
+      - name: a_id
+        description: Side-A native id (MusicBrainz release group gid).
+      - name: b_id
+        description: The decided side-B native id (Discogs master id).
+      - name: method_version
+        description: The method that made the decision.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["exact_v1", "rules_v1", "learned_v1"]
+      - name: feature_version
+        description: FEATURE_VERSION the pair features were computed with.
+      - name: score
+        description: The method's raw score for the decided pair.
+      - name: probability
+        description: The probability the tier was assigned on (calibrated for learned_v1, raw otherwise).
+      - name: tier
+        description: auto_accept or review (reject rows are not in the exhibit).
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["auto_accept", "review"]
+      - name: block_keys
+        description: The blocking keys that produced the decided pair, joined by a pipe.
+      - name: top2_gap
+        description: Probability gap between the decided candidate and the runner-up; null with a single candidate.
+      - name: fold
+        description: The A record's fold; always test in the exhibit.
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["test"]
+      - name: run_id
+        description: Identifier of the full-build run.
+      - name: decided_at_utc
+        description: When the decision was written.

@@ -11,6 +11,7 @@ after the ``sample`` stage; until then :func:`run` stops after Phase 2 and says 
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import resource
@@ -43,7 +44,7 @@ from entity_resolution.eval import split
 from entity_resolution.features import FEATURE_VERSION, blocking, pairs
 from entity_resolution.models import registry
 
-PHASE_STATUS = "Phase 3 complete; methods, tiering and evaluation arrive in Phase 4"
+PHASE_STATUS = "Phase 4 complete: methods fitted, decided and evaluated"
 UNION_PAIR_GATE = 30_000_000
 """Stop and present before pair features if the blocking union exceeds this (owner's ruling)."""
 SAMPLE_RULE = (
@@ -321,13 +322,44 @@ def run(argv: list[str] | None = None) -> int:
             "pair_features": list(pairs.PAIR_FEATURES),
         }
 
-    manifest["runtime"] = rt.block()
+    # ---- Phase 4: methods, decisions, mapping, evaluation ---------------------------------
     manifest["feature_version"] = FEATURE_VERSION
+    with rt.stage("methods"):
+        from entity_resolution.pipeline import methods as methods_stage
+
+        manifest_sha256 = hashlib.sha256(
+            json.dumps(
+                {k: v for k, v in manifest.items() if k != "runtime"}, sort_keys=True
+            ).encode()
+        ).hexdigest()
+        evals, _sens, findings = methods_stage.run_methods(
+            features=feats,
+            in_sample=in_sample,
+            a_ids=a_sample["native_id"].astype("string"),
+            manifest_sha256=manifest_sha256,
+            code_commit=manifest["code_commit"],
+            run_id=manifest["run_id"],
+            now=registry.utc_now_iso(),
+        )
+        manifest["methods"] = {
+            m: {"eval_artifact": f"eval_{m}.json", "record": f"methods/{m}.json"} for m in evals
+        }
+        manifest["manifest_sha256_at_evaluation"] = manifest_sha256
+
+    manifest["runtime"] = rt.block()
     registry.write_manifest(manifest, MANIFEST_PATH, validate=True)
     print(
         f"wrote {MANIFEST_PATH}, {TRUTH_AUDIT_PATH}, {CONTRACTS_PATH}, "
-        f"{BLOCKING_REPORT_PATH}, {SPLIT_PATH}"
+        f"{BLOCKING_REPORT_PATH}, {SPLIT_PATH}, eval_*.json, methods/*.json, mapping/*.test.csv.gz"
     )
+    if findings:
+        print(
+            "make full: STOP, too-good-to-be-true rule fired; audit before the checkpoint:",
+            file=sys.stderr,
+        )
+        for f in findings:
+            print("   " + f, file=sys.stderr)
+        return 4
     print(f"make full: {PHASE_STATUS}")
     return 0
 

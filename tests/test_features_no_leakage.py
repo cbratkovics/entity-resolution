@@ -58,16 +58,87 @@ def test_every_labelled_a_and_its_b_are_in_the_sample(frames) -> None:
     assert (frames["truth"]["status"] == "truth_unsampled").sum() == 0
 
 
-def test_no_test_b_id_in_any_fitted_index() -> None:
-    pytest.skip("fitted objects arrive in Phase 4")
+@pytest.fixture(scope="module")
+def fitted():
+    from entity_resolution.config import METHODS_DIR, PAIRS_DIR
+
+    if (
+        not (METHODS_DIR / "learned_v1.json").exists()
+        or not (PAIRS_DIR / "features.parquet").exists()
+    ):
+        pytest.skip("fitted objects absent: the full build has not reached the methods stage")
+    feats = pd.read_parquet(PAIRS_DIR / "features.parquet")
+    records = {p.stem: json.loads(p.read_text()) for p in METHODS_DIR.glob("*.json")}
+    return feats, records
 
 
-def test_rules_thresholds_recompute_from_fit_alone() -> None:
-    pytest.skip("rules_v1 arrives in Phase 4")
+def test_no_test_a_id_in_any_fitted_index(frames, fitted) -> None:
+    """ADR 0003: fitted objects saw fit-fold (classifier, thresholds) and calibrate-fold
+    (calibrator) pairs of labelled A records only; the index hashes recompute from the features
+    and the truth table, and no test-fold A id is in them."""
+    from entity_resolution.models import labels as labels_mod
+    from entity_resolution.models import learned, tiering
+
+    feats, records = fitted
+    truth = frames["truth"]
+    lab = labels_mod.from_truth(truth[truth["status"] == "truth_in_sample"][["a_id", "b_id"]])
+    labelled = feats["a_id"].isin(lab.labelled_a)
+    fit_pairs = feats[(feats["fold"] == "fit") & labelled]
+    cal_pairs = feats[(feats["fold"] == "calibrate") & labelled]
+    assert not set(fit_pairs["a_id"]) & set(feats[feats["fold"] == "test"]["a_id"])
+    p = records["learned_v1"]["parameters"]
+    assert p["fit_index_sha256"] == learned.index_sha256(fit_pairs)
+    assert p["calibrate_index_sha256"] == learned.index_sha256(cal_pairs)
+    assert p["fit_pairs"] == len(fit_pairs) and p["calibrate_pairs"] == len(cal_pairs)
+    assert set(records["learned_v1"]["fitted_on"].values()) == {"fit", "calibrate"}
+    assert records["exact_v1"]["fitted_on"] is None
+    # rules: the searched decisions are fit-fold labelled A records
+    from entity_resolution.models import rules
+
+    s = rules.score(feats)
+    fit_frame = pd.DataFrame(
+        {"a_id": feats["a_id"], "b_id": feats["b_id"], "score": s, "probability": s}
+    )[(feats["fold"] == "fit").to_numpy() & labelled.to_numpy()]
+    dec = tiering.decide(fit_frame, accept_min=1.1, review_min=1.1)
+    assert records["rules_v1"]["parameters"]["fit_decision_index_sha256"] == learned.index_sha256(
+        dec
+    )
 
 
-def test_calibrator_fit_index_within_calibrate_fold() -> None:
-    pytest.skip("learned_v1 arrives in Phase 4")
+def test_rules_thresholds_recompute_from_fit_alone(frames, fitted) -> None:
+    from entity_resolution.models import labels as labels_mod
+    from entity_resolution.models import rules, tiering
+
+    feats, records = fitted
+    truth = frames["truth"]
+    lab = labels_mod.from_truth(truth[truth["status"] == "truth_in_sample"][["a_id", "b_id"]])
+    labelled = feats["a_id"].isin(lab.labelled_a).to_numpy()
+    fit_mask = (feats["fold"] == "fit").to_numpy() & labelled
+    s = rules.score(feats)
+    fit_frame = pd.DataFrame(
+        {"a_id": feats["a_id"], "b_id": feats["b_id"], "score": s, "probability": s}
+    )[fit_mask]
+    dec = tiering.decide(fit_frame, accept_min=1.1, review_min=1.1)
+    dec["correct"] = [lab.is_correct(a, b) for a, b in zip(dec["a_id"], dec["b_id"], strict=True)]
+    reachable = {
+        a for a, b in zip(fit_frame["a_id"], fit_frame["b_id"], strict=True) if lab.is_correct(a, b)
+    }
+    fitted_thr = rules.fit_thresholds(dec[["score", "correct"]], len(reachable))
+    stored = records["rules_v1"]["parameters"]["thresholds"]
+    assert (
+        fitted_thr["t_accept"] == stored["t_accept"]
+        and fitted_thr["t_review"] == stored["t_review"]
+    )
+    assert records["rules_v1"]["tier_policy"]["auto_accept_min"] == stored["t_accept"]
+
+
+def test_no_truth_column_reaches_the_methods(fitted) -> None:
+    """The features frame the methods score carries ids, fold, block keys and PAIR_FEATURES;
+    no label, status or truth column (ruling e: the exact_v1 audit)."""
+    from entity_resolution.features.pairs import PAIR_COLUMNS
+
+    feats, _ = fitted
+    assert list(feats.columns) == list(PAIR_COLUMNS)
 
 
 def test_candidates_carry_no_truth_column_and_inherit_the_a_fold(frames) -> None:

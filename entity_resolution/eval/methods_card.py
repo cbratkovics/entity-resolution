@@ -16,7 +16,12 @@ from entity_resolution.eval import evaluator
 from entity_resolution.models import registry
 
 CARD_PATH = REPO_ROOT / "docs" / "METHODS_CARD.md"
-HEADER = "# Methods card\n\n_Generated from committed artifacts by `scripts/check_model_card.py --write`; do not edit by hand._\n"
+HEADER = (
+    "# Methods card\n\n_Generated from committed artifacts by `scripts/check_model_card.py --write`; do not "
+    "edit by hand. The block below is validated against the artifacts by that script, which is "
+    "why the number checker skips it._\n\n<!-- generated:methods_card start -->"
+)
+FOOTER = "<!-- generated:methods_card end -->"
 
 
 def render(
@@ -50,7 +55,8 @@ def render(
             "docs/BRIEF.md (section `2.7`) and are built in Phase 4."
         )
         lines.append("")
-        return "\n".join(lines)
+        lines.append(FOOTER)
+        return "\n".join(lines) + "\n"
     lines.append("## Methods")
     lines.append("")
     lines.append("| Method version | Definition | Fitted on | Source |")
@@ -61,26 +67,74 @@ def render(
             f"| `{mv}` | {rec['definition']} | {rec['fitted_on'] or 'nothing'} | `artifacts/methods/{mv}.json` |"
         )
     lines.append("")
-    lines.append("## Evaluation (test fold only)")
+    lines.append("## Results (test fold only)")
+    lines.append("")
+    lines.append(
+        "| Method | Pair completeness (test) | Precision | Recall (labelled) | Recall (overall) | F1 | Coverage | Unverified accepts | Review queue | ECE (decisions) |"
+    )
+    lines.append("|---|---|---|---|---|---|---|---|---|---|")
+    for ev in sorted(eval_artifacts, key=lambda e: e["method_version"]):
+        mv = ev["method_version"]
+        m = ev.get("metrics")
+        if m is None:
+            lines.append(f"| `{mv}` | not computed | | | | | | | | |")
+            continue
+        acc = m["at_auto_accept"]
+        lines.append(
+            f"| `{mv}` | {m['pair_completeness_test']} | {acc['precision']} | {acc['recall_labelled']} | "
+            f"{m['recall_overall']} | {acc['f1']} | {m['coverage']} | {m['unverified_accepts']['count']} "
+            f"({m['unverified_accepts']['share_of_accepts']} of accepts) | {m['ambiguity_rule']['review_queue']} | "
+            f"{m['calibration']['decision_level']['ece']} |"
+        )
+    lines.append("")
+    lines.append(
+        "Keys per method: `artifacts/eval_<method_version>.json#metrics.pair_completeness_test`, "
+        "`#metrics.at_auto_accept.precision`, `#metrics.at_auto_accept.recall_labelled`, "
+        "`#metrics.recall_overall`, `#metrics.at_auto_accept.f1`, `#metrics.coverage`, "
+        "`#metrics.unverified_accepts.count`, `#metrics.unverified_accepts.share_of_accepts`, "
+        "`#metrics.ambiguity_rule.review_queue`, `#metrics.calibration.decision_level.ece`."
+    )
     lines.append("")
     for ev in sorted(eval_artifacts, key=lambda e: e["method_version"]):
         mv = ev["method_version"]
         lines.append(f"### `{mv}`")
         lines.append("")
         lines.append(
-            f"Source: `artifacts/eval_{mv}.json`; input feature version `{ev['input']['feature_version']}`, code commit `{ev['input']['code_commit']}`."
+            f"Source: `artifacts/eval_{mv}.json`; feature version `{ev['input']['feature_version']}`, "
+            f"code commit `{ev['input']['code_commit']}`; thresholds auto_accept_min "
+            f"`{ev['thresholds']['auto_accept_min']}`, review_min `{ev['thresholds']['review_min']}`, "
+            f"ambiguity_gap `{ev['thresholds']['ambiguity_gap']}`."
         )
         lines.append("")
-        if ev.get("metrics") is None:
-            lines.append("Metrics not computed yet (Phase 4).")
+        m = ev.get("metrics")
+        if m is None:
+            lines.append("Metrics not computed yet.")
             lines.append("")
             continue
         lines.append("| Metric | Value | Key |")
         lines.append("|---|---|---|")
-        for key in sorted(ev["metrics"]):
-            value = ev["metrics"][key]
-            if isinstance(value, int | float):
-                lines.append(f"| {key} | {value} | `artifacts/eval_{mv}.json#metrics.{key}` |")
+        flat = {
+            "test_a": m["test_a"],
+            "labelled_a": m["labelled_a"],
+            "labelled_a_reachable": m["labelled_a_reachable"],
+            "at_auto_accept.accepted": m["at_auto_accept"]["accepted"],
+            "at_auto_accept.correct": m["at_auto_accept"]["correct"],
+            "at_auto_accept_or_review.precision": m["at_auto_accept_or_review"]["precision"],
+            "at_auto_accept_or_review.recall_labelled": m["at_auto_accept_or_review"][
+                "recall_labelled"
+            ],
+            "coverage_all_folds": m["coverage_all_folds"],
+            "tier_shares.auto_accept": m["tier_shares"]["auto_accept"],
+            "tier_shares.review": m["tier_shares"]["review"],
+            "tier_shares.reject": m["tier_shares"]["reject"],
+            "ambiguity_rule.decisions_moved_to_review": m["ambiguity_rule"][
+                "decisions_moved_to_review"
+            ],
+            "calibration.decision_level.brier": m["calibration"]["decision_level"]["brier"],
+            "calibration.pair_level.ece": m["calibration"]["pair_level"]["ece"],
+        }
+        for key, value in flat.items():
+            lines.append(f"| {key} | {value} | `artifacts/eval_{mv}.json#metrics.{key}` |")
         lines.append("")
     lines.append("## Metric definitions")
     lines.append("")
@@ -90,7 +144,8 @@ def render(
     for key in sorted(definitions):
         lines.append(f"- `{key}`: {definitions[key]}")
     lines.append("")
-    return "\n".join(lines)
+    lines.append(FOOTER)
+    return "\n".join(lines) + "\n"
 
 
 def render_from_tree(*, artifacts: Path = ARTIFACTS_DIR, methods_dir: Path = METHODS_DIR) -> str:

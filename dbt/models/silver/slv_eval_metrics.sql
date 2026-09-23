@@ -3,7 +3,7 @@
 -- fold by construction (docs/BRIEF.md 2.9). The gold reconciliation tests compare
 -- fct_eval_metrics against this table. Empty until the first artifact is committed.
 {% set metric_paths = [
-    ['pair_completeness', '$.pair_completeness.union'],
+    ['pair_completeness', '$.pair_completeness_test'],
     ['precision_auto_accept', '$.at_auto_accept.precision'],
     ['recall_labelled_auto_accept', '$.at_auto_accept.recall_labelled'],
     ['f1_auto_accept', '$.at_auto_accept.f1'],
@@ -16,8 +16,8 @@
     ['tier_share_auto_accept', '$.tier_shares.auto_accept'],
     ['tier_share_review', '$.tier_shares.review'],
     ['tier_share_reject', '$.tier_shares.reject'],
-    ['ece', '$.calibration.ece'],
-    ['brier', '$.calibration.brier']
+    ['ece', '$.calibration.decision_level.ece'],
+    ['brier', '$.calibration.decision_level.brier']
 ] %}
 
 with artifacts as (

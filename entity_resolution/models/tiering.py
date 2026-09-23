@@ -37,3 +37,38 @@ def tier_for(probability: float) -> str:
     if probability >= REVIEW_MIN:
         return "review"
     return "reject"
+
+
+def decide(
+    pairs,  # type: ignore[no-untyped-def]
+    *,
+    accept_min: float = AUTO_ACCEPT_MIN,
+    review_min: float = REVIEW_MIN,
+    ambiguity_gap: float = AMBIGUITY_GAP,
+):
+    """One decision per A record (docs/BRIEF.md 2.8): the top-probability candidate, its
+    top-2 gap, and a tier from ``accept_min`` / ``review_min``; a non-reject decision whose gap
+    is below ``ambiguity_gap`` goes to review regardless of probability.
+
+    ``pairs`` has ``a_id``, ``b_id``, ``score``, ``probability`` and optionally ``fold`` and
+    ``block_keys``. Ties on probability are broken by ``b_id`` so the decision is deterministic.
+    Returns one row per A record present in ``pairs`` with ``ambiguity_review`` marking the
+    rows the gap rule moved."""
+    import numpy as np
+    import pandas as pd
+
+    ordered = pairs.sort_values(["a_id", "probability", "b_id"], ascending=[True, False, True])
+    top = ordered.groupby("a_id", sort=False).head(2)
+    first = top.groupby("a_id", sort=False).nth(0).set_index("a_id")
+    second = top.groupby("a_id", sort=False).nth(1).set_index("a_id")["probability"]
+    out = first.copy()
+    out["top2_gap"] = (out["probability"] - second.reindex(out.index)).astype("float64")
+    p = out["probability"].to_numpy(dtype="float64")
+    tier = np.where(p >= accept_min, "auto_accept", np.where(p >= review_min, "review", "reject"))
+    gap = out["top2_gap"].to_numpy(dtype="float64")
+    ambiguous = (tier != "reject") & ~np.isnan(gap) & (gap < ambiguity_gap)
+    tier = np.where(ambiguous, "review", tier)
+    out["tier"] = pd.Series(tier, index=out.index, dtype="string")
+    out["ambiguity_review"] = ambiguous & (np.where(p >= accept_min, True, False))
+    out["top2_gap"] = out["top2_gap"].where(~np.isnan(gap), pd.NA)
+    return out.reset_index()

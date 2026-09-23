@@ -1,159 +1,95 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "Evaluation artifact (artifact_version 1.0)",
-  "description": "artifacts/eval_<method_version>.json: one method's evaluation on the test fold (docs/BRIEF.md 2.9). Every published number is read from here. `metrics` is null until Phase 4 computes it; when present its structure is enforced.",
+  "description": "artifacts/eval_<method_version>.json: one method's evaluation on the test fold (docs/BRIEF.md 2.9 as amended by ADR 0001, ADR 0003 and the Phase 4 rulings). The unit is the A record; accuracy metrics are over labelled A records; coverage and unverified accepts count the rest. `metrics` is null only on an empty tree.",
   "type": "object",
-  "required": [
-    "artifact_version",
-    "method_version",
-    "generated_at_utc",
-    "input",
-    "fold_counts",
-    "metric_definitions",
-    "metrics"
-  ],
+  "required": ["artifact_version", "method_version", "generated_at_utc", "input", "fold_counts", "thresholds", "metric_definitions", "metrics"],
   "additionalProperties": false,
   "properties": {
     "artifact_version": {"const": "1.0"},
-    "method_version": {"type": "string", "enum": ["exact_v1", "rules_v1", "learned_v1"]},
+    "method_version": {"enum": ["exact_v1", "rules_v1", "learned_v1"]},
     "generated_at_utc": {"type": "string"},
     "input": {
       "type": "object",
       "required": ["manifest_sha256", "feature_version", "code_commit"],
       "additionalProperties": false,
-      "properties": {
-        "manifest_sha256": {"type": "string"},
-        "feature_version": {"type": "string"},
-        "code_commit": {"type": "string"}
-      }
+      "properties": {"manifest_sha256": {"type": "string"}, "feature_version": {"type": "string"}, "code_commit": {"type": "string"}}
     },
     "fold_counts": {
-      "description": "Per fold: A records, B records, candidate pairs and sampled truth pairs.",
       "type": "object",
       "required": ["fit", "calibrate", "test"],
       "additionalProperties": false,
-      "properties": {
-        "fit": {"$ref": "#/$defs/fold_count"},
-        "calibrate": {"$ref": "#/$defs/fold_count"},
-        "test": {"$ref": "#/$defs/fold_count"}
-      }
+      "properties": {"fit": {"$ref": "#/$defs/fold_count"}, "calibrate": {"$ref": "#/$defs/fold_count"}, "test": {"$ref": "#/$defs/fold_count"}}
     },
-    "metric_definitions": {
+    "thresholds": {
       "type": "object",
-      "additionalProperties": {"type": "string"}
+      "required": ["auto_accept_min", "review_min", "ambiguity_gap"],
+      "additionalProperties": false,
+      "properties": {"auto_accept_min": {"$ref": "#/$defs/unit"}, "review_min": {"$ref": "#/$defs/unit"}, "ambiguity_gap": {"$ref": "#/$defs/unit"}}
     },
-    "metrics": {
-      "oneOf": [{"type": "null"}, {"$ref": "#/$defs/metrics"}]
-    }
+    "metric_definitions": {"type": "object", "additionalProperties": {"type": "string"}},
+    "metrics": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/metrics"}]}
   },
   "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "unit": {"type": "number", "minimum": 0, "maximum": 1},
+    "unit_or_null": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
     "fold_count": {
       "type": "object",
-      "required": ["a_records", "b_records", "candidate_pairs", "truth_pairs"],
+      "required": ["a_records", "labelled_a_records", "candidate_pairs", "decisions"],
       "additionalProperties": false,
-      "properties": {
-        "a_records": {"type": "integer", "minimum": 0},
-        "b_records": {"type": "integer", "minimum": 0},
-        "candidate_pairs": {"type": "integer", "minimum": 0},
-        "truth_pairs": {"type": "integer", "minimum": 0}
-      }
+      "properties": {"a_records": {"$ref": "#/$defs/count"}, "labelled_a_records": {"$ref": "#/$defs/count"}, "candidate_pairs": {"$ref": "#/$defs/count"}, "decisions": {"$ref": "#/$defs/count"}}
     },
-    "unit": {"type": "number", "minimum": 0, "maximum": 1},
     "tier_metrics": {
       "type": "object",
-      "required": ["precision", "recall_labelled", "f1"],
+      "required": ["accepted", "correct", "precision", "recall_labelled", "f1"],
+      "additionalProperties": false,
+      "properties": {"accepted": {"$ref": "#/$defs/count"}, "correct": {"$ref": "#/$defs/count"}, "precision": {"$ref": "#/$defs/unit_or_null"}, "recall_labelled": {"$ref": "#/$defs/unit_or_null"}, "f1": {"$ref": "#/$defs/unit_or_null"}}
+    },
+    "reliability": {
+      "type": "object",
+      "required": ["n", "bins", "ece", "brier"],
       "additionalProperties": false,
       "properties": {
-        "precision": {"$ref": "#/$defs/unit"},
-        "recall_labelled": {"$ref": "#/$defs/unit"},
-        "f1": {"$ref": "#/$defs/unit"}
+        "n": {"$ref": "#/$defs/count"},
+        "bins": {
+          "type": "array", "minItems": 10, "maxItems": 10,
+          "items": {
+            "type": "object",
+            "required": ["lower", "upper", "n", "mean_probability", "observed_rate"],
+            "additionalProperties": false,
+            "properties": {"lower": {"$ref": "#/$defs/unit"}, "upper": {"$ref": "#/$defs/unit"}, "n": {"$ref": "#/$defs/count"}, "mean_probability": {"$ref": "#/$defs/unit_or_null"}, "observed_rate": {"$ref": "#/$defs/unit_or_null"}}
+          }
+        },
+        "ece": {"$ref": "#/$defs/unit_or_null"},
+        "brier": {"$ref": "#/$defs/unit_or_null"}
       }
     },
     "confusion_cell": {
       "type": "object",
       "required": ["tp", "fp", "fn", "tn"],
       "additionalProperties": false,
-      "properties": {
-        "tp": {"type": "integer", "minimum": 0},
-        "fp": {"type": "integer", "minimum": 0},
-        "fn": {"type": "integer", "minimum": 0},
-        "tn": {"type": "integer", "minimum": 0}
-      }
+      "properties": {"tp": {"$ref": "#/$defs/count"}, "fp": {"$ref": "#/$defs/count"}, "fn": {"$ref": "#/$defs/count"}, "tn": {"$ref": "#/$defs/count"}}
     },
     "metrics": {
       "type": "object",
-      "required": [
-        "pair_completeness",
-        "at_auto_accept",
-        "at_auto_accept_or_review",
-        "recall_overall",
-        "coverage",
-        "coverage_all_folds",
-        "tier_shares",
-        "calibration",
-        "confusion"
-      ],
+      "required": ["test_a", "labelled_a", "labelled_a_reachable", "pair_completeness_test", "at_auto_accept", "at_auto_accept_or_review", "recall_overall", "coverage", "coverage_all_folds", "unverified_accepts", "tier_shares", "ambiguity_rule", "calibration", "confusion"],
       "additionalProperties": false,
       "properties": {
-        "pair_completeness": {
-          "type": "object",
-          "required": ["union", "per_key"],
-          "additionalProperties": false,
-          "properties": {
-            "union": {"$ref": "#/$defs/unit"},
-            "per_key": {"type": "object", "additionalProperties": {"$ref": "#/$defs/unit"}}
-          }
-        },
+        "test_a": {"$ref": "#/$defs/count"},
+        "labelled_a": {"$ref": "#/$defs/count"},
+        "labelled_a_reachable": {"$ref": "#/$defs/count"},
+        "pair_completeness_test": {"$ref": "#/$defs/unit_or_null"},
         "at_auto_accept": {"$ref": "#/$defs/tier_metrics"},
         "at_auto_accept_or_review": {"$ref": "#/$defs/tier_metrics"},
-        "recall_overall": {"$ref": "#/$defs/unit"},
-        "coverage": {"$ref": "#/$defs/unit"},
-        "coverage_all_folds": {"$ref": "#/$defs/unit"},
-        "tier_shares": {
-          "type": "object",
-          "required": ["auto_accept", "review", "reject"],
-          "additionalProperties": false,
-          "properties": {
-            "auto_accept": {"$ref": "#/$defs/unit"},
-            "review": {"$ref": "#/$defs/unit"},
-            "reject": {"$ref": "#/$defs/unit"}
-          }
-        },
-        "calibration": {
-          "type": "object",
-          "required": ["bins", "ece", "brier"],
-          "additionalProperties": false,
-          "properties": {
-            "bins": {
-              "type": "array",
-              "minItems": 10,
-              "maxItems": 10,
-              "items": {
-                "type": "object",
-                "required": ["lower", "upper", "n", "mean_probability", "observed_rate"],
-                "additionalProperties": false,
-                "properties": {
-                  "lower": {"$ref": "#/$defs/unit"},
-                  "upper": {"$ref": "#/$defs/unit"},
-                  "n": {"type": "integer", "minimum": 0},
-                  "mean_probability": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/unit"}]},
-                  "observed_rate": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/unit"}]}
-                }
-              }
-            },
-            "ece": {"$ref": "#/$defs/unit"},
-            "brier": {"$ref": "#/$defs/unit"}
-          }
-        },
-        "confusion": {
-          "type": "object",
-          "required": ["auto_accept", "review"],
-          "additionalProperties": false,
-          "properties": {
-            "auto_accept": {"$ref": "#/$defs/confusion_cell"},
-            "review": {"$ref": "#/$defs/confusion_cell"}
-          }
-        }
+        "recall_overall": {"$ref": "#/$defs/unit_or_null"},
+        "coverage": {"$ref": "#/$defs/unit_or_null"},
+        "coverage_all_folds": {"$ref": "#/$defs/unit_or_null"},
+        "unverified_accepts": {"type": "object", "required": ["count", "share_of_accepts"], "additionalProperties": false, "properties": {"count": {"$ref": "#/$defs/count"}, "share_of_accepts": {"$ref": "#/$defs/unit_or_null"}}},
+        "tier_shares": {"type": "object", "required": ["auto_accept", "review", "reject"], "additionalProperties": false, "properties": {"auto_accept": {"$ref": "#/$defs/unit_or_null"}, "review": {"$ref": "#/$defs/unit_or_null"}, "reject": {"$ref": "#/$defs/unit_or_null"}}},
+        "ambiguity_rule": {"type": "object", "required": ["decisions_moved_to_review", "review_queue"], "additionalProperties": false, "properties": {"decisions_moved_to_review": {"$ref": "#/$defs/count"}, "review_queue": {"$ref": "#/$defs/count"}}},
+        "calibration": {"type": "object", "required": ["decision_level", "pair_level"], "additionalProperties": false, "properties": {"decision_level": {"$ref": "#/$defs/reliability"}, "pair_level": {"$ref": "#/$defs/reliability"}}},
+        "confusion": {"type": "object", "required": ["auto_accept", "review"], "additionalProperties": false, "properties": {"auto_accept": {"$ref": "#/$defs/confusion_cell"}, "review": {"$ref": "#/$defs/confusion_cell"}}}
       }
     }
   }

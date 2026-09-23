@@ -1,0 +1,62 @@
+{
+  "code_commit": "7eda8839df8d4e421a82fa398d460b73b24619e9",
+  "created_at_utc": "2026-09-23T12:25:26+00:00",
+  "definition": "HistGradientBoostingClassifier on PAIR_FEATURES (class_weight balanced, fixed hyperparameters) trained on fit-fold pairs of labelled A records; isotonic calibration (out_of_bounds clip) fitted on calibrate-fold labelled pairs; calibrated probability drives the tiers",
+  "feature_version": "0.2.0",
+  "fitted_on": {
+    "calibrator": "calibrate",
+    "model": "fit"
+  },
+  "method_version": "learned_v1",
+  "parameters": {
+    "calibrate_index_sha256": "e5c4774ae816871eee87904d307e2a4039067f9cf504bea2d23ac2f1992aa786",
+    "calibrate_pairs": 901804,
+    "calibrate_positive": 46631,
+    "calibration": "isotonic, out_of_bounds clip",
+    "features": [
+      "title_ratio",
+      "title_partial",
+      "title_token_sort",
+      "title_token_set",
+      "title_jw",
+      "artist_ratio",
+      "artist_token_set",
+      "artist_jw",
+      "artist_full_exact",
+      "title_exact_norm",
+      "year_diff",
+      "year_either_missing",
+      "both_va",
+      "title_len_diff",
+      "n_block_keys",
+      "qualifier_mismatch"
+    ],
+    "fit_index_sha256": "9d5db445556feca43bae8185282ac1a193c82c107fb7a1f620c3c56ce28057f7",
+    "fit_pairs": 2719003,
+    "fit_positive": 139331,
+    "hyperparameters": {
+      "class_weight": "balanced",
+      "early_stopping": false,
+      "l2_regularization": 1.0,
+      "learning_rate": 0.1,
+      "max_iter": 300,
+      "max_leaf_nodes": 31,
+      "min_samples_leaf": 50,
+      "random_state": 0
+    },
+    "mapping": {
+      "full_path": "data/mapping/mapping_learned_v1.parquet",
+      "full_rows": 233333,
+      "test_exhibit": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+      "test_exhibit_sha256": "6f6164c44312721e8a3da5a5d40344abd8c0bd53c339eb8d9adc6934ed74da2e",
+      "test_rows": 46774
+    },
+    "sklearn_version": "1.9.1"
+  },
+  "record_version": "1.0",
+  "tier_policy": {
+    "ambiguity_gap": 0.1,
+    "auto_accept_min": 0.95,
+    "review_min": 0.5
+  }
+}

@@ -1,5 +1,5 @@
 {
-  "code_commit": "c599c1e91793e1aefbf33dcfd0f9af1c6c6cf286",
+  "code_commit": "7eda8839df8d4e421a82fa398d460b73b24619e9",
   "counts": {
     "discogs": {
       "in_scope": 2589349,
@@ -18,7 +18,22 @@
     }
   },
   "feature_version": "0.2.0",
+  "manifest_sha256_at_evaluation": "e615f5a6fd6410ae4e55e8b167eaab357ec4ade8d4c0baf40a5343ed3014903c",
   "manifest_version": "2.0",
+  "methods": {
+    "exact_v1": {
+      "eval_artifact": "eval_exact_v1.json",
+      "record": "methods/exact_v1.json"
+    },
+    "learned_v1": {
+      "eval_artifact": "eval_learned_v1.json",
+      "record": "methods/learned_v1.json"
+    },
+    "rules_v1": {
+      "eval_artifact": "eval_rules_v1.json",
+      "record": "methods/rules_v1.json"
+    }
+  },
   "pairs": {
     "candidates": {
       "content_sha256": "ad0972614aabbc2c5bf38adda4c41c18eadc961f7e45082020cfc960fd9a66c0",
@@ -51,88 +66,95 @@
       "qualifier_mismatch"
     ]
   },
-  "run_id": "20260923T105337+0000",
+  "run_id": "20260923T121557+0000",
   "runtime": {
-    "data_dir_bytes_peak": 14762875070,
+    "data_dir_bytes_peak": 14784312081,
     "data_dir_bytes_start": 14447498794,
-    "disk_used_peak_bytes": 1399996416,
-    "free_disk_bytes_min": 143815589888,
-    "free_disk_bytes_start": 145215586304,
-    "peak_rss_bytes": 9725906944,
+    "disk_used_peak_bytes": 2137276416,
+    "free_disk_bytes_min": 142346825728,
+    "free_disk_bytes_start": 144484102144,
+    "peak_rss_bytes": 9861677056,
     "platform": "darwin",
     "stages": [
       {
         "data_dir_bytes_after": 14447498794,
-        "free_disk_bytes_after": 145215582208,
+        "free_disk_bytes_after": 144484098048,
         "name": "acquire",
-        "peak_rss_bytes_so_far": 100524032,
+        "peak_rss_bytes_so_far": 99852288,
         "seconds": 0.0
       },
       {
         "data_dir_bytes_after": 14447498794,
-        "free_disk_bytes_after": 145215975424,
+        "free_disk_bytes_after": 144484225024,
         "name": "load_b",
-        "peak_rss_bytes_so_far": 657838080,
+        "peak_rss_bytes_so_far": 659263488,
         "seconds": 0.3
       },
       {
         "data_dir_bytes_after": 14447498794,
-        "free_disk_bytes_after": 145215975424,
+        "free_disk_bytes_after": 144484225024,
         "name": "load_a",
-        "peak_rss_bytes_so_far": 1681698816,
+        "peak_rss_bytes_so_far": 1728610304,
         "seconds": 0.4
       },
       {
         "data_dir_bytes_after": 14447498794,
-        "free_disk_bytes_after": 145213136896,
+        "free_disk_bytes_after": 144467779584,
         "name": "truth",
-        "peak_rss_bytes_so_far": 3280416768,
-        "seconds": 28.2
+        "peak_rss_bytes_so_far": 3333124096,
+        "seconds": 33.5
       },
       {
         "data_dir_bytes_after": 14596339060,
-        "free_disk_bytes_after": 145043591168,
+        "free_disk_bytes_after": 144648974336,
         "name": "sample",
-        "peak_rss_bytes_so_far": 4166189056,
-        "seconds": 172.3
+        "peak_rss_bytes_so_far": 4162977792,
+        "seconds": 170.2
       },
       {
         "data_dir_bytes_after": 14596339060,
-        "free_disk_bytes_after": 145043587072,
+        "free_disk_bytes_after": 144648970240,
         "name": "contracts",
-        "peak_rss_bytes_so_far": 4166189056,
+        "peak_rss_bytes_so_far": 4162977792,
         "seconds": 0.3
       },
       {
         "data_dir_bytes_after": 14596339060,
-        "free_disk_bytes_after": 145068318720,
+        "free_disk_bytes_after": 144663306240,
         "name": "truth_audit",
-        "peak_rss_bytes_so_far": 4166189056,
+        "peak_rss_bytes_so_far": 4162977792,
         "seconds": 1.0
       },
       {
         "data_dir_bytes_after": 14596339060,
-        "free_disk_bytes_after": 145066876928,
+        "free_disk_bytes_after": 144608841728,
         "name": "block",
-        "peak_rss_bytes_so_far": 8647954432,
-        "seconds": 58.2
+        "peak_rss_bytes_so_far": 8848949248,
+        "seconds": 58.7
       },
       {
         "data_dir_bytes_after": 14596339060,
-        "free_disk_bytes_after": 145066622976,
+        "free_disk_bytes_after": 144606240768,
         "name": "split",
-        "peak_rss_bytes_so_far": 8647954432,
-        "seconds": 27.8
+        "peak_rss_bytes_so_far": 8848949248,
+        "seconds": 24.6
       },
       {
         "data_dir_bytes_after": 14762875070,
-        "free_disk_bytes_after": 143815589888,
+        "free_disk_bytes_after": 142348488704,
         "name": "features",
-        "peak_rss_bytes_so_far": 9725906944,
-        "seconds": 285.1
+        "peak_rss_bytes_so_far": 9861677056,
+        "seconds": 276.9
+      },
+      {
+        "data_dir_bytes_after": 14784312081,
+        "free_disk_bytes_after": 142346825728,
+        "name": "methods",
+        "peak_rss_bytes_so_far": 9861677056,
+        "seconds": 163.5
       }
     ],
-    "total_seconds": 573.7
+    "total_seconds": 729.8
   },
   "sample": {
     "all_truth_pairs_in_scope": true,
@@ -231,5 +253,5 @@
       "side": "A"
     }
   ],
-  "updated_at_utc": "2026-09-23T11:03:10+00:00"
+  "updated_at_utc": "2026-09-23T12:28:07+00:00"
 }

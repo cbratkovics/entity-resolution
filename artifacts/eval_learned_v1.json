@@ -1,0 +1,258 @@
+{
+  "artifact_version": "1.0",
+  "fold_counts": {
+    "calibrate": {
+      "a_records": 96417,
+      "candidate_pairs": 1513039,
+      "decisions": 72963,
+      "labelled_a_records": 48359
+    },
+    "fit": {
+      "a_records": 289540,
+      "candidate_pairs": 4568231,
+      "decisions": 219090,
+      "labelled_a_records": 144526
+    },
+    "test": {
+      "a_records": 96557,
+      "candidate_pairs": 1514207,
+      "decisions": 73216,
+      "labelled_a_records": 48372
+    }
+  },
+  "generated_at_utc": "2026-09-23T12:25:26+00:00",
+  "input": {
+    "code_commit": "7eda8839df8d4e421a82fa398d460b73b24619e9",
+    "feature_version": "0.2.0",
+    "manifest_sha256": "e615f5a6fd6410ae4e55e8b167eaab357ec4ade8d4c0baf40a5343ed3014903c"
+  },
+  "method_version": "learned_v1",
+  "metric_definitions": {
+    "ambiguity_rule": "Test-fold decisions the ambiguity rule moved from auto_accept to review because the top-2 probability gap was below the gap threshold.",
+    "at_auto_accept_or_review": "The same figures if every review were resolved correctly: a review row counts as correct when any of its candidates is in the truth set. An upper bound.",
+    "calibration": "decision_level: ten equal-width bins over the top candidate's probability of labelled test A records, with the observed rate of correct top candidates; pair_level: the same over every labelled test-fold pair. ECE is the count-weighted mean absolute gap; Brier the mean squared error of the probability against the label.",
+    "confusion": "Pair-level counts over labelled test-fold pairs at each tier boundary: tp and fp are pairs at or above the boundary, fn and tn below.",
+    "coverage": "Auto-accepted A records divided by all A records in the test fold, labelled or not. A volume measure, not an accuracy measure.",
+    "coverage_all_folds": "Auto-accepted A records divided by all sampled A records across every fold. Not an accuracy measure.",
+    "f1": "Harmonic mean of precision and recall_labelled at the same tier boundary.",
+    "labelled_a": "Labelled A records in the test fold: those with an in-sample truth link.",
+    "labelled_a_reachable": "Labelled test-fold A records whose truth survived blocking: at least one candidate pair is a truth pair.",
+    "pair_completeness_test": "labelled_a_reachable divided by labelled_a: the share of labelled test A records whose truth blocking made reachable (A-level pair completeness).",
+    "precision": "Among test-fold A records the method accepted, the share whose accepted B is in the A record's truth set. Over labelled A records only.",
+    "recall_labelled": "Correct accepts divided by labelled_a_reachable. Recall against labelled pairs whose truth blocking made reachable; unlinked is not non-match.",
+    "recall_overall": "Correct accepts divided by labelled_a: recall with the blocking loss included; equals recall_labelled times pair_completeness_test exactly.",
+    "tier_shares": "Share of all test-fold A records in each tier; an A record with no candidate is reject. The three shares sum to one.",
+    "unverified_accepts": "Auto-accepts on unlabelled test-fold A records: counted by coverage, not by the accuracy metrics. share_of_accepts is their share of all test-fold auto-accepts."
+  },
+  "metrics": {
+    "ambiguity_rule": {
+      "decisions_moved_to_review": 350,
+      "review_queue": 6016
+    },
+    "at_auto_accept": {
+      "accepted": 39655,
+      "correct": 39629,
+      "f1": 0.918614,
+      "precision": 0.999344,
+      "recall_labelled": 0.849952
+    },
+    "at_auto_accept_or_review": {
+      "accepted": 44971,
+      "correct": 44911,
+      "f1": 0.980633,
+      "precision": 0.998666,
+      "recall_labelled": 0.963239
+    },
+    "calibration": {
+      "decision_level": {
+        "bins": [
+          {
+            "lower": 0.0,
+            "mean_probability": 0.023413,
+            "n": 1447,
+            "observed_rate": 0.424326,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "mean_probability": 0.125768,
+            "n": 412,
+            "observed_rate": 0.822816,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "mean_probability": 0.239462,
+            "n": 236,
+            "observed_rate": 0.894068,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "mean_probability": 0.351189,
+            "n": 309,
+            "observed_rate": 0.899676,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.4,
+            "mean_probability": 0.412224,
+            "n": 46,
+            "observed_rate": 0.934783,
+            "upper": 0.5
+          },
+          {
+            "lower": 0.5,
+            "mean_probability": 0.579919,
+            "n": 473,
+            "observed_rate": 0.928118,
+            "upper": 0.6
+          },
+          {
+            "lower": 0.6,
+            "mean_probability": 0.663601,
+            "n": 1019,
+            "observed_rate": 0.965653,
+            "upper": 0.7
+          },
+          {
+            "lower": 0.7,
+            "mean_probability": 0.7262,
+            "n": 714,
+            "observed_rate": 0.960784,
+            "upper": 0.8
+          },
+          {
+            "lower": 0.8,
+            "mean_probability": 0.844565,
+            "n": 1229,
+            "observed_rate": 0.981286,
+            "upper": 0.9
+          },
+          {
+            "lower": 0.9,
+            "mean_probability": 0.990438,
+            "n": 41536,
+            "observed_rate": 0.996365,
+            "upper": 1.0
+          }
+        ],
+        "brier": 0.033224,
+        "ece": 0.047858,
+        "n": 47421
+      },
+      "pair_level": {
+        "bins": [
+          {
+            "lower": 0.0,
+            "mean_probability": 0.000991,
+            "n": 853733,
+            "observed_rate": 0.000992,
+            "upper": 0.1
+          },
+          {
+            "lower": 0.1,
+            "mean_probability": 0.123936,
+            "n": 3078,
+            "observed_rate": 0.122482,
+            "upper": 0.2
+          },
+          {
+            "lower": 0.2,
+            "mean_probability": 0.236105,
+            "n": 994,
+            "observed_rate": 0.227364,
+            "upper": 0.3
+          },
+          {
+            "lower": 0.3,
+            "mean_probability": 0.34654,
+            "n": 859,
+            "observed_rate": 0.342258,
+            "upper": 0.4
+          },
+          {
+            "lower": 0.4,
+            "mean_probability": 0.412441,
+            "n": 102,
+            "observed_rate": 0.441176,
+            "upper": 0.5
+          },
+          {
+            "lower": 0.5,
+            "mean_probability": 0.578045,
+            "n": 821,
+            "observed_rate": 0.563946,
+            "upper": 0.6
+          },
+          {
+            "lower": 0.6,
+            "mean_probability": 0.662563,
+            "n": 1449,
+            "observed_rate": 0.700483,
+            "upper": 0.7
+          },
+          {
+            "lower": 0.7,
+            "mean_probability": 0.725725,
+            "n": 957,
+            "observed_rate": 0.728318,
+            "upper": 0.8
+          },
+          {
+            "lower": 0.8,
+            "mean_probability": 0.843363,
+            "n": 1505,
+            "observed_rate": 0.815947,
+            "upper": 0.9
+          },
+          {
+            "lower": 0.9,
+            "mean_probability": 0.990165,
+            "n": 41913,
+            "observed_rate": 0.990122,
+            "upper": 1.0
+          }
+        ],
+        "brier": 0.003158,
+        "ece": 0.000147,
+        "n": 905411
+      }
+    },
+    "confusion": {
+      "auto_accept": {
+        "fn": 6717,
+        "fp": 276,
+        "tn": 858444,
+        "tp": 39974
+      },
+      "review": {
+        "fn": 1789,
+        "fp": 1743,
+        "tn": 856977,
+        "tp": 44902
+      }
+    },
+    "coverage": 0.422113,
+    "coverage_all_folds": 0.421281,
+    "labelled_a": 48372,
+    "labelled_a_reachable": 46625,
+    "pair_completeness_test": 0.963884,
+    "recall_overall": 0.819255,
+    "test_a": 96557,
+    "tier_shares": {
+      "auto_accept": 0.422113,
+      "reject": 0.515581,
+      "review": 0.062305
+    },
+    "unverified_accepts": {
+      "count": 1103,
+      "share_of_accepts": 0.027062
+    }
+  },
+  "thresholds": {
+    "ambiguity_gap": 0.1,
+    "auto_accept_min": 0.95,
+    "review_min": 0.5
+  }
+}

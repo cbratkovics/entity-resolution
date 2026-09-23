@@ -48,10 +48,14 @@ def test_no_data_directory_or_dump_is_tracked() -> None:
 
 
 def test_no_tracked_csv_has_an_attribute_column() -> None:
+    import gzip
+
     for p in _tracked():
-        if p.suffix.lower() != ".csv":
+        name = p.name.lower()
+        if not (name.endswith(".csv") or name.endswith(".csv.gz")):
             continue
-        with (REPO_ROOT / p).open(encoding="utf-8", newline="") as fh:
+        opener = gzip.open if name.endswith(".gz") else open
+        with opener(REPO_ROOT / p, "rt", encoding="utf-8", newline="") as fh:
             header = next(csv.reader(fh), [])
         bad = {h.strip().lower() for h in header} & FORBIDDEN_COLUMNS
         assert not bad, f"{p}: forbidden columns {sorted(bad)}"

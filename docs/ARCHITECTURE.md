@@ -21,17 +21,22 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 | `eval/split.py` | folds by the A record's hash (ADR 0003); pairs and truth inherit A's fold. |
 | `eval/evaluator.py` | the evaluation artifact writer and metric definitions. Metric computation in Phase 4. |
 | `eval/methods_card.py` | renders `docs/METHODS_CARD.md` from artifacts; byte-stable. |
+| `models/labels.py` | truth sets per labelled A record; pair labels (1, 0, or unlabelled). The only place the truth table meets the pairs besides the evaluator. |
+| `models/exact.py`, `models/rules.py`, `models/learned.py` | the three methods: nothing fitted; fixed weights with thresholds searched on fit-fold decisions; gradient boosting on fit-fold labelled pairs with isotonic calibration on the calibrate fold. |
+| `models/tiering.py` | tier thresholds, ambiguity gap, review-cost constants and `decide`: one decision per A record. |
 | `models/registry.py` | manifest and method version records. |
-| `models/tiering.py` | tier thresholds, ambiguity gap and review-cost constants. |
-| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, then block, split and pair features (`data/pairs/`), with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`. Phase 4 adds methods and evaluation. |
+| `eval/evaluator.py` | test-fold metrics at A-record grain over labelled A records; unverified accepts; decision- and pair-level calibration; confusion. |
+| `eval/review_cost.py` | the accept-threshold sweep and cost curve. |
+| `pipeline/methods.py` | the Phase 4 stage: fit, decide, mapping exhibits (ADR 0005), evaluate, sweep, too-good-to-be-true rule. |
+| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, then block, split and pair features (`data/pairs/`), with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`. then the methods stage (`pipeline/methods.py`). |
 | `citations.py` | the number checker's rules, shared verbatim with demo 1. |
 
 ## Artifacts `artifacts/`
 
 Committed, schema-validated (`artifacts/schemas/`), identifiers and numbers only:
-`manifest.json`, `methods/<method_version>.json`, `eval_<method_version>.json`, and from later
-phases `truth_audit.json`, `blocking_report.json`, `split.json`, `review_sensitivity.json`,
-`mapping/mapping_<method_version>.csv`.
+`manifest.json`, `truth_audit.json`, `contracts.json`, `blocking_report.json`, `split.json`,
+`methods/<method_version>.json`, `eval_<method_version>.json`, `review_sensitivity.json` and the
+test-fold mapping exhibits `mapping/mapping_<method_version>.test.csv.gz` (ADR 0005).
 
 ## Warehouse `dbt/`
 

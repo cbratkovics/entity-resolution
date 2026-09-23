@@ -55,3 +55,15 @@ sources:
         meta:
           formatter: template
           external_location: "read_json_auto('{{ var('artifacts_dir') }}/split.json', filename = true)"
+
+      - name: review_sensitivity
+        description: artifacts/review_sensitivity.json — per method, the accept-threshold sweep with review queue size, expected false accepts and total cost per cost ratio (schema review_sensitivity.schema.json).
+        meta:
+          formatter: template
+          external_location: "read_json_auto('{{ var('artifacts_dir') }}/review_sensitivity.json', filename = true, maximum_object_size = 50000000)"
+
+      - name: mapping
+        description: artifacts/mapping/mapping_<method_version>.test.csv.gz — test-fold A records with a non-reject decision per method (ADR 0005); identifiers and numbers only.
+        meta:
+          formatter: template
+          external_location: "read_csv_auto('{{ var('artifacts_dir') }}/mapping/mapping_*.test.csv.gz', filename = true, header = true, union_by_name = true, all_varchar = true)"
