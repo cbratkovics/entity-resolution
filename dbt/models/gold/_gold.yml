@@ -166,8 +166,14 @@ models:
       - name: accepts
         description: Test-fold A records accepted at this threshold.
         data_type: bigint
+      - name: queue_floor
+        description: Test-fold A records with review_min <= probability < threshold.
+        data_type: bigint
+      - name: queue_ambiguity
+        description: Records at or above the threshold that the ambiguity rule keeps in review.
+        data_type: bigint
       - name: review_queue
-        description: Test-fold A records between review_min and the threshold.
+        description: queue_floor plus queue_ambiguity, the queue a reviewer sees at this threshold.
         data_type: bigint
       - name: precision_labelled
         description: Precision at this threshold over labelled test-fold decisions.
@@ -204,11 +210,17 @@ models:
       - name: accept_min
         description: The method's auto-accept threshold.
         data_type: double
-      - name: review_queue
+      - name: queue_floor
         description: Test-fold A records with floor <= probability < accept_min.
         data_type: bigint
+      - name: queue_ambiguity
+        description: Records at or above accept_min that the ambiguity rule keeps in review, independent of the floor.
+        data_type: bigint
+      - name: queue_total
+        description: queue_floor plus queue_ambiguity, the queue a reviewer sees.
+        data_type: bigint
       - name: queue_share_of_test_a
-        description: review_queue over the test-fold A count.
+        description: queue_total over the test-fold A count.
         data_type: double
       - name: recall_with_review
         description: Correct auto-accepts plus resolvable reviews over labelled reachable A records.
@@ -340,22 +352,22 @@ models:
                 field: method_version
       - name: test_a
         description: A records in the test fold.
-        data_type: double
+        data_type: bigint
       - name: labelled_a
         description: Labelled A records in the test fold.
-        data_type: double
+        data_type: bigint
       - name: labelled_a_reachable
         description: Labelled test A records whose truth survived blocking.
-        data_type: double
+        data_type: bigint
       - name: pair_completeness
         description: labelled_a_reachable over labelled_a (A-level pair completeness on the test fold).
         data_type: double
       - name: accepted
         description: Labelled test A records auto-accepted.
-        data_type: double
+        data_type: bigint
       - name: correct
         description: Auto-accepts whose B is in the A record's truth set.
-        data_type: double
+        data_type: bigint
       - name: precision_auto_accept
         description: Precision among auto-accepted labelled A records.
         data_type: double
@@ -385,7 +397,7 @@ models:
         data_type: double
       - name: unverified_accepts
         description: Auto-accepts on unlabelled test A records, counted by coverage only.
-        data_type: double
+        data_type: bigint
       - name: unverified_accepts_share
         description: unverified_accepts over all test-fold auto-accepts.
         data_type: double
@@ -400,10 +412,10 @@ models:
         data_type: double
       - name: ambiguity_moved_to_review
         description: Decisions the ambiguity rule moved from auto_accept to review.
-        data_type: double
+        data_type: bigint
       - name: review_queue
         description: Test-fold A records in the review tier.
-        data_type: double
+        data_type: bigint
       - name: ece
         description: Expected calibration error at decision level.
         data_type: double
@@ -446,8 +458,8 @@ unit_tests:
     given:
       - input: ref('brz_review_sensitivity')
         rows:
-          - {source_file: f, generated_at_utc: "2026-09-23 00:00:00", feature_version: "0.2.0", code_commit: c, method_version: learned_v1, review_min: 0.5, chosen_accept_threshold: 0.95, threshold: 0.95, accepts: 100, review_queue: 40, precision_labelled: 0.9, expected_false_accepts: 10.0, cost_ratio: 5, total_cost: 90.0}
-          - {source_file: f, generated_at_utc: "2026-09-23 00:00:00", feature_version: "0.2.0", code_commit: c, method_version: learned_v1, review_min: 0.5, chosen_accept_threshold: 0.95, threshold: 0.90, accepts: 120, review_queue: 20, precision_labelled: 0.8, expected_false_accepts: 24.0, cost_ratio: 20, total_cost: 500.0}
+          - {source_file: f, generated_at_utc: "2026-09-23 00:00:00", feature_version: "0.2.0", code_commit: c, method_version: learned_v1, review_min: 0.5, chosen_accept_threshold: 0.95, threshold: 0.95, accepts: 100, queue_floor: 30, queue_ambiguity: 10, review_queue: 40, precision_labelled: 0.9, expected_false_accepts: 10.0, cost_ratio: 5, total_cost: 90.0}
+          - {source_file: f, generated_at_utc: "2026-09-23 00:00:00", feature_version: "0.2.0", code_commit: c, method_version: learned_v1, review_min: 0.5, chosen_accept_threshold: 0.95, threshold: 0.90, accepts: 120, queue_floor: 20, queue_ambiguity: 0, review_queue: 20, precision_labelled: 0.8, expected_false_accepts: 24.0, cost_ratio: 20, total_cost: 500.0}
     expect:
       rows:
         - {method_version: learned_v1, threshold: 0.95, cost_ratio: 5, total_cost_recomputed: 90.0, is_chosen: true}

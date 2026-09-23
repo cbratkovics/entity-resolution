@@ -5,7 +5,8 @@
 {% set columns = [
     ['source_file', 'varchar'], ['method_version', 'varchar'], ['accept_min', 'double'],
     ['n_test_a', 'bigint'], ['n_labelled_reachable', 'bigint'], ['floor', 'double'],
-    ['review_queue', 'bigint'], ['queue_share_of_test_a', 'double'], ['recall_with_review', 'double']
+    ['queue_floor', 'bigint'], ['queue_ambiguity', 'bigint'], ['queue_total', 'bigint'],
+    ['queue_share_of_test_a', 'double'], ['recall_with_review', 'double']
 ] %}
 {% if files_exist(var('artifacts_dir') ~ '/review_sensitivity.json') %}
 with report as (
@@ -33,7 +34,9 @@ select
     p.n_test_a,
     p.n_labelled_reachable,
     cast(p.point.floor as double) as floor,
-    cast(p.point.review_queue as bigint) as review_queue,
+    cast(p.point.queue_floor as bigint) as queue_floor,
+    cast(p.point.queue_ambiguity as bigint) as queue_ambiguity,
+    cast(p.point.queue_total as bigint) as queue_total,
     cast(p.point.queue_share_of_test_a as double) as queue_share_of_test_a,
     cast(p.point.recall_with_review as double) as recall_with_review
 from per_method as p

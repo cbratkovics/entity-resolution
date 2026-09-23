@@ -20,11 +20,11 @@
       "labelled_a_records": 48372
     }
   },
-  "generated_at_utc": "2026-09-23T13:34:14+00:00",
+  "generated_at_utc": "2026-09-23T14:16:02+00:00",
   "input": {
-    "code_commit": "7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e",
+    "code_commit": "6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4",
     "feature_version": "0.2.0",
-    "manifest_sha256": "bd0331119cd1cf72330d55b87f16c9a54b692eb8564d68ba32a63b6e55dc6ddd"
+    "manifest_sha256": "7b7bf2ae19b1ca9be5b389c81241c359679fb1a2e811efd8e9a33d3cfcafa066"
   },
   "method_version": "rules_v1",
   "metric_definitions": {

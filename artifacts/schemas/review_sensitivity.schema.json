@@ -73,6 +73,8 @@
               "required": [
                 "threshold",
                 "accepts",
+                "queue_floor",
+                "queue_ambiguity",
                 "review_queue",
                 "precision_labelled",
                 "expected_false_accepts",
@@ -117,6 +119,14 @@
                     ],
                     "minimum": 0
                   }
+                },
+                "queue_floor": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "queue_ambiguity": {
+                  "type": "integer",
+                  "minimum": 0
                 }
               }
             }
@@ -127,6 +137,7 @@
               "accept_min",
               "n_test_a",
               "n_labelled_reachable",
+              "floors_omitted_at_or_above_accept_min",
               "points"
             ],
             "additionalProperties": false,
@@ -150,7 +161,9 @@
                   "type": "object",
                   "required": [
                     "floor",
-                    "review_queue",
+                    "queue_floor",
+                    "queue_ambiguity",
+                    "queue_total",
                     "queue_share_of_test_a",
                     "recall_with_review"
                   ],
@@ -161,7 +174,15 @@
                       "minimum": 0,
                       "maximum": 1
                     },
-                    "review_queue": {
+                    "queue_floor": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "queue_ambiguity": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "queue_total": {
                       "type": "integer",
                       "minimum": 0
                     },
@@ -182,6 +203,14 @@
                       "maximum": 1
                     }
                   }
+                }
+              },
+              "floors_omitted_at_or_above_accept_min": {
+                "type": "array",
+                "items": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
                 }
               }
             }

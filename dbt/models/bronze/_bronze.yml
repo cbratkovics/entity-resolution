@@ -265,8 +265,12 @@ models:
         description: The swept accept threshold (0.50 to 0.99).
       - name: accepts
         description: Test-fold A records accepted at this threshold.
+      - name: queue_floor
+        description: Test-fold A records with review_min <= probability < threshold.
+      - name: queue_ambiguity
+        description: Records at or above the threshold that the ambiguity rule keeps in review.
       - name: review_queue
-        description: Test-fold A records between review_min and the threshold.
+        description: queue_floor plus queue_ambiguity, the queue a reviewer sees at this threshold.
       - name: precision_labelled
         description: Precision at this threshold over labelled test-fold decisions.
       - name: expected_false_accepts
@@ -341,10 +345,14 @@ models:
         description: Labelled test-fold A records whose truth survived blocking.
       - name: floor
         description: The review floor swept (0.05 to 0.95).
-      - name: review_queue
+      - name: queue_floor
         description: Test-fold A records with floor <= probability < accept_min.
+      - name: queue_ambiguity
+        description: Records at or above accept_min that the ambiguity rule keeps in review.
+      - name: queue_total
+        description: queue_floor plus queue_ambiguity.
       - name: queue_share_of_test_a
-        description: review_queue over n_test_a.
+        description: queue_total over n_test_a.
       - name: recall_with_review
         description: Correct auto-accepts plus reviews whose truth is among the candidates, over n_labelled_reachable.
 

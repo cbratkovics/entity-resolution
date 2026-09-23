@@ -12,13 +12,26 @@ make setup lint test dbt docs
 step that depends on a file that exists only on one machine fails locally before it fails in
 CI. Expected runtimes are measured in Phase 6 and recorded here.
 
-## The full build
+## The full build (owner-run)
 
-`make full` downloads the dumps recorded in `artifacts/manifest.json`, verifies their sha256,
-and regenerates every artifact. It is not built before Phase 4; until then it exits with the
-phase it is waiting for. The deterministic sample (`sha256(source || native_id)` against a
-threshold in the manifest) and the hash-based fold split mean that a rerun on the same dumps
-reproduces the artifacts byte for byte, apart from timestamps.
+`make full` runs `entity_resolution.pipeline.match`: download the dumps recorded in
+`artifacts/manifest.json` (free disk is checked and printed first), stream-extract the ten
+MusicBrainz tables, load both sides, classify the truth links, draw the deterministic sample,
+run the contracts, block, split, compute pair features, fit and evaluate the three methods, and
+write every artifact. It is owner-run on a machine with at least `20 GiB` of free disk and
+`12 GiB` of memory (measured figures below); the repository's `verify` workflow checks the
+committed artifacts without running it.
+
+```
+make setup
+make full                 # exits 4 when the too-good-to-be-true rule fires; the audit is `make test`
+make test                 # the real-sample leakage checks run once data/ exists
+make dbt docs             # warehouse, exports, cards and number checks against the new artifacts
+```
+
+The deterministic sample (`sha256(source || native_id)` against a threshold in the manifest) and
+the hash-based fold split mean that a rerun on the same dumps reproduces the artifacts byte for
+byte, apart from timestamps and the run id.
 
 ## The two-run gate
 
@@ -36,18 +49,19 @@ options (pyarrow, zstd, no index).
 ## Can a hosted runner run the full build? (measured, not decided)
 
 The committed manifest's run recorded a peak `data/` size of 14,784,312,081 bytes
-(`13.77 GiB`) and a peak resident set of 9,619,075,072 bytes (`8.96 GiB`), the
+(`13.77 GiB`) and a peak resident set of 9,929,076,736 bytes (`9.25 GiB`), the
 latter reached in the pair-feature stage. <!-- cite: artifacts/manifest.json#runtime.data_dir_bytes_peak; artifacts/manifest.json#runtime.peak_rss_bytes -->
 Of the disk, the MusicBrainz archive is 7,542,238,956 bytes and its ten extracted tables
 4,795,695,166 bytes. <!-- cite: artifacts/manifest.json#sources[1].dump_bytes; artifacts/manifest.json#sources[1].extract.extracted_bytes -->
-That run took 769.1 seconds with the loaders' parquet caches already present; the sample
-stage took 174.8 seconds, blocking 59.9 seconds, pair features
-286.4 seconds and the three methods together 187.7 seconds.
+That run took 780.8 seconds with the loaders' parquet caches already present; the sample
+stage took 170.1 seconds, blocking 67.2 seconds, pair features
+297.9 seconds and the three methods together 186.4 seconds.
 <!-- cite: artifacts/manifest.json#runtime.total_seconds; artifacts/manifest.json#runtime.stages[4].seconds; artifacts/manifest.json#runtime.stages[7].seconds; artifacts/manifest.json#runtime.stages[9].seconds; artifacts/manifest.json#runtime.stages[10].seconds -->
 A cold run adds the Discogs parse and the MusicBrainz load (about two minutes on this machine).
-A GitHub-hosted runner has roughly `14 GiB` of free disk and `7 GiB` of memory, so until the
-extraction is changed (`docs/ROADMAP.md`) the full build is owner-run on a machine with at
-least `20 GiB` free and `12 GiB` of memory. Phase 6 decides the workflow.
+A GitHub-hosted runner has roughly `14 GiB` of free disk and `7 GiB` of memory, so the full
+build is owner-run on a machine with at least `20 GiB` free and `12 GiB` of memory; the
+`verify` workflow checks the committed artifacts instead, and the extraction change that would
+fit a runner is on the roadmap.
 
 ## Warehouse determinism
 

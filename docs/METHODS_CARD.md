@@ -8,10 +8,10 @@ _Generated from committed artifacts by `scripts/check_model_card.py --write`; do
 | Field | Value | Source key |
 |---|---|---|
 | Feature version | `0.2.0` | `artifacts/manifest.json#feature_version` |
-| Code commit | `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e` | `artifacts/manifest.json#code_commit` |
+| Code commit | `6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4` | `artifacts/manifest.json#code_commit` |
 | Side A | musicbrainz | `artifacts/manifest.json#side_a` |
 | Side B | discogs | fixed by `docs/BRIEF.md` (section `2.1`) |
-| Run id | `20260923T132431+0000` | `artifacts/manifest.json#run_id` |
+| Run id | `20260923T140606+0000` | `artifacts/manifest.json#run_id` |
 
 ## Methods
 
@@ -33,7 +33,7 @@ Keys per method: `artifacts/eval_<method_version>.json#metrics.pair_completeness
 
 ### `exact_v1`
 
-Source: `artifacts/eval_exact_v1.json`; feature version `0.2.0`, code commit `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
+Source: `artifacts/eval_exact_v1.json`; feature version `0.2.0`, code commit `6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
 
 | Metric | Value | Key |
 |---|---|---|
@@ -54,7 +54,7 @@ Source: `artifacts/eval_exact_v1.json`; feature version `0.2.0`, code commit `7e
 
 ### `learned_v1`
 
-Source: `artifacts/eval_learned_v1.json`; feature version `0.2.0`, code commit `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
+Source: `artifacts/eval_learned_v1.json`; feature version `0.2.0`, code commit `6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4`; thresholds auto_accept_min `0.95`, review_min `0.5`, ambiguity_gap `0.1`.
 
 | Metric | Value | Key |
 |---|---|---|
@@ -75,7 +75,7 @@ Source: `artifacts/eval_learned_v1.json`; feature version `0.2.0`, code commit `
 
 ### `rules_v1`
 
-Source: `artifacts/eval_rules_v1.json`; feature version `0.2.0`, code commit `7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e`; thresholds auto_accept_min `0.65`, review_min `0.0756756772994995`, ambiguity_gap `0.1`.
+Source: `artifacts/eval_rules_v1.json`; feature version `0.2.0`, code commit `6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4`; thresholds auto_accept_min `0.65`, review_min `0.0756756772994995`, ambiguity_gap `0.1`.
 
 | Metric | Value | Key |
 |---|---|---|

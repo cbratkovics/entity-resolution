@@ -10,6 +10,7 @@
     'tier_share_auto_accept', 'tier_share_review', 'tier_share_reject',
     'ambiguity_moved_to_review', 'review_queue', 'ece', 'brier', 'ece_pair_level', 'brier_pair_level'
 ] %}
+{% set counts = ['test_a', 'labelled_a', 'labelled_a_reachable', 'accepted', 'correct', 'unverified_accepts', 'ambiguity_moved_to_review', 'review_queue'] %}
 
 with long as (
     select * from {{ ref('slv_eval_metrics') }}
@@ -18,7 +19,11 @@ with long as (
 select
     cast(l.method_version as varchar) as method_version,
     {% for m in metrics %}
+    {% if m in counts %}
+    cast(max(case when l.metric = '{{ m }}' then l.value end) as bigint) as {{ m }},
+    {% else %}
     cast(max(case when l.metric = '{{ m }}' then l.value end) as double) as {{ m }},
+    {% endif %}
     {% endfor %}
     cast('test' as varchar) as fold
 from long as l

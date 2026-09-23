@@ -36,10 +36,15 @@ def sweep(
     candidates) are aligned boolean arrays; ``n_test_a`` counts every test-fold A record and
     ``n_labelled_reachable`` the labelled ones whose truth survived blocking."""
     p = test_decisions["probability"].to_numpy(dtype="float64")
+    ambiguity = test_decisions["ambiguity_review"].fillna(False).to_numpy(dtype=bool)
     points = []
     for t in SWEEP_THRESHOLDS:
-        accept = p >= t
-        queue = int(((p >= review_min) & ~accept).sum())
+        # the ambiguity rule keeps its rows in review at every threshold, so the queue a
+        # reviewer sees is the floor part plus the ambiguity part
+        accept = (p >= t) & ~ambiguity
+        q_floor = int(((p >= review_min) & (p < t)).sum())
+        q_amb = int((ambiguity & (p >= t)).sum())
+        queue = q_floor + q_amb
         lab_acc = accept & is_labelled
         precision = float(correct[lab_acc].mean()) if lab_acc.any() else None
         n_accept = int(accept.sum())
@@ -56,6 +61,8 @@ def sweep(
             {
                 "threshold": t,
                 "accepts": n_accept,
+                "queue_floor": q_floor,
+                "queue_ambiguity": q_amb,
                 "review_queue": queue,
                 "precision_labelled": None if precision is None else round(precision, 6),
                 "expected_false_accepts": expected_fa,
@@ -90,31 +97,49 @@ def floor_sweep(
     n_test_a: int,
     n_labelled_reachable: int,
 ) -> dict[str, Any]:
-    """For each review floor, the review queue (test A records with floor <= p < accept_min),
-    its share of the test fold, and recall with review: correct auto-accepts plus reviews whose
-    truth is among the candidates, over labelled reachable A records (the upper bound of
-    ``at_auto_accept_or_review``, as a function of the floor)."""
+    """For each review floor strictly below ``accept_min``: ``queue_floor`` (test A records with
+    floor <= p < accept_min), ``queue_ambiguity`` (records at or above accept_min that the
+    ambiguity rule moved to review; independent of the floor), ``queue_total`` (their sum, the
+    queue a reviewer sees), its share of the test fold, and recall with review: correct
+    auto-accepts plus queued rows whose truth is among the candidates, over labelled reachable
+    A records. Floors at or above ``accept_min`` are omitted: the queue is undefined there."""
     p = test_decisions["probability"].to_numpy(dtype="float64")
-    accept = p >= accept_min
+    ambiguity = test_decisions["ambiguity_review"].fillna(False).to_numpy(dtype=bool)
+    accept = (p >= accept_min) & ~ambiguity
     correct_accepts = int((accept & is_labelled & correct).sum())
+    resolved_ambiguity = int((ambiguity & is_labelled & reachable).sum())
+    q_amb = int(ambiguity.sum())
     points = []
     for floor in REVIEW_FLOORS:
-        review = (p >= floor) & ~accept
-        queue = int(review.sum())
-        resolved = int((review & is_labelled & reachable).sum())
+        if floor >= accept_min:
+            continue
+        floor_queue = (p >= floor) & (p < accept_min)
+        resolved_floor = int((floor_queue & is_labelled & reachable).sum())
+        q_floor = int(floor_queue.sum())
         points.append(
             {
                 "floor": floor,
-                "review_queue": queue,
-                "queue_share_of_test_a": round(queue / n_test_a, 6) if n_test_a else None,
-                "recall_with_review": round((correct_accepts + resolved) / n_labelled_reachable, 6)
-                if n_labelled_reachable
+                "queue_floor": q_floor,
+                "queue_ambiguity": q_amb,
+                "queue_total": q_floor + q_amb,
+                "queue_share_of_test_a": round((q_floor + q_amb) / n_test_a, 6)
+                if n_test_a
                 else None,
+                "recall_with_review": (
+                    round(
+                        (correct_accepts + resolved_floor + resolved_ambiguity)
+                        / n_labelled_reachable,
+                        6,
+                    )
+                    if n_labelled_reachable
+                    else None
+                ),
             }
         )
     return {
         "accept_min": accept_min,
         "n_test_a": n_test_a,
         "n_labelled_reachable": n_labelled_reachable,
+        "floors_omitted_at_or_above_accept_min": [f for f in REVIEW_FLOORS if f >= accept_min],
         "points": points,
     }

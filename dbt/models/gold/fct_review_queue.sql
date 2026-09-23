@@ -7,6 +7,8 @@ select
     cast(review_min as double) as review_min,
     cast(chosen_accept_threshold as double) as chosen_accept_threshold,
     cast(accepts as bigint) as accepts,
+    cast(queue_floor as bigint) as queue_floor,
+    cast(queue_ambiguity as bigint) as queue_ambiguity,
     cast(review_queue as bigint) as review_queue,
     cast(precision_labelled as double) as precision_labelled,
     cast(expected_false_accepts as double) as expected_false_accepts,

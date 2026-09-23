@@ -6,7 +6,7 @@
     ['source_file', 'varchar'], ['generated_at_utc', 'timestamp'], ['feature_version', 'varchar'],
     ['code_commit', 'varchar'], ['method_version', 'varchar'], ['review_min', 'double'],
     ['chosen_accept_threshold', 'double'], ['threshold', 'double'], ['accepts', 'bigint'],
-    ['review_queue', 'bigint'], ['precision_labelled', 'double'], ['expected_false_accepts', 'double'],
+    ['queue_floor', 'bigint'], ['queue_ambiguity', 'bigint'], ['review_queue', 'bigint'], ['precision_labelled', 'double'], ['expected_false_accepts', 'double'],
     ['cost_ratio', 'integer'], ['total_cost', 'double']
 ] %}
 {% if files_exist(var('artifacts_dir') ~ '/review_sensitivity.json') %}
@@ -41,6 +41,8 @@ per_point as (
         p.chosen_accept_threshold,
         cast(p.point.threshold as double) as threshold,
         cast(p.point.accepts as bigint) as accepts,
+        cast(p.point.queue_floor as bigint) as queue_floor,
+        cast(p.point.queue_ambiguity as bigint) as queue_ambiguity,
         cast(p.point.review_queue as bigint) as review_queue,
         cast(p.point.precision_labelled as double) as precision_labelled,
         cast(p.point.expected_false_accepts as double) as expected_false_accepts,
@@ -59,6 +61,8 @@ select
     q.chosen_accept_threshold,
     q.threshold,
     q.accepts,
+    q.queue_floor,
+    q.queue_ambiguity,
     q.review_queue,
     q.precision_labelled,
     q.expected_false_accepts,

@@ -1,6 +1,6 @@
 {
-  "code_commit": "7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e",
-  "created_at_utc": "2026-09-23T13:34:14+00:00",
+  "code_commit": "6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4",
+  "created_at_utc": "2026-09-23T14:16:02+00:00",
   "definition": "score = 0.45*title_token_set + 0.35*artist_token_set + 0.20*year_agreement, year_agreement = 1 if year_diff == 0, 0.5 if 1, 0.25 if missing, else 0; weights fixed a priori; t_accept maximises F1 over labelled fit-fold A-record decisions, t_review is the score below which their cumulative precision falls under 0.50; raw score used as the probability (uncalibrated)",
   "feature_version": "0.2.0",
   "fitted_on": {
@@ -13,7 +13,7 @@
       "full_path": "data/mapping/mapping_rules_v1.parquet",
       "full_rows": 365264,
       "test_exhibit": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
-      "test_exhibit_sha256": "30e8efbd43a63bf0f01311277ee011968a253e039354d994ec3288aa379da8ff",
+      "test_exhibit_sha256": "c422f54f88aae464d2cec70601b6d7931de85d3635155a39840b9887d5919f2d",
       "test_rows": 73216
     },
     "thresholds": {

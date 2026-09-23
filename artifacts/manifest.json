@@ -1,5 +1,5 @@
 {
-  "code_commit": "7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e",
+  "code_commit": "6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4",
   "counts": {
     "discogs": {
       "in_scope": 2589349,
@@ -18,7 +18,7 @@
     }
   },
   "feature_version": "0.2.0",
-  "manifest_sha256_at_evaluation": "bd0331119cd1cf72330d55b87f16c9a54b692eb8564d68ba32a63b6e55dc6ddd",
+  "manifest_sha256_at_evaluation": "7b7bf2ae19b1ca9be5b389c81241c359679fb1a2e811efd8e9a33d3cfcafa066",
   "manifest_version": "2.0",
   "methods": {
     "exact_v1": {
@@ -66,95 +66,95 @@
       "qualifier_mismatch"
     ]
   },
-  "run_id": "20260923T132431+0000",
+  "run_id": "20260923T140606+0000",
   "runtime": {
     "data_dir_bytes_peak": 14784312081,
     "data_dir_bytes_start": 14784312081,
-    "disk_used_peak_bytes": 2221936640,
-    "free_disk_bytes_min": 142183755776,
-    "free_disk_bytes_start": 144405692416,
-    "peak_rss_bytes": 9619075072,
+    "disk_used_peak_bytes": 1110630400,
+    "free_disk_bytes_min": 143172960256,
+    "free_disk_bytes_start": 144283590656,
+    "peak_rss_bytes": 9929076736,
     "platform": "darwin",
     "stages": [
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144405692416,
+        "free_disk_bytes_after": 144283590656,
         "name": "acquire",
-        "peak_rss_bytes_so_far": 100335616,
+        "peak_rss_bytes_so_far": 99909632,
         "seconds": 0.0
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144405876736,
+        "free_disk_bytes_after": 144283877376,
         "name": "load_b",
-        "peak_rss_bytes_so_far": 664760320,
+        "peak_rss_bytes_so_far": 677236736,
         "seconds": 0.3
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144407814144,
+        "free_disk_bytes_after": 144288051200,
         "name": "load_a",
-        "peak_rss_bytes_so_far": 1710047232,
-        "seconds": 0.5
+        "peak_rss_bytes_so_far": 1701814272,
+        "seconds": 0.4
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144292605952,
+        "free_disk_bytes_after": 144286543872,
         "name": "truth",
-        "peak_rss_bytes_so_far": 3304849408,
-        "seconds": 31.1
+        "peak_rss_bytes_so_far": 3310870528,
+        "seconds": 27.3
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144349532160,
+        "free_disk_bytes_after": 144279425024,
         "name": "sample",
-        "peak_rss_bytes_so_far": 4160393216,
-        "seconds": 174.8
+        "peak_rss_bytes_so_far": 4117647360,
+        "seconds": 170.1
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144349396992,
+        "free_disk_bytes_after": 144279420928,
         "name": "contracts",
-        "peak_rss_bytes_so_far": 4160393216,
-        "seconds": 0.3
+        "peak_rss_bytes_so_far": 4117647360,
+        "seconds": 0.4
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144353628160,
+        "free_disk_bytes_after": 144271069184,
         "name": "truth_audit",
-        "peak_rss_bytes_so_far": 4160393216,
-        "seconds": 1.0
+        "peak_rss_bytes_so_far": 4117647360,
+        "seconds": 1.1
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144343293952,
+        "free_disk_bytes_after": 143191613440,
         "name": "block",
-        "peak_rss_bytes_so_far": 8331022336,
-        "seconds": 59.9
+        "peak_rss_bytes_so_far": 8424329216,
+        "seconds": 67.2
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 144337940480,
+        "free_disk_bytes_after": 143192862720,
         "name": "split",
-        "peak_rss_bytes_so_far": 8331022336,
-        "seconds": 26.9
+        "peak_rss_bytes_so_far": 8424329216,
+        "seconds": 29.4
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 142183755776,
+        "free_disk_bytes_after": 143181991936,
         "name": "features",
-        "peak_rss_bytes_so_far": 9619075072,
-        "seconds": 286.4
+        "peak_rss_bytes_so_far": 9929076736,
+        "seconds": 297.9
       },
       {
         "data_dir_bytes_after": 14784312081,
-        "free_disk_bytes_after": 143248617472,
+        "free_disk_bytes_after": 143172960256,
         "name": "methods",
-        "peak_rss_bytes_so_far": 9619075072,
-        "seconds": 187.7
+        "peak_rss_bytes_so_far": 9929076736,
+        "seconds": 186.4
       }
     ],
-    "total_seconds": 769.1
+    "total_seconds": 780.8
   },
   "sample": {
     "all_truth_pairs_in_scope": true,
@@ -253,5 +253,5 @@
       "side": "A"
     }
   ],
-  "updated_at_utc": "2026-09-23T13:37:20+00:00"
+  "updated_at_utc": "2026-09-23T14:19:07+00:00"
 }

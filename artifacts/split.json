@@ -13,7 +13,7 @@
       100
     ]
   },
-  "code_commit": "7e109a1b0cd4d9fd9bdfaaaf9c8ce75a3e67cf6e",
+  "code_commit": "6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4",
   "feature_version": "0.2.0",
   "folds": {
     "calibrate": {
@@ -35,7 +35,7 @@
       "truth_pairs": 48478
     }
   },
-  "generated_at_utc": "2026-09-23T13:29:21+00:00",
+  "generated_at_utc": "2026-09-23T14:10:57+00:00",
   "rule": "fold = sha256(a native id) mod 100: fit [0, 60), calibrate [60, 80), test [80, 100)",
   "split_version": "1.0"
 }
