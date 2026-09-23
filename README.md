@@ -1,6 +1,28 @@
-# entity-resolution
+# Entity resolution: Discogs masters against MusicBrainz release groups
 
 Record linkage between two open music catalogues, measured against labelled ground truth.
+
+[Live site](https://cbratkovics.github.io/entity-resolution/) · [dbt docs](https://cbratkovics.github.io/entity-resolution/dbt/) · [Findings](docs/FINDINGS.md) · [Methods card](docs/METHODS_CARD.md) · [Brief](docs/BRIEF.md) · ![ci](https://github.com/cbratkovics/entity-resolution/actions/workflows/ci.yml/badge.svg)
+
+## What the numbers say
+
+- **Rules is the best single method at fixed tiers.** `rules_v1` auto-accepts with precision
+  0.994615 and recall 0.930917 against labelled pairs, F1 0.961712; `learned_v1` trades recall
+  for precision, 0.999344 at 0.849952, F1 0.918614; the exact rule stops at recall 0.760858.
+  <!-- cite: artifacts/eval_rules_v1.json#metrics.at_auto_accept.precision; artifacts/eval_rules_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_rules_v1.json#metrics.at_auto_accept.f1; artifacts/eval_learned_v1.json#metrics.at_auto_accept.precision; artifacts/eval_learned_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_learned_v1.json#metrics.at_auto_accept.f1; artifacts/eval_exact_v1.json#metrics.at_auto_accept.recall_labelled -->
+- **Unverified accepts are the coverage-versus-accuracy exhibit.** `rules_v1` auto-accepts 4,501
+  unlabelled test-fold records, 0.093498 of its accepts, against 1,103 and 0.027062 for
+  `learned_v1`; they lift coverage and are excluded from every accuracy figure.
+  <!-- cite: artifacts/eval_rules_v1.json#metrics.unverified_accepts.count; artifacts/eval_rules_v1.json#metrics.unverified_accepts.share_of_accepts; artifacts/eval_learned_v1.json#metrics.unverified_accepts.count; artifacts/eval_learned_v1.json#metrics.unverified_accepts.share_of_accepts -->
+- **Calibration is where `learned_v1` earns its place.** Its pair-level ECE on the test fold is
+  0.000147 and its decision-level ECE 0.047858: the argmax over calibrated pair probabilities
+  selects upward, so the tiers act on slightly overconfident numbers; the uncalibrated rules
+  score sits at 0.402040 at pair level.
+  <!-- cite: artifacts/eval_learned_v1.json#metrics.calibration.pair_level.ece; artifacts/eval_learned_v1.json#metrics.calibration.decision_level.ece; artifacts/eval_rules_v1.json#metrics.calibration.pair_level.ece -->
+
+`docs/FINDINGS.md` carries the full argument with the review-budget table and the limitations.
+
+## Overview
 
 Discogs masters (side B) are matched to MusicBrainz release groups (side A, chosen after
 profiling both candidates, ADR-0001). Because side A publishes its own links to Discogs, every
@@ -13,6 +35,33 @@ same number.
 **Status.** Complete for v1 (`docs/BRIEF.md` Phase 6): three methods evaluated on a held-out
 test fold of labelled pairs, a dbt warehouse that reconciles to the artifacts, a docs site
 rendered from the exported marts, and a findings document with numbered limitations.
+
+## How this was built
+
+An independent project on open data: no employer code or data is involved, and every source is
+CC0 (`docs/DATA_SOURCES.md`). It was built with Claude Code under `docs/BRIEF.md`, a contract
+with phase gates and checkpoints the owner reviewed at every phase, an ADR for every departure
+([0001](docs/adr/0001-side-a-musicbrainz-and-album-sample-scope.md),
+[0002](docs/adr/0002-musicbrainz-first-release-year-from-core-tables.md),
+[0003](docs/adr/0003-fold-by-a-record.md),
+[0004](docs/adr/0004-various-artists-canonical-token.md),
+[0005](docs/adr/0005-mapping-table-scope.md)), and CI that fails on any number in the docs
+without an artifact citation whose value matches. That is why a Claude model is listed as a
+co-author on the commits.
+
+## Pipeline
+
+```mermaid
+flowchart LR
+    dumps["Discogs and MusicBrainz dumps"] --> adapters["Source adapters"]
+    adapters --> sample["Deterministic sample and truth audit"]
+    sample --> blocking["Blocking"]
+    blocking --> features["Pair features"]
+    features --> methods["exact / rules / learned methods"]
+    methods --> artifacts["Committed artifacts"]
+    artifacts --> bronze["dbt bronze"] --> silver["dbt silver"] --> gold["dbt gold"]
+    gold --> site["Docs site"]
+```
 
 ## Why ground truth matters
 
@@ -46,24 +95,6 @@ fair. Every reported metric comes from the `test` fold.
 Keys, per method, in `artifacts/eval_<method_version>.json#metrics`: `pair_completeness_test`, `at_auto_accept.precision`, `at_auto_accept.recall_labelled`, `recall_overall`, `at_auto_accept.f1`, `coverage`, `unverified_accepts.count`, `unverified_accepts.share_of_accepts`, `ambiguity_rule.review_queue`, `calibration.decision_level.ece`. Every metric is on the test fold; precision, recall and F1 are over labelled A records; coverage counts every test-fold A record.
 <!-- generated:results end -->
 
-## What the numbers say
-
-- **Rules is the best single method at fixed tiers.** `rules_v1` auto-accepts with precision
-  0.994615 and recall 0.930917 against labelled pairs, F1 0.961712; `learned_v1` trades recall
-  for precision, 0.999344 at 0.849952, F1 0.918614; the exact rule stops at recall 0.760858.
-  <!-- cite: artifacts/eval_rules_v1.json#metrics.at_auto_accept.precision; artifacts/eval_rules_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_rules_v1.json#metrics.at_auto_accept.f1; artifacts/eval_learned_v1.json#metrics.at_auto_accept.precision; artifacts/eval_learned_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_learned_v1.json#metrics.at_auto_accept.f1; artifacts/eval_exact_v1.json#metrics.at_auto_accept.recall_labelled -->
-- **Unverified accepts are the coverage-versus-accuracy exhibit.** `rules_v1` auto-accepts 4,501
-  unlabelled test-fold records, 0.093498 of its accepts, against 1,103 and 0.027062 for
-  `learned_v1`; they lift coverage and are excluded from every accuracy figure.
-  <!-- cite: artifacts/eval_rules_v1.json#metrics.unverified_accepts.count; artifacts/eval_rules_v1.json#metrics.unverified_accepts.share_of_accepts; artifacts/eval_learned_v1.json#metrics.unverified_accepts.count; artifacts/eval_learned_v1.json#metrics.unverified_accepts.share_of_accepts -->
-- **Calibration is where `learned_v1` earns its place.** Its pair-level ECE on the test fold is
-  0.000147 and its decision-level ECE 0.047858: the argmax over calibrated pair probabilities
-  selects upward, so the tiers act on slightly overconfident numbers; the uncalibrated rules
-  score sits at 0.402040 at pair level.
-  <!-- cite: artifacts/eval_learned_v1.json#metrics.calibration.pair_level.ece; artifacts/eval_learned_v1.json#metrics.calibration.decision_level.ece; artifacts/eval_rules_v1.json#metrics.calibration.pair_level.ece -->
-
-`docs/FINDINGS.md` carries the full argument with the review-budget table and the limitations.
-
 ## Coverage is not precision
 
 Half of the sampled A records carry no MusicBrainz link to Discogs, so nothing they are matched
@@ -75,7 +106,7 @@ construction. <!-- cite: artifacts/eval_rules_v1.json#metrics.unverified_accepts
 `docs/METHODS_CARD.md` carries the method records and metric definitions; the site renders the
 same figures as charts.
 
-Site: _Pages URL to be filled after the site is enabled (owner TODO step 3)._
+Site: https://cbratkovics.github.io/entity-resolution/ (published by `pages.yml` once Pages is enabled).
 
 ## How to run
 
@@ -113,4 +144,5 @@ committed artifacts without it.
 Discogs monthly data dump (masters), CC0, from data.discogs.com; MusicBrainz core database
 dump, CC0, from data.metabrainz.org; Wikidata (profiled, not used as a side), CC0. Verbatim
 licence text, URLs, dump dates and what is loaded from each are in `docs/DATA_SOURCES.md`.
-This repository's own code is the author's; the data stays under `data/` and never enters git.
+The code is MIT licensed (`LICENSE`); the data is CC0 as recorded in `docs/DATA_SOURCES.md`, stays
+under `data/` and never enters git.
