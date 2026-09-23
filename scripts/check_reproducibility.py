@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-"""Compare two full runs (docs/REPRODUCIBILITY.md, the two-run gate): the sample parquet files
-by file bytes and by content hash, the manifest minus timestamps and run id, and the truth
-audit minus its timestamp.
+"""Compare two full runs (docs/REPRODUCIBILITY.md, the two-run gate): the sample, candidate and
+feature parquet files by file bytes and by content hash, the manifest minus timestamps, run id
+and runtime, and the truth audit, blocking report and split minus their timestamps.
 
     python scripts/check_reproducibility.py <snapshot_dir>
 
@@ -23,7 +23,15 @@ import json
 import pandas as pd
 import pyarrow.parquet as pq
 
-from entity_resolution.config import CONTRACTS_PATH, MANIFEST_PATH, SAMPLE_DIR, TRUTH_AUDIT_PATH
+from entity_resolution.config import (
+    BLOCKING_REPORT_PATH,
+    CONTRACTS_PATH,
+    MANIFEST_PATH,
+    PAIRS_DIR,
+    SAMPLE_DIR,
+    SPLIT_PATH,
+    TRUTH_AUDIT_PATH,
+)
 from entity_resolution.data import acquire, sample
 
 VOLATILE_MANIFEST = ("updated_at_utc", "run_id", "runtime")
@@ -53,8 +61,13 @@ def main(argv: list[str] | None = None) -> int:
     snap = Path(argv[0])
     problems: list[str] = []
     notes: list[str] = []
-    for name in ("a", "b", "truth"):
-        old, new = snap / f"{name}.parquet", SAMPLE_DIR / f"{name}.parquet"
+    files = [(n, SAMPLE_DIR / f"{n}.parquet") for n in ("a", "b", "truth")]
+    files += [(n, PAIRS_DIR / f"{n}.parquet") for n in ("candidates", "features")]
+    for name, new in files:
+        old = snap / f"{name}.parquet"
+        if not old.exists() or not new.exists():
+            notes.append(f"{name}.parquet: not present in both runs; skipped")
+            continue
         old_bytes, old_sha = acquire.file_sha256(old)
         new_bytes, new_sha = acquire.file_sha256(new)
         old_df, new_df = pd.read_parquet(old), pd.read_parquet(new)
@@ -84,6 +97,12 @@ def main(argv: list[str] | None = None) -> int:
     old_c = _strip(json.loads((snap / "contracts.json").read_text()), VOLATILE_AUDIT)
     new_c = _strip(json.loads(CONTRACTS_PATH.read_text()), VOLATILE_AUDIT)
     problems += [f"contracts {d}" for d in _diff_keys(old_c, new_c)]
+    for label, path in (("blocking_report", BLOCKING_REPORT_PATH), ("split", SPLIT_PATH)):
+        old_p = snap / path.name
+        if old_p.exists() and path.exists():
+            a_ = _strip(json.loads(old_p.read_text()), VOLATILE_AUDIT)
+            b_ = _strip(json.loads(path.read_text()), VOLATILE_AUDIT)
+            problems += [f"{label} {d}" for d in _diff_keys(a_, b_)]
     for n in notes:
         print("note:", n)
     for p in problems:

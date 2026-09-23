@@ -830,8 +830,12 @@ def _minutes(s: float | None) -> str:
 
 def render_profile(profiles: dict[str, dict[str, Any]]) -> str:
     d, mb, wd = profiles.get("discogs"), profiles.get("musicbrainz"), profiles.get("wikidata")
+    versions = sorted({p["feature_version"] for p in profiles.values()})
     lines = [
         "# Source profile (Phase 1)",
+        "",
+        "Dated record: patterns and normalised-key rates were classified at feature version "
+        f"`{', '.join(versions)}` and are not regenerated when the normaliser changes (ADR-0004).",
         "",
         "<!-- generated:profile start -->",
         "_Rendered by `scripts/profile_sources.py render` from `artifacts/profile/*.json`; do not edit_",

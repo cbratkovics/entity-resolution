@@ -9,7 +9,7 @@ from entity_resolution.features import normalize as n
 
 
 def test_feature_version_is_set() -> None:
-    assert FEATURE_VERSION == "0.1.0"
+    assert FEATURE_VERSION == "0.2.0"
 
 
 @pytest.mark.parametrize(
@@ -71,6 +71,14 @@ def test_various_artists_flag(credit: str) -> None:
 
 def test_various_is_not_matched_by_substring() -> None:
     assert not n.is_various_artists("Various Cruelties")
+    assert n.normalize_artist("Various Cruelties") == ("various cruelties", "various cruelties")
+
+
+@pytest.mark.parametrize("credit", ["Various", "Various Artists", "VA", "V/A"])
+def test_various_artists_credits_canonicalise_to_one_token(credit: str) -> None:
+    assert n.normalize_artist(credit) == (n.VA_CANONICAL, n.VA_CANONICAL)
+    r = n.normalize_record("Now That's Music", credit, 2001)
+    assert r.artist_tokens == (n.VA_CANONICAL,) and r.is_various_artists
 
 
 def test_self_titled_compares_against_both_artist_forms() -> None:

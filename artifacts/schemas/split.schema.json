@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Split (split_version 1.0)",
+  "description": "artifacts/split.json: the fold rule (ADR 0003: sha256 of the A native id mod 100) and counts per fold of A records, labelled A records, truth pairs and candidate pairs. Seed-free by construction.",
+  "type": "object",
+  "required": ["split_version", "generated_at_utc", "feature_version", "code_commit", "rule", "bounds", "folds"],
+  "additionalProperties": false,
+  "properties": {
+    "split_version": {"const": "1.0"},
+    "generated_at_utc": {"type": "string"},
+    "feature_version": {"type": "string"},
+    "code_commit": {"type": "string"},
+    "rule": {"type": "string"},
+    "bounds": {"type": "object", "required": ["fit", "calibrate", "test"], "additionalProperties": {"type": "array", "items": {"type": "integer"}, "minItems": 2, "maxItems": 2}},
+    "folds": {
+      "type": "object",
+      "required": ["fit", "calibrate", "test"],
+      "additionalProperties": false,
+      "properties": {
+        "fit": {"$ref": "#/$defs/fold"},
+        "calibrate": {"$ref": "#/$defs/fold"},
+        "test": {"$ref": "#/$defs/fold"}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "fold": {
+      "type": "object",
+      "required": ["a_records", "labelled_a_records", "truth_pairs", "candidate_pairs"],
+      "additionalProperties": false,
+      "properties": {
+        "a_records": {"$ref": "#/$defs/count"},
+        "labelled_a_records": {"$ref": "#/$defs/count"},
+        "truth_pairs": {"$ref": "#/$defs/count"},
+        "candidate_pairs": {"$ref": "#/$defs/count"}
+      }
+    }
+  }
+}

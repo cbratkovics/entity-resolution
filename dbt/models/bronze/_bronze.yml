@@ -160,3 +160,82 @@ models:
                 values: ["grain_unique", "id_format", "year_range", "null_rates"]
       - name: check_ok
         description: Whether this check passed.
+
+  - name: brz_blocking_report
+    description: "artifacts/blocking_report.json as one row per block key, union figures repeated. Grain (block_key). Empty until the first full build reaches blocking."
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: generated_at_utc
+        description: When the report was written.
+      - name: feature_version
+        description: FEATURE_VERSION the keys were emitted with.
+      - name: code_commit
+        description: Git commit of the code that produced the run.
+      - name: block_key
+        description: The blocking key (k_title3, k_artist_year, k_title_sorted, k_phonetic, k_self_titled).
+        data_tests:
+          - unique
+          - not_null
+      - name: key_pairs
+        description: Candidate pairs this key produced on its own, before the union.
+      - name: key_pair_completeness
+        description: Share of sampled truth pairs this key recovers on its own.
+      - name: keys_emitted_a
+        description: Key values emitted by side-A records for this key.
+      - name: keys_emitted_b
+        description: Key values emitted by side-B records for this key.
+      - name: union_pairs
+        description: Distinct candidate pairs in the union of every key, before the per-A cap.
+      - name: candidate_pairs_after_cap
+        description: Candidate pairs kept after the per-A cap.
+      - name: reduction_ratio
+        description: One minus candidate pairs after the cap over the A times B cross product.
+      - name: union_pair_completeness
+        description: Share of sampled truth pairs recovered by the union, before the cap.
+      - name: after_cap_pair_completeness
+        description: Share of sampled truth pairs still present after the per-A cap.
+      - name: truth_pairs
+        description: Sampled truth pairs the completeness figures are measured against.
+      - name: truth_pairs_lost_to_cap
+        description: Truth pairs in the union that the per-A cap removed.
+      - name: a_records_over_cap
+        description: A records whose union candidates exceeded the cap.
+      - name: pairs_dropped
+        description: Candidate pairs removed by the cap.
+      - name: candidate_cap_per_a
+        description: The per-A candidate cap.
+
+  - name: brz_split
+    description: "artifacts/split.json as one row per fold (ADR 0003: folds by the A record). Grain (fold). Empty until the first full build reaches the split."
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: generated_at_utc
+        description: When the split was written.
+      - name: feature_version
+        description: FEATURE_VERSION of the run.
+      - name: code_commit
+        description: Git commit of the code that produced the run.
+      - name: rule
+        description: The fold rule in words.
+      - name: fold
+        description: The fold (fit, calibrate, test).
+        data_tests:
+          - unique
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ["fit", "calibrate", "test"]
+      - name: bucket_low
+        description: Lowest hash bucket (inclusive) assigned to the fold.
+      - name: bucket_high
+        description: Highest hash bucket (exclusive) assigned to the fold.
+      - name: a_records
+        description: Sampled A records in the fold.
+      - name: labelled_a_records
+        description: Labelled A records in the fold.
+      - name: truth_pairs
+        description: In-sample truth pairs whose A record is in the fold.
+      - name: candidate_pairs
+        description: Candidate pairs whose A record is in the fold.

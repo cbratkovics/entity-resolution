@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Blocking report (report_version 1.0)",
+  "description": "artifacts/blocking_report.json: per-key and union pair completeness against the sampled truth pairs, candidate counts, reduction ratio, cap overflow and the largest block sizes (docs/BRIEF.md 2.4). Counts and rates only.",
+  "type": "object",
+  "required": ["report_version", "generated_at_utc", "feature_version", "code_commit", "keys", "candidate_cap_per_a", "a_records", "b_records", "cross_product", "union_pairs", "candidate_pairs_after_cap", "reduction_ratio", "per_key_pairs", "keys_emitted", "largest_blocks_a", "cap_overflow", "pair_completeness"],
+  "additionalProperties": false,
+  "properties": {
+    "report_version": {"const": "1.0"},
+    "generated_at_utc": {"type": "string"},
+    "feature_version": {"type": "string"},
+    "code_commit": {"type": "string"},
+    "keys": {"type": "array", "items": {"$ref": "#/$defs/key"}},
+    "candidate_cap_per_a": {"$ref": "#/$defs/count"},
+    "a_records": {"$ref": "#/$defs/count"},
+    "b_records": {"$ref": "#/$defs/count"},
+    "cross_product": {"$ref": "#/$defs/count"},
+    "union_pairs": {"$ref": "#/$defs/count"},
+    "candidate_pairs_after_cap": {"$ref": "#/$defs/count"},
+    "reduction_ratio": {"$ref": "#/$defs/rate"},
+    "per_key_pairs": {"type": "object", "propertyNames": {"$ref": "#/$defs/key"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+    "keys_emitted": {
+      "type": "object",
+      "required": ["a", "b"],
+      "additionalProperties": false,
+      "properties": {
+        "a": {"type": "object", "propertyNames": {"$ref": "#/$defs/key"}, "additionalProperties": {"$ref": "#/$defs/count"}},
+        "b": {"type": "object", "propertyNames": {"$ref": "#/$defs/key"}, "additionalProperties": {"$ref": "#/$defs/count"}}
+      }
+    },
+    "largest_blocks_a": {"type": "object", "propertyNames": {"$ref": "#/$defs/key"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/count"}}},
+    "cap_overflow": {
+      "type": "object",
+      "required": ["a_records_over_cap", "pairs_dropped", "max_candidates_per_a", "a_records_with_candidates"],
+      "additionalProperties": false,
+      "properties": {
+        "a_records_over_cap": {"$ref": "#/$defs/count"},
+        "pairs_dropped": {"$ref": "#/$defs/count"},
+        "max_candidates_per_a": {"$ref": "#/$defs/count"},
+        "a_records_with_candidates": {"$ref": "#/$defs/count"}
+      }
+    },
+    "pair_completeness": {
+      "type": "object",
+      "required": ["truth_pairs", "per_key", "union", "after_cap", "truth_pairs_lost_to_cap"],
+      "additionalProperties": false,
+      "properties": {
+        "truth_pairs": {"$ref": "#/$defs/count"},
+        "per_key": {"type": "object", "propertyNames": {"$ref": "#/$defs/key"}, "additionalProperties": {"$ref": "#/$defs/rate"}},
+        "union": {"$ref": "#/$defs/rate"},
+        "after_cap": {"$ref": "#/$defs/rate"},
+        "truth_pairs_lost_to_cap": {"$ref": "#/$defs/count"}
+      }
+    }
+  },
+  "$defs": {
+    "count": {"type": "integer", "minimum": 0},
+    "rate": {"type": ["number", "null"], "minimum": 0, "maximum": 1},
+    "key": {"enum": ["k_title3", "k_artist_year", "k_title_sorted", "k_phonetic", "k_self_titled"]}
+  }
+}

@@ -24,24 +24,28 @@ import pandas as pd
 
 from entity_resolution.config import (
     A_SCOPE_PRIMARY_TYPE,
+    BLOCKING_REPORT_PATH,
     CONTRACTS_PATH,
     DATA_DIR,
     MANIFEST_PATH,
+    PAIRS_DIR,
     PROJECT,
     RAW_DIR,
     SAMPLE_DIR,
+    SPLIT_PATH,
     TRUTH_AUDIT_PATH,
     UNLINKED_SHARE,
 )
 from entity_resolution.data import acquire, contracts, loader, sample, truth
 from entity_resolution.data.discogs import DiscogsAdapter
 from entity_resolution.data.musicbrainz import MusicBrainzAdapter
-from entity_resolution.features import FEATURE_VERSION
+from entity_resolution.eval import split
+from entity_resolution.features import FEATURE_VERSION, blocking, pairs
 from entity_resolution.models import registry
 
-PHASE_STATUS = (
-    "Phase 2 complete; blocking, features, methods and evaluation arrive in Phases 3 and 4"
-)
+PHASE_STATUS = "Phase 3 complete; methods, tiering and evaluation arrive in Phase 4"
+UNION_PAIR_GATE = 30_000_000
+"""Stop and present before pair features if the blocking union exceeds this (owner's ruling)."""
 SAMPLE_RULE = (
     "membership = sha256(source || '|' || native_id) as 64 hex chars <= threshold_hex; the "
     "threshold is the hash of the n-th smallest record of the unlinked pool with n chosen so that "
@@ -269,10 +273,61 @@ def run(argv: list[str] | None = None) -> int:
         }
         registry.validate_and_write(audit, "truth_audit", TRUTH_AUDIT_PATH)
 
+    # ---- Phase 3: blocking, split, pair features -------------------------------------------
+    in_sample = t.in_sample()[["a_id", "b_id"]].astype("string")
+    with rt.stage("block"):
+        candidates, block_report = blocking.build_candidates(a_sample, b_sample, in_sample)
+        print(
+            f"   union pairs {block_report['union_pairs']:,}; after cap "
+            f"{block_report['candidate_pairs_after_cap']:,}; per key "
+            f"{block_report['per_key_pairs']}; cap overflow {block_report['cap_overflow']}; "
+            f"pair completeness union {block_report['pair_completeness']['union']} "
+            f"per key {block_report['pair_completeness']['per_key']}"
+        )
+        block_artifact = {
+            "report_version": "1.0",
+            "generated_at_utc": registry.utc_now_iso(),
+            "feature_version": FEATURE_VERSION,
+            "code_commit": manifest["code_commit"],
+            **block_report,
+        }
+        registry.validate_and_write(block_artifact, "blocking_report", BLOCKING_REPORT_PATH)
+        if block_report["union_pairs"] > UNION_PAIR_GATE:
+            manifest["runtime"] = rt.block()
+            registry.write_manifest(manifest, MANIFEST_PATH, validate=True)
+            print(
+                f"make full: STOP: blocking union {block_report['union_pairs']:,} exceeds the "
+                f"{UNION_PAIR_GATE:,} gate; pair features not computed (present before continuing)",
+                file=sys.stderr,
+            )
+            return 3
+
+    with rt.stage("split"):
+        candidates["fold"] = split.assign(candidates["a_id"])
+        split_artifact = {
+            "split_version": "1.0",
+            "generated_at_utc": registry.utc_now_iso(),
+            "feature_version": FEATURE_VERSION,
+            "code_commit": manifest["code_commit"],
+            **split.report(a_sample["native_id"], t.labelled_a_ids(), in_sample, candidates),
+        }
+        registry.validate_and_write(split_artifact, "split", SPLIT_PATH)
+
+    with rt.stage("features"):
+        feats = pairs.pair_features(candidates, a_sample, b_sample)
+        manifest["pairs"] = {
+            "candidates": write_parquet(candidates, PAIRS_DIR / "candidates.parquet"),
+            "features": write_parquet(feats, PAIRS_DIR / "features.parquet"),
+            "pair_features": list(pairs.PAIR_FEATURES),
+        }
+
     manifest["runtime"] = rt.block()
     manifest["feature_version"] = FEATURE_VERSION
     registry.write_manifest(manifest, MANIFEST_PATH, validate=True)
-    print(f"wrote {MANIFEST_PATH}, {TRUTH_AUDIT_PATH}, {CONTRACTS_PATH}")
+    print(
+        f"wrote {MANIFEST_PATH}, {TRUTH_AUDIT_PATH}, {CONTRACTS_PATH}, "
+        f"{BLOCKING_REPORT_PATH}, {SPLIT_PATH}"
+    )
     print(f"make full: {PHASE_STATUS}")
     return 0
 

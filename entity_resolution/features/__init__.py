@@ -5,5 +5,6 @@
 artifact.
 """
 
-FEATURE_VERSION = "0.1.0"
-"""0.1.0: normalisation (2.3) only; no blocking keys or pair features yet."""
+FEATURE_VERSION = "0.2.0"
+"""0.2.0: various-artists credits canonicalised to one token (ADR 0004); still normalisation
+(2.3) only, no blocking keys or pair features yet."""

@@ -33,6 +33,21 @@ hash and the membership thresholds from the files on disk, and
 difference fails). Parquet is written with fixed
 options (pyarrow, zstd, no index).
 
+## Can a hosted runner run the full build? (measured, not decided)
+
+The committed manifest's run recorded a peak `data/` size of 14,762,875,070 bytes
+(`13.75 GiB`) and a peak resident set of 9,725,906,944 bytes (`9.06 GiB`), the
+latter reached in the pair-feature stage. <!-- cite: artifacts/manifest.json#runtime.data_dir_bytes_peak; artifacts/manifest.json#runtime.peak_rss_bytes -->
+Of the disk, the MusicBrainz archive is 7,542,238,956 bytes and its ten extracted tables
+4,795,695,166 bytes. <!-- cite: artifacts/manifest.json#sources[1].dump_bytes; artifacts/manifest.json#sources[1].extract.extracted_bytes -->
+That run took 573.7 seconds with the loaders' parquet caches already present; the sample
+stage took 172.3 seconds, blocking 58.2 seconds and pair features
+285.1 seconds. <!-- cite: artifacts/manifest.json#runtime.total_seconds; artifacts/manifest.json#runtime.stages[4].seconds; artifacts/manifest.json#runtime.stages[7].seconds; artifacts/manifest.json#runtime.stages[9].seconds -->
+A cold run adds the Discogs parse and the MusicBrainz load (about two minutes on this machine).
+A GitHub-hosted runner has roughly `14 GiB` of free disk and `7 GiB` of memory, so until the
+extraction is changed (`docs/ROADMAP.md`) the full build is owner-run on a machine with at
+least `20 GiB` free and `12 GiB` of memory. Phase 6 decides the workflow.
+
 ## Warehouse determinism
 
 DuckDB's parallel aggregation order is not deterministic, so exported values can differ at the

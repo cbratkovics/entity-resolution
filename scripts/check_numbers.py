@@ -16,7 +16,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from entity_resolution.citations import check_document  # noqa: E402
 from entity_resolution.config import REPO_ROOT  # noqa: E402
 
-DEFAULT = ["README.md", "docs/FINDINGS.md", "docs/METHODS_CARD.md", "docs/PROFILE.md", "docs/adr"]
+DEFAULT = [
+    "README.md",
+    "docs/FINDINGS.md",
+    "docs/METHODS_CARD.md",
+    "docs/PROFILE.md",
+    "docs/REPRODUCIBILITY.md",
+    "docs/adr",
+]
 
 
 def main(argv: list[str] | None = None) -> int:

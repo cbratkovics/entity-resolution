@@ -1,5 +1,7 @@
 # Source profile (Phase 1)
 
+Dated record: patterns and normalised-key rates were classified at feature version `0.1.0` and are not regenerated when the normaliser changes (ADR-0004).
+
 <!-- generated:profile start -->
 _Rendered by `scripts/profile_sources.py render` from `artifacts/profile/*.json`; do not edit_
 _the generated block by hand. Every figure below is the artifact value; the key is the column._

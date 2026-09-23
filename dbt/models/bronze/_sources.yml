@@ -43,3 +43,15 @@ sources:
         meta:
           formatter: template
           external_location: "read_json_auto('{{ var('artifacts_dir') }}/contracts.json', filename = true)"
+
+      - name: blocking_report
+        description: artifacts/blocking_report.json — per-key and union pair completeness, candidate counts, reduction ratio and cap overflow of the current run (schema blocking_report.schema.json).
+        meta:
+          formatter: template
+          external_location: "read_json_auto('{{ var('artifacts_dir') }}/blocking_report.json', filename = true)"
+
+      - name: split
+        description: artifacts/split.json — the fold rule (ADR 0003) and counts per fold of the current run (schema split.schema.json).
+        meta:
+          formatter: template
+          external_location: "read_json_auto('{{ var('artifacts_dir') }}/split.json', filename = true)"

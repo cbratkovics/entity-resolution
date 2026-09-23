@@ -16,6 +16,9 @@ Title: bracketed groups whose text contains a word from ``QUALIFIERS`` are dropp
 Interpretation recorded for the checkpoint: ``is_self_titled`` compares ``title_norm`` with
 both ``artist_norm`` and ``artist_norm_full``, so "The Beatles" by The Beatles is self-titled
 whether or not the article was dropped.
+
+Various-artists credits (``VA_CREDITS``) normalise to the single token ``VA_CANONICAL`` on
+both sides (ADR 0004, feature version 0.2.0).
 """
 
 from __future__ import annotations
@@ -36,6 +39,9 @@ QUALIFIERS: tuple[str, ...] = (
     "reissue",
 )
 VA_CREDITS: frozenset[str] = frozenset({"various", "various artists", "va", "v/a"})
+VA_CANONICAL = "various"
+"""Every various-artists credit normalises to this one token (ADR 0004): MusicBrainz writes
+"Various Artists" where Discogs writes "Various", and the credits must agree."""
 
 _DISAMBIGUATOR_RE = re.compile(r"\s*\(\d+\)")
 _COMMA_ARTICLE_RE = re.compile(
@@ -146,7 +152,10 @@ def metaphone_first(text: str) -> str:
 
 
 def normalize_artist(credit: str) -> tuple[str, str]:
-    """``(artist_norm, artist_norm_full)``."""
+    """``(artist_norm, artist_norm_full)``; a various-artists credit is ``VA_CANONICAL`` in
+    both forms."""
+    if is_various_artists(credit):
+        return VA_CANONICAL, VA_CANONICAL
     full = basic(reorder_comma_article(strip_disambiguator(credit)))
     return drop_leading_article(full), full
 

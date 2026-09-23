@@ -1,0 +1,41 @@
+{
+  "bounds": {
+    "calibrate": [
+      60,
+      80
+    ],
+    "fit": [
+      0,
+      60
+    ],
+    "test": [
+      80,
+      100
+    ]
+  },
+  "code_commit": "c599c1e91793e1aefbf33dcfd0f9af1c6c6cf286",
+  "feature_version": "0.2.0",
+  "folds": {
+    "calibrate": {
+      "a_records": 96417,
+      "candidate_pairs": 1513039,
+      "labelled_a_records": 48359,
+      "truth_pairs": 48451
+    },
+    "fit": {
+      "a_records": 289540,
+      "candidate_pairs": 4568231,
+      "labelled_a_records": 144526,
+      "truth_pairs": 144823
+    },
+    "test": {
+      "a_records": 96557,
+      "candidate_pairs": 1514207,
+      "labelled_a_records": 48372,
+      "truth_pairs": 48478
+    }
+  },
+  "generated_at_utc": "2026-09-23T10:58:20+00:00",
+  "rule": "fold = sha256(a native id) mod 100: fit [0, 60), calibrate [60, 80), test [80, 100)",
+  "split_version": "1.0"
+}

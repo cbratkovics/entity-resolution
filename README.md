@@ -11,10 +11,10 @@ review queue at the chosen thresholds. Coverage (how many records got a match) i
 beside precision (how many of those matches are right), because in this data they are not the
 same number.
 
-**Status.** Phase 2 of `docs/BRIEF.md`: side A is MusicBrainz release groups of primary type
-Album (`docs/adr/0001-*.md`), the loaders, the deterministic sample and the truth audit exist
-(`artifacts/manifest.json`, `artifacts/truth_audit.json`), and `make full` reproduces the
-sample byte for byte. No method has been run, so there are no results yet. The results table below is filled from
+**Status.** Phase 3 of `docs/BRIEF.md`: the sample, blocking, folds and pair features exist
+(`artifacts/manifest.json`, `artifacts/truth_audit.json`, `artifacts/blocking_report.json`,
+`artifacts/split.json`); `make full` reproduces the sample byte for byte. No method has been
+run, so there are no results yet. The results table below is filled from
 `artifacts/eval_<method_version>.json` once Phase 4 has run; until then it reads from an empty
 artifact tree on purpose.
 

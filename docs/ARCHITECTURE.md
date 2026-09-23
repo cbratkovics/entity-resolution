@@ -15,14 +15,16 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 | `data/truth.py` | truth links in their own frame with the statuses dead, out of scope, unsampled, in sample; the audit block. |
 | `data/sample.py` | deterministic membership hash, solved per-side thresholds, unlinked share, content hashes for the reproducibility gate. |
 | `data/contracts.py` | pure contract checks (grain, id format, year range, null rates) returning count-only reports. |
-| `features/` | the one normalisation and pair-feature module; `FEATURE_VERSION`. Filled in Phase 3. |
+| `features/normalize.py` | section 2.3 in full plus the various-artists canonical token (ADR 0004); the one normaliser. |
+| `features/blocking.py` | the five blocking keys, union of blocks in DuckDB, per-A cap with counted overflow, pair completeness per key. |
+| `features/pairs.py` | `PAIR_FEATURES` in fixed order, rapidfuzz similarities on the normalised forms, nullable year. |
+| `eval/split.py` | folds by the A record's hash (ADR 0003); pairs and truth inherit A's fold. |
 | `eval/evaluator.py` | the evaluation artifact writer and metric definitions. Metric computation in Phase 4. |
 | `eval/methods_card.py` | renders `docs/METHODS_CARD.md` from artifacts; byte-stable. |
 | `models/registry.py` | manifest and method version records. |
 | `models/tiering.py` | tier thresholds, ambiguity gap and review-cost constants. |
-| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`. Phases 3 and 4 add the later stages. |
+| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, then block, split and pair features (`data/pairs/`), with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`. Phase 4 adds methods and evaluation. |
 | `citations.py` | the number checker's rules, shared verbatim with demo 1. |
-| `features/normalize.py` | section 2.3 in full: the one normaliser (rule 5); the profiler already calls it. |
 
 ## Artifacts `artifacts/`
 

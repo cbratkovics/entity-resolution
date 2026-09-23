@@ -30,7 +30,17 @@
         }
       }
     },
-    "runtime": {"$ref": "#/$defs/runtime"}
+    "runtime": {"$ref": "#/$defs/runtime"},
+    "pairs": {
+      "type": "object",
+      "required": ["candidates", "features", "pair_features"],
+      "additionalProperties": false,
+      "properties": {
+        "candidates": {"$ref": "#/$defs/file"},
+        "features": {"$ref": "#/$defs/file"},
+        "pair_features": {"type": "array", "items": {"type": "string"}}
+      }
+    }
   },
   "$defs": {
     "count": {"type": "integer", "minimum": 0},

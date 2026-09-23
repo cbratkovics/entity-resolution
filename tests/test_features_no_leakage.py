@@ -70,5 +70,42 @@ def test_calibrator_fit_index_within_calibrate_fold() -> None:
     pytest.skip("learned_v1 arrives in Phase 4")
 
 
-def test_stored_pair_features_recompute_from_raw_fields() -> None:
-    pytest.skip("pair features arrive in Phase 3")
+def test_candidates_carry_no_truth_column_and_inherit_the_a_fold(frames) -> None:
+    from entity_resolution.config import PAIRS_DIR
+    from entity_resolution.eval import split
+
+    if not (PAIRS_DIR / "candidates.parquet").exists():
+        pytest.skip("candidates absent: the full build has not reached blocking")
+    cands = pd.read_parquet(PAIRS_DIR / "candidates.parquet")
+    assert not set(cands.columns) & {"status", "is_truth", "label", "truth"}
+    head = cands.head(5000)
+    assert (head["fold"] == head["a_id"].map(split.fold_for)).all()
+
+
+def test_stored_pair_features_recompute_from_raw_fields(frames) -> None:
+    """Two hundred random real pairs, recomputed from the raw fields through the one normaliser
+    and the one feature function, match the stored features exactly."""
+    from entity_resolution.config import PAIRS_DIR
+    from entity_resolution.features import normalize, pairs
+
+    if not (PAIRS_DIR / "features.parquet").exists():
+        pytest.skip("features absent: the full build has not reached pair features")
+    feats = pd.read_parquet(PAIRS_DIR / "features.parquet")
+    picked = feats.sample(n=200, random_state=0)
+    raw_cols = ["source", "native_id", "title", "artist_credit", "year"]
+    a_raw = frames["a"][raw_cols][frames["a"]["native_id"].isin(picked["a_id"])]
+    b_raw = frames["b"][raw_cols][frames["b"]["native_id"].isin(picked["b_id"])]
+    a_norm = normalize.normalize_frame(a_raw)
+    b_norm = normalize.normalize_frame(b_raw)
+    recomputed = pairs.pair_features(
+        picked[["a_id", "b_id", "fold", "block_keys"]].assign(
+            n_block_keys=picked["n_block_keys"].to_numpy()
+        ),
+        a_norm,
+        b_norm,
+    )
+    for col in pairs.PAIR_FEATURES:
+        left = recomputed[col].astype("float64").to_numpy()
+        right = picked[col].astype("float64").to_numpy()
+        assert (pd.isna(left) == pd.isna(right)).all(), col
+        assert (left[~pd.isna(left)] == right[~pd.isna(right)]).all(), col

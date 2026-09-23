@@ -1,5 +1,5 @@
 {
-  "code_commit": "23185c87d37038513c8478f132b80dc1ef47723a",
+  "code_commit": "c599c1e91793e1aefbf33dcfd0f9af1c6c6cf286",
   "counts": {
     "discogs": {
       "in_scope": 2589349,
@@ -17,76 +17,129 @@
       "year_out_of_range_nulled": 1
     }
   },
-  "feature_version": "0.1.0",
+  "feature_version": "0.2.0",
   "manifest_version": "2.0",
-  "run_id": "20260923T093803+0000",
+  "pairs": {
+    "candidates": {
+      "content_sha256": "ad0972614aabbc2c5bf38adda4c41c18eadc961f7e45082020cfc960fd9a66c0",
+      "file_sha256": "9c28aca92832faa812b1b40baf9d6357016b709de381eab216198c0759ca0f9a",
+      "path": "pairs/candidates.parquet",
+      "rows": 7595477
+    },
+    "features": {
+      "content_sha256": "b515f57df4dd261ed9a713b5e463fd21dc096b004dc13238fade4a93419cac25",
+      "file_sha256": "8b6fc8b4c1e5c89513f225f8a402e0f90f20cb9c740f74361903d4b8dc0d2ddf",
+      "path": "pairs/features.parquet",
+      "rows": 7595477
+    },
+    "pair_features": [
+      "title_ratio",
+      "title_partial",
+      "title_token_sort",
+      "title_token_set",
+      "title_jw",
+      "artist_ratio",
+      "artist_token_set",
+      "artist_jw",
+      "artist_full_exact",
+      "title_exact_norm",
+      "year_diff",
+      "year_either_missing",
+      "both_va",
+      "title_len_diff",
+      "n_block_keys",
+      "qualifier_mismatch"
+    ]
+  },
+  "run_id": "20260923T105337+0000",
   "runtime": {
-    "data_dir_bytes_peak": 14596397044,
-    "data_dir_bytes_start": 14145117658,
-    "disk_used_peak_bytes": 446742528,
-    "free_disk_bytes_min": 146032889856,
-    "free_disk_bytes_start": 146479632384,
-    "peak_rss_bytes": 5146497024,
+    "data_dir_bytes_peak": 14762875070,
+    "data_dir_bytes_start": 14447498794,
+    "disk_used_peak_bytes": 1399996416,
+    "free_disk_bytes_min": 143815589888,
+    "free_disk_bytes_start": 145215586304,
+    "peak_rss_bytes": 9725906944,
     "platform": "darwin",
     "stages": [
       {
-        "data_dir_bytes_after": 14145117658,
-        "free_disk_bytes_after": 146479628288,
+        "data_dir_bytes_after": 14447498794,
+        "free_disk_bytes_after": 145215582208,
         "name": "acquire",
-        "peak_rss_bytes_so_far": 98996224,
+        "peak_rss_bytes_so_far": 100524032,
         "seconds": 0.0
       },
       {
-        "data_dir_bytes_after": 14230901813,
-        "free_disk_bytes_after": 146395316224,
+        "data_dir_bytes_after": 14447498794,
+        "free_disk_bytes_after": 145215975424,
         "name": "load_b",
-        "peak_rss_bytes_so_far": 2375712768,
-        "seconds": 99.7
-      },
-      {
-        "data_dir_bytes_after": 14447498794,
-        "free_disk_bytes_after": 146187018240,
-        "name": "load_a",
-        "peak_rss_bytes_so_far": 5146497024,
-        "seconds": 25.7
-      },
-      {
-        "data_dir_bytes_after": 14447498794,
-        "free_disk_bytes_after": 146185625600,
-        "name": "truth",
-        "peak_rss_bytes_so_far": 5146497024,
-        "seconds": 25.7
-      },
-      {
-        "data_dir_bytes_after": 14596397044,
-        "free_disk_bytes_after": 146033131520,
-        "name": "sample",
-        "peak_rss_bytes_so_far": 5146497024,
-        "seconds": 143.1
-      },
-      {
-        "data_dir_bytes_after": 14596397044,
-        "free_disk_bytes_after": 146033127424,
-        "name": "contracts",
-        "peak_rss_bytes_so_far": 5146497024,
+        "peak_rss_bytes_so_far": 657838080,
         "seconds": 0.3
       },
       {
-        "data_dir_bytes_after": 14596397044,
-        "free_disk_bytes_after": 146032889856,
+        "data_dir_bytes_after": 14447498794,
+        "free_disk_bytes_after": 145215975424,
+        "name": "load_a",
+        "peak_rss_bytes_so_far": 1681698816,
+        "seconds": 0.4
+      },
+      {
+        "data_dir_bytes_after": 14447498794,
+        "free_disk_bytes_after": 145213136896,
+        "name": "truth",
+        "peak_rss_bytes_so_far": 3280416768,
+        "seconds": 28.2
+      },
+      {
+        "data_dir_bytes_after": 14596339060,
+        "free_disk_bytes_after": 145043591168,
+        "name": "sample",
+        "peak_rss_bytes_so_far": 4166189056,
+        "seconds": 172.3
+      },
+      {
+        "data_dir_bytes_after": 14596339060,
+        "free_disk_bytes_after": 145043587072,
+        "name": "contracts",
+        "peak_rss_bytes_so_far": 4166189056,
+        "seconds": 0.3
+      },
+      {
+        "data_dir_bytes_after": 14596339060,
+        "free_disk_bytes_after": 145068318720,
         "name": "truth_audit",
-        "peak_rss_bytes_so_far": 5146497024,
+        "peak_rss_bytes_so_far": 4166189056,
         "seconds": 1.0
+      },
+      {
+        "data_dir_bytes_after": 14596339060,
+        "free_disk_bytes_after": 145066876928,
+        "name": "block",
+        "peak_rss_bytes_so_far": 8647954432,
+        "seconds": 58.2
+      },
+      {
+        "data_dir_bytes_after": 14596339060,
+        "free_disk_bytes_after": 145066622976,
+        "name": "split",
+        "peak_rss_bytes_so_far": 8647954432,
+        "seconds": 27.8
+      },
+      {
+        "data_dir_bytes_after": 14762875070,
+        "free_disk_bytes_after": 143815589888,
+        "name": "features",
+        "peak_rss_bytes_so_far": 9725906944,
+        "seconds": 285.1
       }
     ],
-    "total_seconds": 295.6
+    "total_seconds": 573.7
   },
   "sample": {
     "all_truth_pairs_in_scope": true,
     "files": {
       "a": {
-        "content_sha256": "8b1ba9835937bd38aadd73ecae19831f40df1cc2a130a732310f05e74f7de909",
-        "file_sha256": "b39f288731ebc34c1415859835d2f10116d11a099563a1755ec1b35d7f1b7948",
+        "content_sha256": "2dc1fc04430d63dcada815d8b62210b136e494dd3d83e9cb06b418679091b260",
+        "file_sha256": "f8ed6458dac83a6d24d2349b9b5cea536ea1da328ae324a5e9a92dae406ed83a",
         "path": "sample/a.parquet",
         "rows": 482514
       },
@@ -178,5 +231,5 @@
       "side": "A"
     }
   ],
-  "updated_at_utc": "2026-09-23T09:42:59+00:00"
+  "updated_at_utc": "2026-09-23T11:03:10+00:00"
 }
