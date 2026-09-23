@@ -44,7 +44,11 @@ sizes, sha256 hashes and download timings are in `artifacts/profile/<source>.jso
   `release.barcode` beyond the join key, and anything under the derived export
   (`mbdump-derived.tar.bz2`: annotations, user ratings, user tags, search indexes, CC BY-NC-SA).
 
-## Wikidata (side-A candidate #3)
+## Wikidata (side-A candidate #3, profiled and rejected by ADR-0001)
+
+Profiled in Phase 1 and not used as side A: its population is selected by P1954, so it has no
+unlinked A records (`artifacts/profile/wikidata.json` is kept as the record of that profile).
+It is on the roadmap as a possible third source.
 
 - Endpoint: `https://query.wikidata.org/sparql`, paged queries with a User-Agent and backoff,
   responses cached and hashed (`artifacts/profile/wikidata.json#acquisition`). Queried on
