@@ -2,9 +2,8 @@
 
 Record linkage between two open music catalogues, measured against labelled ground truth.
 
-Discogs masters (side B) are matched to album-level works in a second open catalogue (side A:
-MusicBrainz release groups or Wikidata album items; the choice is made after profiling both and
-recorded in `docs/adr/0001-*.md`). Because side A publishes its own links to Discogs, every
+Discogs masters (side B) are matched to MusicBrainz release groups (side A, chosen after
+profiling both candidates, ADR-0001). Because side A publishes its own links to Discogs, every
 method here is scored on real labelled pairs: precision, recall against labelled pairs, pair
 completeness of the blocking step, calibration of the probabilities, and the size of the human
 review queue at the chosen thresholds. Coverage (how many records got a match) is reported
@@ -47,8 +46,23 @@ fair. Every reported metric comes from the `test` fold.
 Keys, per method, in `artifacts/eval_<method_version>.json#metrics`: `pair_completeness_test`, `at_auto_accept.precision`, `at_auto_accept.recall_labelled`, `recall_overall`, `at_auto_accept.f1`, `coverage`, `unverified_accepts.count`, `unverified_accepts.share_of_accepts`, `ambiguity_rule.review_queue`, `calibration.decision_level.ece`. Every metric is on the test fold; precision, recall and F1 are over labelled A records; coverage counts every test-fold A record.
 <!-- generated:results end -->
 
-Every metric is on the test fold; precision, recall and F1 are over labelled A records; the
-rendered block is checked byte for byte against the artifacts in CI.
+## What the numbers say
+
+- **Rules is the best single method at fixed tiers.** `rules_v1` auto-accepts with precision
+  0.994615 and recall 0.930917 against labelled pairs, F1 0.961712; `learned_v1` trades recall
+  for precision, 0.999344 at 0.849952, F1 0.918614; the exact rule stops at recall 0.760858.
+  <!-- cite: artifacts/eval_rules_v1.json#metrics.at_auto_accept.precision; artifacts/eval_rules_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_rules_v1.json#metrics.at_auto_accept.f1; artifacts/eval_learned_v1.json#metrics.at_auto_accept.precision; artifacts/eval_learned_v1.json#metrics.at_auto_accept.recall_labelled; artifacts/eval_learned_v1.json#metrics.at_auto_accept.f1; artifacts/eval_exact_v1.json#metrics.at_auto_accept.recall_labelled -->
+- **Unverified accepts are the coverage-versus-accuracy exhibit.** `rules_v1` auto-accepts 4,501
+  unlabelled test-fold records, 0.093498 of its accepts, against 1,103 and 0.027062 for
+  `learned_v1`; they lift coverage and are excluded from every accuracy figure.
+  <!-- cite: artifacts/eval_rules_v1.json#metrics.unverified_accepts.count; artifacts/eval_rules_v1.json#metrics.unverified_accepts.share_of_accepts; artifacts/eval_learned_v1.json#metrics.unverified_accepts.count; artifacts/eval_learned_v1.json#metrics.unverified_accepts.share_of_accepts -->
+- **Calibration is where `learned_v1` earns its place.** Its pair-level ECE on the test fold is
+  0.000147 and its decision-level ECE 0.047858: the argmax over calibrated pair probabilities
+  selects upward, so the tiers act on slightly overconfident numbers; the uncalibrated rules
+  score sits at 0.402040 at pair level.
+  <!-- cite: artifacts/eval_learned_v1.json#metrics.calibration.pair_level.ece; artifacts/eval_learned_v1.json#metrics.calibration.decision_level.ece; artifacts/eval_rules_v1.json#metrics.calibration.pair_level.ece -->
+
+`docs/FINDINGS.md` carries the full argument with the review-budget table and the limitations.
 
 ## Coverage is not precision
 
@@ -58,9 +72,10 @@ Coverage counts them; precision does not. `rules_v1` auto-accepts 4,501
 unlabelled test-fold records, 0.093498 of its accepts, and `learned_v1` 1,103, 0.027062 of its
 accepts; those accepts lift coverage and are excluded from every accuracy figure by
 construction. <!-- cite: artifacts/eval_rules_v1.json#metrics.unverified_accepts.count; artifacts/eval_rules_v1.json#metrics.unverified_accepts.share_of_accepts; artifacts/eval_learned_v1.json#metrics.unverified_accepts.count; artifacts/eval_learned_v1.json#metrics.unverified_accepts.share_of_accepts -->
-`docs/FINDINGS.md` carries the narrative, the review-budget table and the numbered limitations;
-`docs/METHODS_CARD.md` the method records and metric definitions; the site the same figures as
-charts.
+`docs/METHODS_CARD.md` carries the method records and metric definitions; the site renders the
+same figures as charts.
+
+Site: _Pages URL to be filled after the site is enabled (owner TODO step 3)._
 
 ## How to run
 
@@ -71,7 +86,7 @@ make test     # pytest; real-data tests skip when data/ is absent
 make dbt      # dbt build against the committed artifacts, docs generate, description check
 make docs     # regenerate docs/METHODS_CARD.md and run the number and placeholder checks
 make smoke    # all of the above from a fresh clone in a temp dir
-make full     # the full build over the real dumps (network, hours; not built before Phase 4)
+make full     # the full build over the real dumps (network; about an hour cold on the owner's machine, see docs/REPRODUCIBILITY.md)
 ```
 
 `data/` holds the dumps and every derived row and is git-ignored. Committed data is limited

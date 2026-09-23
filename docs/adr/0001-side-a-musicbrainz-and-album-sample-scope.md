@@ -1,5 +1,7 @@
 # ADR-0001 — Side A is MusicBrainz release groups; sample scope is Album release groups (2026-09-23)
 
+_Item 4's profile regeneration is superseded by ADR-0004 (the profile is a dated record at `0.1.0`)._
+
 **Context.** `docs/BRIEF.md` section `2.1` leaves side A open between MusicBrainz release
 groups (candidate #1) and Wikidata items carrying P1954 (candidate #3), to be decided from the
 Phase 1 profile (`docs/PROFILE.md`, `artifacts/profile/`). The profile measured, against the

@@ -6,7 +6,7 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 
 | module | role |
 |---|---|
-| `config.py` | `PROJECT`: sides, method versions, folds, tiers, paths. `side_a` is `None` until ADR 0001. |
+| `config.py` | `PROJECT`: sides, method versions, folds, tiers, paths. `side_a` is `"musicbrainz"` (ADR-0001). |
 | `interfaces.py` | `SourceAdapter` protocol; `Record`, `TruthLink`, `CandidatePair`, `Decision` dataclasses. |
 | `data/loader.py` | adapter registry: `discogs` (side B), `musicbrainz` (side A, ADR 0001) and `fixture` for offline tests. |
 | `data/acquire.py` | dump specs, timed and hashed downloads behind a free-disk check, streaming extraction of named tar members. |
@@ -19,7 +19,6 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 | `features/blocking.py` | the five blocking keys, union of blocks in DuckDB, per-A cap with counted overflow, pair completeness per key. |
 | `features/pairs.py` | `PAIR_FEATURES` in fixed order, rapidfuzz similarities on the normalised forms, nullable year. |
 | `eval/split.py` | folds by the A record's hash (ADR 0003); pairs and truth inherit A's fold. |
-| `eval/evaluator.py` | the evaluation artifact writer and metric definitions. Metric computation in Phase 4. |
 | `eval/methods_card.py` | renders `docs/METHODS_CARD.md` from artifacts; byte-stable. |
 | `models/labels.py` | truth sets per labelled A record; pair labels (1, 0, or unlabelled). The only place the truth table meets the pairs besides the evaluator. |
 | `models/exact.py`, `models/rules.py`, `models/learned.py` | the three methods: nothing fitted; fixed weights with thresholds searched on fit-fold decisions; gradient boosting on fit-fold labelled pairs with isotonic calibration on the calibrate fold. |
@@ -28,7 +27,7 @@ The design is `docs/BRIEF.md` section 2; this file says where each piece lives.
 | `eval/evaluator.py` | test-fold metrics at A-record grain over labelled A records; unverified accepts; decision- and pair-level calibration; confusion. |
 | `eval/review_cost.py` | the accept-threshold sweep and cost curve. |
 | `pipeline/methods.py` | the Phase 4 stage: fit, decide, mapping exhibits (ADR 0005), evaluate, sweep, too-good-to-be-true rule. |
-| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, then block, split and pair features (`data/pairs/`), with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`. then the methods stage (`pipeline/methods.py`). |
+| `pipeline/match.py` | `make full`: acquire, load both sides, truth, sample, contracts, manifest and truth audit, then block, split and pair features (`data/pairs/`), with per-stage wall time, `data/` size, free disk and peak RSS recorded in `manifest.json#runtime`, then the methods stage (`pipeline/methods.py`). |
 | `citations.py` | the number checker's rules, shared verbatim with demo 1. |
 
 ## Artifacts `artifacts/`

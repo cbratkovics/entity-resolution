@@ -50,7 +50,7 @@ The gap is a selection effect: the argmax over calibrated pair probabilities pic
 candidate whose probability is highest, and that choice biases the chosen probability upward,
 so the tiers act on slightly overconfident numbers even though the pair probabilities are not.
 The rules score, used as a probability without calibration, shows the opposite pattern: a
-decision-level ECE of 0.012978 by accident and a pair-level ECE of 0.402040, because the raw
+decision-level ECE of 0.012978 not by design and a pair-level ECE of 0.402040, because the raw
 score is nowhere near a probability across the millions of candidate pairs.
 <!-- cite: artifacts/eval_rules_v1.json#metrics.calibration.decision_level.ece; artifacts/eval_rules_v1.json#metrics.calibration.pair_level.ece -->
 Calibrating on decisions rather than pairs is on the roadmap.
