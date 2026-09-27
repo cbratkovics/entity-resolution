@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab export manifest (lab_manifest_version 1.0)",
+  "description": "artifacts/lab/manifest.json: identity of the evidence snapshot the lab renders, every input artifact with its sha256, every generated file with its hash and row count, the capability declaration, the population and the case-selection strategy. The analytical digest covers analytical content only; the build block is volatile and excluded from it.",
+  "type": "object",
+  "required": ["lab_manifest_version", "snapshot_id", "analytical_digest", "evidence", "sources", "files", "capabilities", "population", "selection", "supported_operations", "build"],
+  "additionalProperties": false,
+  "properties": {
+    "lab_manifest_version": {"const": "1.0"},
+    "snapshot_id": {"type": "string", "pattern": "^[0-9]{8}T[0-9]{6}\\+0000@[0-9a-f]{12}$", "description": "<run_id>@<first 12 hex of manifest_sha256_at_evaluation>"},
+    "analytical_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 over the sorted (file, content sha256) pairs of every analytical file in `files`; unchanged evidence gives the same digest whatever the build time."},
+    "evidence": {"$ref": "#/$defs/evidence"},
+    "sources": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["path", "sha256", "role"], "additionalProperties": false, "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "role": {"type": "string", "enum": ["manifest", "eval_artifact", "method_record", "review_sensitivity", "split", "blocking_report", "truth_audit", "mapping_exhibit", "findings_narrative", "local_features", "local_candidates", "local_truth", "local_sample_a"]}, "local_only": {"type": "boolean"}}}},
+    "files": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object", "required": ["sha256", "bytes", "generated_from", "recomputable_without_local_data", "analytical"], "additionalProperties": false, "properties": {"sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "bytes": {"type": "integer", "minimum": 0}, "rows": {"type": "integer", "minimum": 0}, "generated_from": {"type": "string", "enum": ["committed_artifacts", "committed_artifacts_and_local_data", "synthetic_generator"]}, "recomputable_without_local_data": {"type": "boolean"}, "analytical": {"type": "boolean"}, "schema": {"type": "string"}}}},
+    "capabilities": {"type": "object", "required": ["evidence_comparison", "supported_floor_control", "case_explorer", "decision_ledger", "synthetic_sandbox", "local_case_evidence", "complete_replay"], "additionalProperties": false, "properties": {
+      "evidence_comparison": {"$ref": "#/$defs/capability"},
+      "supported_floor_control": {"$ref": "#/$defs/capability"},
+      "case_explorer": {"$ref": "#/$defs/capability"},
+      "decision_ledger": {"$ref": "#/$defs/capability"},
+      "synthetic_sandbox": {"$ref": "#/$defs/capability"},
+      "local_case_evidence": {"$ref": "#/$defs/capability"},
+      "complete_replay": {"type": "object", "propertyNames": {"enum": ["exact_v1", "rules_v1", "learned_v1"]}, "additionalProperties": {"$ref": "#/$defs/replay_capability"}}
+    }},
+    "population": {"$ref": "#/$defs/population"},
+    "selection": {"type": "object", "required": ["strategy_version", "total_cases", "counts_by_reason", "criteria", "limitations"], "additionalProperties": false, "properties": {"strategy_version": {"type": "string"}, "total_cases": {"type": "integer", "minimum": 0}, "counts_by_reason": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}}, "criteria": {"type": "array", "items": {"$ref": "#/$defs/criterion"}}, "limitations": {"type": "array", "items": {"type": "string"}}}},
+    "supported_operations": {"type": "array", "items": {"type": "string"}},
+    "build": {"type": "object", "required": ["built_at_utc", "builder_code_commit", "builder_version"], "additionalProperties": false, "properties": {"built_at_utc": {"type": "string"}, "builder_code_commit": {"type": "string"}, "builder_version": {"type": "string"}}}
+  },
+  "$defs": {
+    "evidence": {"type": "object", "required": ["run_id", "evaluation_code_commit", "feature_version", "manifest_sha256_at_evaluation", "evaluation_generated_at_utc", "artifact_version", "sensitivity_version", "lab_contract_version"], "additionalProperties": false, "properties": {"run_id": {"type": "string"}, "evaluation_code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "feature_version": {"type": "string"}, "manifest_sha256_at_evaluation": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "evaluation_generated_at_utc": {"type": "string"}, "artifact_version": {"type": "string"}, "sensitivity_version": {"type": "string"}, "lab_contract_version": {"const": "1.0"}}},
+    "capability": {"type": "object", "required": ["available", "note"], "additionalProperties": false, "properties": {"available": {"type": "boolean"}, "note": {"type": "string"}}},
+    "replay_capability": {"type": "object", "required": ["available", "note", "decision_value_kind"], "additionalProperties": false, "properties": {"available": {"type": "boolean"}, "note": {"type": "string"}, "decision_value_kind": {"type": "string", "enum": ["binary_score", "uncalibrated_score", "calibrated_probability", "unavailable"]}, "file": {"type": "string"}, "meta_file": {"type": "string"}, "reconciled_to_eval_artifact": {"type": "boolean"}, "population_conserved": {"type": "boolean"}}},
+    "population": {"type": "object", "required": ["fold", "grain", "a_records", "labelled_a", "labelled_a_reachable", "source_keys"], "additionalProperties": false, "properties": {"fold": {"const": "test"}, "grain": {"const": "a_record"}, "a_records": {"type": "integer", "minimum": 0}, "labelled_a": {"type": "integer", "minimum": 0}, "labelled_a_reachable": {"type": "integer", "minimum": 0}, "source_keys": {"type": "array", "items": {"type": "string"}}}},
+    "criterion": {"type": "object", "required": ["reason_code", "description", "cap", "source", "deterministic_order"], "additionalProperties": false, "properties": {"reason_code": {"type": "string", "pattern": "^[a-z_]+$"}, "description": {"type": "string"}, "cap": {"type": "integer", "minimum": 0}, "source": {"type": "string", "enum": ["committed_exhibits", "findings_narrative", "local_evidence"]}, "deterministic_order": {"type": "string"}, "selected": {"type": "integer", "minimum": 0}, "available": {"type": "integer", "minimum": 0}}}
+  }
+}

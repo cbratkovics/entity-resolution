@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab synthetic mechanics sandbox (sandbox_version 1.0)",
+  "description": "apps/decision-lab/fixtures/synthetic_sandbox.json: readable, entirely invented records and fixture scores that demonstrate the policy mechanics (ties, single candidates, boundary values, no-candidate records, a downstream duplicate-join distortion). Identifiers are SYN-A-nnn / SYN-B-nnn so they can never collide with real MusicBrainz or Discogs ids; titles are drawn from a fixed nonsense vocabulary. Nothing here is a prediction of the fitted learned_v1 model and nothing here may enter a real-snapshot figure.",
+  "type": "object",
+  "required": ["synthetic", "sandbox_version", "badge", "generated_by", "vocabulary", "records", "candidates", "labels", "score_kinds", "policies", "cases", "downstream_fixture"],
+  "additionalProperties": false,
+  "properties": {
+    "synthetic": {"const": true},
+    "sandbox_version": {"const": "1.0"},
+    "badge": {"type": "string"},
+    "generated_by": {"type": "string"},
+    "vocabulary": {"type": "array", "items": {"type": "string"}},
+    "records": {"type": "object", "required": ["a", "b"], "additionalProperties": false, "properties": {"a": {"type": "array", "items": {"$ref": "#/$defs/record_a"}}, "b": {"type": "array", "items": {"$ref": "#/$defs/record_b"}}}},
+    "candidates": {"type": "array", "items": {"type": "object", "required": ["a_id", "b_id", "values"], "additionalProperties": false, "properties": {"a_id": {"$ref": "#/$defs/syn_a"}, "b_id": {"$ref": "#/$defs/syn_b"}, "values": {"type": "object", "required": ["synthetic_exact_like", "synthetic_rules_like"], "additionalProperties": false, "properties": {"synthetic_exact_like": {"type": "number"}, "synthetic_rules_like": {"type": "number"}}}}}},
+    "labels": {"type": "object", "propertyNames": {"pattern": "^SYN-A-[0-9]{3}$"}, "additionalProperties": {"type": "array", "items": {"$ref": "#/$defs/syn_b"}}},
+    "score_kinds": {"type": "object", "required": ["synthetic_exact_like", "synthetic_rules_like"], "additionalProperties": false, "properties": {"synthetic_exact_like": {"type": "string"}, "synthetic_rules_like": {"type": "string"}}},
+    "policies": {"type": "array", "items": {"type": "object", "required": ["preset", "policy"], "additionalProperties": false, "properties": {"preset": {"type": "string"}, "policy": {"$ref": "lab_receipt.schema.json#/$defs/policy"}}}},
+    "cases": {"type": "array", "items": {"type": "object", "required": ["case_id", "a_id", "purpose", "expected"], "additionalProperties": false, "properties": {"case_id": {"type": "string", "pattern": "^SYN-CASE-[a-z0-9_]+$"}, "a_id": {"$ref": "#/$defs/syn_a"}, "purpose": {"type": "string"}, "expected": {"type": "object", "additionalProperties": {"type": "object", "additionalProperties": true}}}}},
+    "downstream_fixture": {"type": "object", "required": ["note", "fact_rows", "mapping_with_duplicate", "conserved_row_count"], "additionalProperties": false, "properties": {"note": {"type": "string"}, "fact_rows": {"type": "array", "items": {"type": "object", "required": ["b_id", "units"], "additionalProperties": false, "properties": {"b_id": {"$ref": "#/$defs/syn_b"}, "units": {"type": "integer"}}}}, "mapping_with_duplicate": {"type": "array", "items": {"type": "object", "required": ["a_id", "b_id"], "additionalProperties": false, "properties": {"a_id": {"$ref": "#/$defs/syn_a"}, "b_id": {"$ref": "#/$defs/syn_b"}}}}, "conserved_row_count": {"type": "integer"}}}
+  },
+  "$defs": {
+    "syn_a": {"type": "string", "pattern": "^SYN-A-[0-9]{3}$"},
+    "syn_b": {"type": "string", "pattern": "^SYN-B-[0-9]{3}$"},
+    "record_a": {"type": "object", "required": ["id", "title", "artist_credit", "year"], "additionalProperties": false, "properties": {"id": {"$ref": "#/$defs/syn_a"}, "title": {"type": "string"}, "artist_credit": {"type": "string"}, "year": {"type": ["integer", "null"]}}},
+    "record_b": {"type": "object", "required": ["id", "title", "artist_credit", "year"], "additionalProperties": false, "properties": {"id": {"$ref": "#/$defs/syn_b"}, "title": {"type": "string"}, "artist_credit": {"type": "string"}, "year": {"type": ["integer", "null"]}}}
+  }
+}

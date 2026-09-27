@@ -1,0 +1,420 @@
+{
+ "analytical_digest": "ac76c88791eadd3a4748241b2b443cd43415cc394a7af42b3d187eb4fe1cfa9a",
+ "build": {
+  "builder_code_commit": "4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc",
+  "builder_version": "1.0",
+  "built_at_utc": "2026-09-27T01:47:24+00:00"
+ },
+ "capabilities": {
+  "case_explorer": {
+   "available": true,
+   "note": "48 curated cases from the committed test-fold exhibits; not a representative sample"
+  },
+  "complete_replay": {
+   "exact_v1": {
+    "available": true,
+    "decision_value_kind": "binary_score",
+    "file": "replay/replay_exact_v1.test.csv.gz",
+    "meta_file": "replay/replay_exact_v1.json",
+    "note": "exact_v1 decision values are a pure function of the frozen features (recomputed, not refitted); one row per test-fold A record including no-candidate and reject-tier records; reconciled exactly to the evaluation artifact at the recorded policy",
+    "population_conserved": true,
+    "reconciled_to_eval_artifact": true
+   },
+   "learned_v1": {
+    "available": false,
+    "decision_value_kind": "unavailable",
+    "note": "no frozen model; committed and local mappings are rounded to six decimals and omit reject-tier and no-candidate records; refitting would be a new versioned run, not the historical snapshot"
+   },
+   "rules_v1": {
+    "available": true,
+    "decision_value_kind": "uncalibrated_score",
+    "file": "replay/replay_rules_v1.test.csv.gz",
+    "meta_file": "replay/replay_rules_v1.json",
+    "note": "rules_v1 decision values are a pure function of the frozen features (recomputed, not refitted); one row per test-fold A record including no-candidate and reject-tier records; reconciled exactly to the evaluation artifact at the recorded policy",
+    "population_conserved": true,
+    "reconciled_to_eval_artifact": true
+   }
+  },
+  "decision_ledger": {
+   "available": true,
+   "note": "local, append-only review events and scenario receipts validated against lab_review_events and lab_receipt; never an upstream write"
+  },
+  "evidence_comparison": {
+   "available": true,
+   "note": "snapshot.json: every figure copied from a committed artifact with its source key"
+  },
+  "local_case_evidence": {
+   "available": true,
+   "note": "labels, full candidate counts and unrounded gaps verified against the hash-checked data/ inputs of the recorded run"
+  },
+  "supported_floor_control": {
+   "available": true,
+   "note": "only the exported review floors of review_sensitivity.json at the recorded accept threshold; anything else is a replay"
+  },
+  "synthetic_sandbox": {
+   "available": true,
+   "note": "SYNTHETIC \u2014 invented records and fixture scores; not the historical snapshot"
+  }
+ },
+ "evidence": {
+  "artifact_version": "1.0",
+  "evaluation_code_commit": "6b3124b176ea8ffaf198c3ee6aa966cd6a2eccb4",
+  "evaluation_generated_at_utc": "2026-09-23T14:16:02+00:00",
+  "feature_version": "0.2.0",
+  "lab_contract_version": "1.0",
+  "manifest_sha256_at_evaluation": "7b7bf2ae19b1ca9be5b389c81241c359679fb1a2e811efd8e9a33d3cfcafa066",
+  "run_id": "20260923T140606+0000",
+  "sensitivity_version": "1.0"
+ },
+ "files": {
+  "apps/decision-lab/fixtures/policy_fixtures.json": {
+   "analytical": false,
+   "bytes": 27566,
+   "generated_from": "synthetic_generator",
+   "recomputable_without_local_data": true,
+   "sha256": "72eada87556b78b26f23852434bc1ef594955066573d99b21f07b9d74467c57f"
+  },
+  "apps/decision-lab/fixtures/synthetic_sandbox.json": {
+   "analytical": false,
+   "bytes": 32920,
+   "generated_from": "synthetic_generator",
+   "recomputable_without_local_data": true,
+   "schema": "lab_synthetic_sandbox",
+   "sha256": "667a866ee4780a837b2e048614056c31945d0e9fbd6975276ad4195f8506296c"
+  },
+  "case_selection.json": {
+   "analytical": true,
+   "bytes": 9720,
+   "generated_from": "committed_artifacts_and_local_data",
+   "recomputable_without_local_data": false,
+   "rows": 48,
+   "sha256": "38365d5bb2a1bfac9402a6c68b9ef6a23b92dea0f66f4fa3f1f50196b0ca8047"
+  },
+  "cases.json": {
+   "analytical": true,
+   "bytes": 129895,
+   "generated_from": "committed_artifacts_and_local_data",
+   "recomputable_without_local_data": false,
+   "rows": 48,
+   "schema": "lab_cases",
+   "sha256": "43193d5e97618fb4af200ea5d63115ae3c1333a56d456f505bbd65e62b34ded0"
+  },
+  "replay/replay_exact_v1.json": {
+   "analytical": true,
+   "bytes": 16258,
+   "generated_from": "committed_artifacts_and_local_data",
+   "recomputable_without_local_data": false,
+   "schema": "lab_replay_meta",
+   "sha256": "a8435d304d4a6ee493c049d38163534fa915dc8942d298286d2c0413282f2084"
+  },
+  "replay/replay_exact_v1.test.csv.gz": {
+   "analytical": true,
+   "bytes": 139260,
+   "generated_from": "committed_artifacts_and_local_data",
+   "recomputable_without_local_data": false,
+   "rows": 96557,
+   "sha256": "057125736cee91b155a74a209921d94848238a56a3e7956c06aea2ba16c9508d"
+  },
+  "replay/replay_rules_v1.json": {
+   "analytical": true,
+   "bytes": 16489,
+   "generated_from": "committed_artifacts_and_local_data",
+   "recomputable_without_local_data": false,
+   "schema": "lab_replay_meta",
+   "sha256": "1d8b7a08f1c5f426c078fec1f50ad3ddb27623d3b146e153ab887818d9e8c93b"
+  },
+  "replay/replay_rules_v1.test.csv.gz": {
+   "analytical": true,
+   "bytes": 602113,
+   "generated_from": "committed_artifacts_and_local_data",
+   "recomputable_without_local_data": false,
+   "rows": 96557,
+   "sha256": "bec9eb8f74daed24cff0f3a5a66a6bda3453cd1f55c1ed9017cd8577ed041d56"
+  },
+  "snapshot.json": {
+   "analytical": true,
+   "bytes": 92291,
+   "generated_from": "committed_artifacts",
+   "recomputable_without_local_data": true,
+   "rows": 3,
+   "schema": "lab_snapshot",
+   "sha256": "06bb38cf5cfda5d0c4c6bc0c8fff6fb9d4602b2bad6c53bd535168b49ebf92e1"
+  }
+ },
+ "lab_manifest_version": "1.0",
+ "population": {
+  "a_records": 96557,
+  "fold": "test",
+  "grain": "a_record",
+  "labelled_a": 48372,
+  "labelled_a_reachable": 46625,
+  "source_keys": [
+   "artifacts/split.json#folds.test.a_records",
+   "artifacts/split.json#folds.test.labelled_a_records",
+   "artifacts/eval_exact_v1.json#metrics.labelled_a_reachable",
+   "artifacts/eval_exact_v1.json#metrics.test_a",
+   "artifacts/eval_rules_v1.json#metrics.test_a",
+   "artifacts/eval_learned_v1.json#metrics.test_a",
+   "artifacts/eval_exact_v1.json#metrics.labelled_a",
+   "artifacts/eval_rules_v1.json#metrics.labelled_a",
+   "artifacts/eval_learned_v1.json#metrics.labelled_a"
+  ]
+ },
+ "selection": {
+  "counts_by_reason": {
+   "agreement_all_accept": 9,
+   "ambiguity_demoted": 8,
+   "ambiguity_tie": 13,
+   "gap_at_rounded_boundary": 5,
+   "method_disagreement": 10,
+   "no_candidate": 4,
+   "partial_export": 25,
+   "single_candidate": 7,
+   "unverified_accept": 5,
+   "verified_wrong_accept": 5,
+   "worked_example": 3
+  },
+  "criteria": [
+   {
+    "available": 3,
+    "cap": 3,
+    "description": "The release groups discussed in docs/FINDINGS.md; narrative copied from there.",
+    "deterministic_order": "order of docs/FINDINGS.md",
+    "reason_code": "worked_example",
+    "selected": 3,
+    "source": "findings_narrative"
+   },
+   {
+    "available": 34519,
+    "cap": 6,
+    "description": "All three methods exported the same B in the auto_accept tier.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "agreement_all_accept",
+    "selected": 6,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 605,
+    "cap": 8,
+    "description": "At least two methods exported this record and chose different B ids.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "method_disagreement",
+    "selected": 8,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 1918,
+    "cap": 6,
+    "description": "Some exported method has a top-2 gap of exactly 0.0 and the review tier.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "ambiguity_tie",
+    "selected": 6,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 5348,
+    "cap": 6,
+    "description": "Some exported method has the review tier, a probability at or above its accept_min and a rounded top-2 gap strictly between 0 and ambiguity_gap: demoted by the ambiguity rule.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "ambiguity_demoted",
+    "selected": 6,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 939,
+    "cap": 4,
+    "description": "Some exported method has the review tier and a six-decimal gap equal to ambiguity_gap; the exhibit alone cannot say whether the unrounded gap is below it.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "gap_at_rounded_boundary",
+    "selected": 4,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 15577,
+    "cap": 5,
+    "description": "Some exported method has a null top-2 gap: the record had one blocked candidate.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "single_candidate",
+    "selected": 5,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 36480,
+    "cap": 5,
+    "description": "Exported by one or two methods only; the others rejected it or had no candidate.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "partial_export",
+    "selected": 5,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 4560,
+    "cap": 5,
+    "description": "Auto-accepted by some method and unlabelled: counted by coverage, invisible to precision.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "unverified_accept",
+    "selected": 5,
+    "source": "local_evidence"
+   },
+   {
+    "available": 271,
+    "cap": 5,
+    "description": "Labelled and auto-accepted by some method with a chosen B outside the truth set.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "verified_wrong_accept",
+    "selected": 5,
+    "source": "local_evidence"
+   },
+   {
+    "available": 23341,
+    "cap": 4,
+    "description": "A test-fold A record with no blocked candidate: reject for every method, absent from every exhibit.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "no_candidate",
+    "selected": 4,
+    "source": "local_evidence"
+   },
+   {
+    "available": 0,
+    "cap": 3,
+    "description": "A test-fold A record with candidates that every method rejected: absent from every exhibit.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "reject_all_methods",
+    "selected": 0,
+    "source": "local_evidence"
+   }
+  ],
+  "limitations": [
+   "A curated exhibit, not a representative sample: no figure in the lab is computed from these cases.",
+   "Each criterion takes the first `cap` qualifying A records in ascending A id order; a case carries every reason code it qualifies for, so counts_by_reason can exceed a criterion's cap.",
+   "worked_example: 3 available, 3 selected (cap 3)",
+   "agreement_all_accept: 34519 available, 6 selected (cap 6)",
+   "method_disagreement: 605 available, 8 selected (cap 8)",
+   "ambiguity_tie: 1918 available, 6 selected (cap 6)",
+   "ambiguity_demoted: 5348 available, 6 selected (cap 6)",
+   "gap_at_rounded_boundary: 939 available, 4 selected (cap 4)",
+   "single_candidate: 15577 available, 5 selected (cap 5)",
+   "partial_export: 36480 available, 5 selected (cap 5)",
+   "unverified_accept: 4560 available, 5 selected (cap 5)",
+   "verified_wrong_accept: 271 available, 5 selected (cap 5)",
+   "no_candidate: 23341 available, 4 selected (cap 4)",
+   "reject_all_methods: 0 available, 0 selected (cap 3)",
+   "Exhibit values are rounded to six decimals; a gap equal to the threshold is flagged gap_at_rounded_boundary because the exhibit cannot classify it."
+  ],
+  "strategy_version": "1.0",
+  "total_cases": 48
+ },
+ "snapshot_id": "20260923T140606+0000@7b7bf2ae19b1",
+ "sources": [
+  {
+   "path": "artifacts/blocking_report.json",
+   "role": "blocking_report",
+   "sha256": "c64326f73ec8d0d97c2f4a0fa21fe01d16da5d65633c04338bbf300b2d08d9e7"
+  },
+  {
+   "path": "artifacts/eval_exact_v1.json",
+   "role": "eval_artifact",
+   "sha256": "1eccd4954ffe74d72758afc06a3c0827eb4f6d57177abb4516364279b2b6d697"
+  },
+  {
+   "path": "artifacts/eval_learned_v1.json",
+   "role": "eval_artifact",
+   "sha256": "53ce4a85d5b389402a7497a9ff4b6a1367872cbf59e4ada8c38b0d3a09826a24"
+  },
+  {
+   "path": "artifacts/eval_rules_v1.json",
+   "role": "eval_artifact",
+   "sha256": "e5befa5bab755f7957fbb405ec7dc6d3402d6d86c9e1b3361e606cf09b3203f7"
+  },
+  {
+   "path": "artifacts/manifest.json",
+   "role": "manifest",
+   "sha256": "1b9bd60224db742e7e69b70ea161a48a92b98407d3c42329dfd45cfd5e9a3f13"
+  },
+  {
+   "path": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+   "role": "mapping_exhibit",
+   "sha256": "71c2dd2c51eb6dfa47154c90ec862f2595864f7366acf328425b422419dfc286"
+  },
+  {
+   "path": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+   "role": "mapping_exhibit",
+   "sha256": "b5141135bd3581f6c1bf74bb18fbe580e466f95082a8e62754d266ad068cedeb"
+  },
+  {
+   "path": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+   "role": "mapping_exhibit",
+   "sha256": "c422f54f88aae464d2cec70601b6d7931de85d3635155a39840b9887d5919f2d"
+  },
+  {
+   "path": "artifacts/methods/exact_v1.json",
+   "role": "method_record",
+   "sha256": "9cac4931528f41c6b4c0e7069754e7d612ace3ea96f0184b101df70705eb898a"
+  },
+  {
+   "path": "artifacts/methods/learned_v1.json",
+   "role": "method_record",
+   "sha256": "85084745267e84b60612e4f82062f0749e29917f0aa2263293dcefb6456579ba"
+  },
+  {
+   "path": "artifacts/methods/rules_v1.json",
+   "role": "method_record",
+   "sha256": "fbb51f430fcb60bd9e66d3ddb3eb0319a43222b79c4b88221eb39ec10bc1d980"
+  },
+  {
+   "path": "artifacts/review_sensitivity.json",
+   "role": "review_sensitivity",
+   "sha256": "49624bb5f70861e11af37b53ef365018e348ae1c6498cf12d37ba6763b6e0bb0"
+  },
+  {
+   "path": "artifacts/split.json",
+   "role": "split",
+   "sha256": "c3da786e3621ba9c27cfc3cb1df1cfc39885b5c0d133b3aa7a9a7b081af61ce2"
+  },
+  {
+   "path": "artifacts/truth_audit.json",
+   "role": "truth_audit",
+   "sha256": "4d6a87e8486caf1252005bb10e0d23d8b0776d2815e7a5dc03eddfb2e61ada3f"
+  },
+  {
+   "local_only": true,
+   "path": "data/pairs/candidates.parquet",
+   "role": "local_candidates",
+   "sha256": "9c28aca92832faa812b1b40baf9d6357016b709de381eab216198c0759ca0f9a"
+  },
+  {
+   "local_only": true,
+   "path": "data/pairs/features.parquet",
+   "role": "local_features",
+   "sha256": "8b6fc8b4c1e5c89513f225f8a402e0f90f20cb9c740f74361903d4b8dc0d2ddf"
+  },
+  {
+   "local_only": true,
+   "path": "data/sample/a.parquet",
+   "role": "local_sample_a",
+   "sha256": "f8ed6458dac83a6d24d2349b9b5cea536ea1da328ae324a5e9a92dae406ed83a"
+  },
+  {
+   "local_only": true,
+   "path": "data/sample/truth.parquet",
+   "role": "local_truth",
+   "sha256": "c9955915080ad1eea0691f6924b12f1910da16be36dff35711ca59b78da7e58f"
+  },
+  {
+   "path": "docs/FINDINGS.md",
+   "role": "findings_narrative",
+   "sha256": "4edc29a8189cd8df8059e794a11cc02f079a5a04498dab6d0aee9bbd04d3c0b7"
+  }
+ ],
+ "supported_operations": [
+  "compare_methods_at_recorded_policies",
+  "select_supported_review_floor",
+  "queue_budget_feasibility",
+  "inspect_curated_case",
+  "record_local_review_event",
+  "export_import_receipt",
+  "synthetic_sandbox",
+  "replay_policy:exact_v1",
+  "replay_policy:rules_v1"
+ ]
+}

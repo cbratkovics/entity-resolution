@@ -1,0 +1,1249 @@
+{
+ "cases": [
+  {
+   "baseline_policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "description": "Mandatory regression: top scores 0.80 and 0.76 (gap 0.04). At accept 0.95 the record is in review by value and the baseline demotion flag is false. Lowering accept to 0.75 must still give review because the gap is below 0.10; reusing the old flag would accept it.",
+   "expected_baseline_decisions": [
+    {
+     "ambiguous": true,
+     "demoted": false,
+     "gap": 0.040000000000000036,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    }
+   ],
+   "expected_corrected_sweep": [
+    {
+     "accepts": 0,
+     "labelled_accepts": 0,
+     "labelled_false_accepts": 0,
+     "precision_labelled": null,
+     "queue_ambiguity": 1,
+     "queue_floor": 0,
+     "review_queue": 1,
+     "threshold": 0.75
+    },
+    {
+     "accepts": 0,
+     "labelled_accepts": 0,
+     "labelled_false_accepts": 0,
+     "precision_labelled": null,
+     "queue_ambiguity": 0,
+     "queue_floor": 1,
+     "review_queue": 1,
+     "threshold": 0.95
+    }
+   ],
+   "expected_decisions": [
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.040000000000000036,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    }
+   ],
+   "expected_legacy_sweep": [
+    {
+     "accepts": 1,
+     "queue_ambiguity": 0,
+     "queue_floor": 0,
+     "review_queue": 0,
+     "threshold": 0.75
+    },
+    {
+     "accepts": 0,
+     "queue_ambiguity": 0,
+     "queue_floor": 1,
+     "review_queue": 1,
+     "threshold": 0.95
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 0,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 1,
+     "decisions_moved_to_review": 1,
+     "review_queue": 1
+    },
+    "at_auto_accept": {
+     "accepted": 0,
+     "correct": 0,
+     "f1": 0.0,
+     "precision": null,
+     "recall_labelled": 0.0
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 1,
+     "correct": 1,
+     "f1": 1.0,
+     "precision": 1.0,
+     "recall_labelled": 1.0
+    },
+    "coverage": 0.0,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 1,
+    "labelled_a_reachable": 1,
+    "no_candidate_a": 0,
+    "pair_completeness_test": 1.0,
+    "policy": {
+     "accept_min": 0.75,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.5
+    },
+    "recall_overall": 0.0,
+    "test_a": 1,
+    "tier_counts": {
+     "auto_accept": 0,
+     "reject": 0,
+     "review": 1
+    },
+    "tier_shares": {
+     "auto_accept": 0.0,
+     "reject": 0.0,
+     "review": 1.0
+    },
+    "unverified_accepts": {
+     "count": 0,
+     "share_of_accepts": null
+    }
+   },
+   "id": "regression_ambiguity_flag_reuse",
+   "policy": {
+    "accept_min": 0.75,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.8,
+     "v2": 0.76
+    }
+   ]
+  },
+  {
+   "description": "Values immediately below, at and above accept_min and review_min; gaps immediately below, at and above ambiguity_gap. Inclusive lower bounds; strict gap comparison. The pair (0.99, 0.89) shows that a decimal gap of 0.10 is 0.0999... as a double and is therefore ambiguous; exact_gap_boundary tests a representable gap.",
+   "expected_decisions": [
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.44999999999999996,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.44999999999999984,
+     "reason": "value_at_or_above_review_min",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.45000000000000007,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.4,
+     "reason": "value_at_or_above_review_min",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.3999999999999999,
+     "reason": "value_below_review_min",
+     "tier": "reject"
+    },
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.09999999999999998,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    },
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.09999999999999987,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.10000000000000009,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": true,
+     "demoted": false,
+     "gap": 0.04999999999999993,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.010000000000000009,
+     "reason": "value_below_review_min",
+     "tier": "reject"
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 3,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 3,
+     "decisions_moved_to_review": 2,
+     "review_queue": 5
+    },
+    "at_auto_accept": {
+     "accepted": 3,
+     "correct": 2,
+     "f1": 0.307692,
+     "precision": 0.666667,
+     "recall_labelled": 0.2
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 8,
+     "correct": 7,
+     "f1": 0.777778,
+     "precision": 0.875,
+     "recall_labelled": 0.7
+    },
+    "coverage": 0.3,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 10,
+    "labelled_a_reachable": 10,
+    "no_candidate_a": 0,
+    "pair_completeness_test": 1.0,
+    "policy": {
+     "accept_min": 0.95,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.5
+    },
+    "recall_overall": 0.2,
+    "test_a": 10,
+    "tier_counts": {
+     "auto_accept": 3,
+     "reject": 2,
+     "review": 5
+    },
+    "tier_shares": {
+     "auto_accept": 0.3,
+     "reject": 0.2,
+     "review": 0.5
+    },
+    "unverified_accepts": {
+     "count": 0,
+     "share_of_accepts": 0.0
+    }
+   },
+   "id": "boundaries_accept_review_gap",
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.95,
+     "v2": 0.5
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.9499999999999998,
+     "v2": 0.5
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 0.9500000000000001,
+     "v2": 0.5
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.5,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.49999999999999994,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.99,
+     "v2": 0.89
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.99,
+     "v2": 0.8900000000000001
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.99,
+     "v2": 0.8899999999999999
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.6,
+     "v2": 0.55
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.4,
+     "v2": 0.39
+    }
+   ]
+  },
+  {
+   "description": "With ambiguity_gap 0.25 the gap 1.0 - 0.75 is exactly representable: equal to the threshold is not ambiguous (strict <); one ulp under is; one ulp over is not.",
+   "expected_decisions": [
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.25,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.2499999999999999,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.2500000000000001,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 2,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 1,
+     "decisions_moved_to_review": 1,
+     "review_queue": 1
+    },
+    "at_auto_accept": {
+     "accepted": 2,
+     "correct": 2,
+     "f1": 0.8,
+     "precision": 1.0,
+     "recall_labelled": 0.666667
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 3,
+     "correct": 3,
+     "f1": 1.0,
+     "precision": 1.0,
+     "recall_labelled": 1.0
+    },
+    "coverage": 0.666667,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 3,
+    "labelled_a_reachable": 3,
+    "no_candidate_a": 0,
+    "pair_completeness_test": 1.0,
+    "policy": {
+     "accept_min": 0.95,
+     "ambiguity_gap": 0.25,
+     "review_min": 0.5
+    },
+    "recall_overall": 0.666667,
+    "test_a": 3,
+    "tier_counts": {
+     "auto_accept": 2,
+     "reject": 0,
+     "review": 1
+    },
+    "tier_shares": {
+     "auto_accept": 0.6666666666666666,
+     "reject": 0.0,
+     "review": 0.3333333333333333
+    },
+    "unverified_accepts": {
+     "count": 0,
+     "share_of_accepts": 0.0
+    }
+   },
+   "id": "exact_gap_boundary",
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.25,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 1.0,
+     "v2": 0.75
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 1.0,
+     "v2": 0.7500000000000001
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 1.0,
+     "v2": 0.7499999999999999
+    }
+   ]
+  },
+  {
+   "description": "A single candidate has a null gap, never zero or a perfect gap, so it is never ambiguous; a no-candidate A record is reject with reason no_candidate and stays in the population. An unlabelled accept is an unverified accept.",
+   "expected_decisions": [
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "no_candidate",
+     "tier": "reject"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "no_candidate",
+     "tier": "reject"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "value_at_or_above_review_min",
+     "tier": "review"
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 2,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 0,
+     "decisions_moved_to_review": 0,
+     "review_queue": 1
+    },
+    "at_auto_accept": {
+     "accepted": 1,
+     "correct": 1,
+     "f1": 0.666667,
+     "precision": 1.0,
+     "recall_labelled": 0.5
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 2,
+     "correct": 2,
+     "f1": 1.0,
+     "precision": 1.0,
+     "recall_labelled": 1.0
+    },
+    "coverage": 0.4,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 3,
+    "labelled_a_reachable": 2,
+    "no_candidate_a": 2,
+    "pair_completeness_test": 0.666667,
+    "policy": {
+     "accept_min": 0.95,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.5
+    },
+    "recall_overall": 0.333333,
+    "test_a": 5,
+    "tier_counts": {
+     "auto_accept": 2,
+     "reject": 2,
+     "review": 1
+    },
+    "tier_shares": {
+     "auto_accept": 0.4,
+     "reject": 0.4,
+     "review": 0.2
+    },
+    "unverified_accepts": {
+     "count": 1,
+     "share_of_accepts": 0.5
+    }
+   },
+   "id": "single_candidate_and_no_candidate",
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 1,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.99,
+     "v2": null
+    },
+    {
+     "labelled": false,
+     "n_candidates": 1,
+     "top1_correct": null,
+     "truth_reachable": null,
+     "v1": 0.99,
+     "v2": null
+    },
+    {
+     "labelled": true,
+     "n_candidates": 0,
+     "top1_correct": null,
+     "truth_reachable": false,
+     "v1": null,
+     "v2": null
+    },
+    {
+     "labelled": false,
+     "n_candidates": 0,
+     "top1_correct": null,
+     "truth_reachable": null,
+     "v1": null,
+     "v2": null
+    },
+    {
+     "labelled": true,
+     "n_candidates": 1,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 0.7,
+     "v2": null
+    }
+   ]
+  },
+  {
+   "description": "A tie on value gives gap zero, which is ambiguous under any positive gap threshold; the chosen candidate is the lexically smallest B id ('10' before '9').",
+   "expected_decisions": [
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.0,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    },
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.0,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 0,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 2,
+     "decisions_moved_to_review": 2,
+     "review_queue": 2
+    },
+    "at_auto_accept": {
+     "accepted": 0,
+     "correct": 0,
+     "f1": 0.0,
+     "precision": null,
+     "recall_labelled": 0.0
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 2,
+     "correct": 2,
+     "f1": 1.0,
+     "precision": 1.0,
+     "recall_labelled": 1.0
+    },
+    "coverage": 0.0,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 2,
+    "labelled_a_reachable": 2,
+    "no_candidate_a": 0,
+    "pair_completeness_test": 1.0,
+    "policy": {
+     "accept_min": 0.95,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.5
+    },
+    "recall_overall": 0.0,
+    "test_a": 2,
+    "tier_counts": {
+     "auto_accept": 0,
+     "reject": 0,
+     "review": 2
+    },
+    "tier_shares": {
+     "auto_accept": 0.0,
+     "reject": 0.0,
+     "review": 1.0
+    },
+    "unverified_accepts": {
+     "count": 0,
+     "share_of_accepts": null
+    }
+   },
+   "id": "ties_and_lexical_order",
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 1.0,
+     "v2": 1.0
+    },
+    {
+     "labelled": true,
+     "n_candidates": 3,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 1.0,
+     "v2": 1.0
+    }
+   ]
+  },
+  {
+   "description": "No labelled record and nothing accepted: precision, recall and F1 are unavailable (null), never perfect or zero by default; coverage still counts.",
+   "expected_decisions": [
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.09999999999999998,
+     "reason": "value_below_review_min",
+     "tier": "reject"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "no_candidate",
+     "tier": "reject"
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 0,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 0,
+     "decisions_moved_to_review": 0,
+     "review_queue": 0
+    },
+    "at_auto_accept": {
+     "accepted": 0,
+     "correct": 0,
+     "f1": null,
+     "precision": null,
+     "recall_labelled": null
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 0,
+     "correct": 0,
+     "f1": null,
+     "precision": null,
+     "recall_labelled": null
+    },
+    "coverage": 0.0,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 0,
+    "labelled_a_reachable": 0,
+    "no_candidate_a": 1,
+    "pair_completeness_test": null,
+    "policy": {
+     "accept_min": 0.95,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.5
+    },
+    "recall_overall": null,
+    "test_a": 2,
+    "tier_counts": {
+     "auto_accept": 0,
+     "reject": 2,
+     "review": 0
+    },
+    "tier_shares": {
+     "auto_accept": 0.0,
+     "reject": 1.0,
+     "review": 0.0
+    },
+    "unverified_accepts": {
+     "count": 0,
+     "share_of_accepts": null
+    }
+   },
+   "id": "zero_denominators",
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": false,
+     "n_candidates": 2,
+     "top1_correct": null,
+     "truth_reachable": null,
+     "v1": 0.3,
+     "v2": 0.2
+    },
+    {
+     "labelled": false,
+     "n_candidates": 0,
+     "top1_correct": null,
+     "truth_reachable": null,
+     "v1": null,
+     "v2": null
+    }
+   ]
+  },
+  {
+   "description": "recall_labelled divides by labelled records whose truth survived blocking; recall_overall by all labelled records; their ratio is pair_completeness_test. A labelled record whose truth is unreachable can still be accepted (wrongly) or queued; queued unreachable rows do not count toward recall with review.",
+   "expected_decisions": [
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.89,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.89,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.7000000000000001,
+     "reason": "value_at_or_above_review_min",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.7000000000000001,
+     "reason": "value_at_or_above_review_min",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.1,
+     "reason": "value_below_review_min",
+     "tier": "reject"
+    }
+   ],
+   "expected_floor_sweep": [
+    {
+     "floor": 0.05,
+     "queue_ambiguity": 0,
+     "queue_floor": 3,
+     "queue_share_of_test_a": 0.6,
+     "queue_total": 3,
+     "recall_with_review": 1.0
+    },
+    {
+     "floor": 0.5,
+     "queue_ambiguity": 0,
+     "queue_floor": 2,
+     "queue_share_of_test_a": 0.4,
+     "queue_total": 2,
+     "recall_with_review": 0.666667
+    },
+    {
+     "floor": 0.9,
+     "queue_ambiguity": 0,
+     "queue_floor": 0,
+     "queue_share_of_test_a": 0.0,
+     "queue_total": 0,
+     "recall_with_review": 0.333333
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 2,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 0,
+     "decisions_moved_to_review": 0,
+     "review_queue": 2
+    },
+    "at_auto_accept": {
+     "accepted": 2,
+     "correct": 1,
+     "f1": 0.4,
+     "precision": 0.5,
+     "recall_labelled": 0.333333
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 4,
+     "correct": 2,
+     "f1": 0.571429,
+     "precision": 0.5,
+     "recall_labelled": 0.666667
+    },
+    "coverage": 0.4,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 5,
+    "labelled_a_reachable": 3,
+    "no_candidate_a": 0,
+    "pair_completeness_test": 0.6,
+    "policy": {
+     "accept_min": 0.95,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.5
+    },
+    "recall_overall": 0.2,
+    "test_a": 5,
+    "tier_counts": {
+     "auto_accept": 2,
+     "reject": 1,
+     "review": 2
+    },
+    "tier_shares": {
+     "auto_accept": 0.4,
+     "reject": 0.2,
+     "review": 0.4
+    },
+    "unverified_accepts": {
+     "count": 0,
+     "share_of_accepts": 0.0
+    }
+   },
+   "floor_accept_min": 0.95,
+   "floors": [
+    0.05,
+    0.5,
+    0.9,
+    0.95
+   ],
+   "id": "blocking_loss_denominators",
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 0.99,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": false,
+     "truth_reachable": false,
+     "v1": 0.99,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": false,
+     "truth_reachable": false,
+     "v1": 0.8,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 0.8,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 2,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 0.2,
+     "v2": 0.1
+    }
+   ]
+  },
+  {
+   "description": "The rules_v1 policy shape (accept 0.65, review 0.0757, gap 0.10) over an uncalibrated score in [0, 1]; nothing about these rows is from the real snapshot.",
+   "expected_decisions": [
+    {
+     "ambiguous": true,
+     "demoted": true,
+     "gap": 0.09999999999999998,
+     "reason": "ambiguity_gap_below_threshold",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": 0.55,
+     "reason": "value_at_or_above_accept_min",
+     "tier": "auto_accept"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "value_at_or_above_review_min",
+     "tier": "review"
+    },
+    {
+     "ambiguous": false,
+     "demoted": false,
+     "gap": null,
+     "reason": "value_below_review_min",
+     "tier": "reject"
+    }
+   ],
+   "expected_metrics": {
+    "accepted_all": 1,
+    "ambiguity_rule": {
+     "ambiguous_non_reject": 1,
+     "decisions_moved_to_review": 1,
+     "review_queue": 2
+    },
+    "at_auto_accept": {
+     "accepted": 0,
+     "correct": 0,
+     "f1": 0.0,
+     "precision": null,
+     "recall_labelled": 0.0
+    },
+    "at_auto_accept_or_review": {
+     "accepted": 2,
+     "correct": 2,
+     "f1": 0.8,
+     "precision": 1.0,
+     "recall_labelled": 0.666667
+    },
+    "coverage": 0.25,
+    "denominators": {
+     "coverage": "all A records in the population",
+     "precision": "labelled auto-accepted A records",
+     "recall_labelled": "labelled A records whose truth survived blocking",
+     "recall_overall": "all labelled A records",
+     "share_of_accepts": "all auto-accepted A records"
+    },
+    "labelled_a": 3,
+    "labelled_a_reachable": 3,
+    "no_candidate_a": 0,
+    "pair_completeness_test": 1.0,
+    "policy": {
+     "accept_min": 0.65,
+     "ambiguity_gap": 0.1,
+     "review_min": 0.0756756772994995
+    },
+    "recall_overall": 0.0,
+    "test_a": 4,
+    "tier_counts": {
+     "auto_accept": 1,
+     "reject": 1,
+     "review": 2
+    },
+    "tier_shares": {
+     "auto_accept": 0.25,
+     "reject": 0.25,
+     "review": 0.5
+    },
+    "unverified_accepts": {
+     "count": 1,
+     "share_of_accepts": 1.0
+    }
+   },
+   "id": "rules_native_shape",
+   "policy": {
+    "accept_min": 0.65,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.0756756772994995
+   },
+   "rows": [
+    {
+     "labelled": true,
+     "n_candidates": 35,
+     "top1_correct": true,
+     "truth_reachable": true,
+     "v1": 1.0,
+     "v2": 0.9
+    },
+    {
+     "labelled": false,
+     "n_candidates": 4,
+     "top1_correct": null,
+     "truth_reachable": null,
+     "v1": 0.65,
+     "v2": 0.1
+    },
+    {
+     "labelled": true,
+     "n_candidates": 1,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 0.0756756772994995,
+     "v2": null
+    },
+    {
+     "labelled": true,
+     "n_candidates": 1,
+     "top1_correct": false,
+     "truth_reachable": true,
+     "v1": 0.07,
+     "v2": null
+    }
+   ]
+  }
+ ],
+ "fixtures_version": "1.0",
+ "generated_by": "entity_resolution.decision_lab.fixtures",
+ "invalid_policies": [
+  {
+   "error": true,
+   "id": "review_above_accept",
+   "policy": {
+    "accept_min": 0.5,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.6
+   }
+  },
+  {
+   "error": true,
+   "id": "accept_above_one",
+   "policy": {
+    "accept_min": 1.5,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   }
+  },
+  {
+   "error": true,
+   "id": "negative_review",
+   "policy": {
+    "accept_min": 0.9,
+    "ambiguity_gap": 0.1,
+    "review_min": -0.1
+   }
+  },
+  {
+   "error": true,
+   "id": "nan_accept",
+   "policy": {
+    "accept_min": "NaN",
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   }
+  },
+  {
+   "error": true,
+   "id": "inf_gap",
+   "policy": {
+    "accept_min": 0.9,
+    "ambiguity_gap": "Infinity",
+    "review_min": 0.5
+   }
+  },
+  {
+   "error": true,
+   "id": "gap_above_one",
+   "policy": {
+    "accept_min": 0.9,
+    "ambiguity_gap": 1.5,
+    "review_min": 0.5
+   }
+  },
+  {
+   "error": true,
+   "id": "string_accept",
+   "policy": {
+    "accept_min": "0.9",
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   }
+  }
+ ],
+ "note": "Synthetic rows; every expected value comes from entity_resolution.decision_lab.policy. Strings 'NaN' and 'Infinity' in invalid policies stand for the non-finite doubles.",
+ "rank_cases": [
+  {
+   "candidates": [
+    [
+     "9",
+     1.0
+    ],
+    [
+     "10",
+     1.0
+    ],
+    [
+     "2",
+     0.5
+    ]
+   ],
+   "expected_order": [
+    "10",
+    "9",
+    "2"
+   ],
+   "id": "lexical_tie"
+  },
+  {
+   "candidates": [
+    [
+     "1",
+     0.2
+    ],
+    [
+     "2",
+     0.9
+    ],
+    [
+     "3",
+     0.5
+    ]
+   ],
+   "expected_order": [
+    "2",
+    "3",
+    "1"
+   ],
+   "id": "value_first"
+  },
+  {
+   "candidates": [
+    [
+     "b",
+     0.7
+    ],
+    [
+     "a",
+     0.7
+    ],
+    [
+     "c",
+     0.7
+    ]
+   ],
+   "expected_order": [
+    "a",
+    "b",
+    "c"
+   ],
+   "id": "all_tied"
+  }
+ ]
+}

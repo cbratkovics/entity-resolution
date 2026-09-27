@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab scenario receipt (receipt_version 1.0)",
+  "description": "A policy-scenario decision record exported by the lab. Imported receipts are untrusted: strings are length-limited, identifiers are pattern-checked, and the snapshot block must match the loaded evidence before anything is applied. Hashes are provenance aids, not signatures.",
+  "type": "object",
+  "required": ["receipt_version", "receipt_id", "kind", "created_at_utc", "decision_question", "snapshot", "population", "method", "selected_controls", "user_constraints", "observations", "assumptions", "alternatives_considered", "chosen_action", "rationale", "limitations", "outcome"],
+  "additionalProperties": false,
+  "properties": {
+    "receipt_version": {"const": "1.0"},
+    "receipt_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{8,64}$"},
+    "kind": {"const": "policy_scenario"},
+    "created_at_utc": {"type": "string", "maxLength": 40},
+    "decision_question": {"type": "string", "maxLength": 2000},
+    "snapshot": {"$ref": "#/$defs/snapshot_ref"},
+    "population": {"type": "object", "required": ["fold", "grain", "a_records", "labelled_a"], "additionalProperties": false, "properties": {"fold": {"const": "test"}, "grain": {"const": "a_record"}, "a_records": {"type": "integer"}, "labelled_a": {"type": "integer"}}},
+    "method": {"type": "object", "required": ["method_version", "score_kind", "policy", "policy_source"], "additionalProperties": false, "properties": {"method_version": {"type": "string", "enum": ["exact_v1", "rules_v1", "learned_v1"]}, "score_kind": {"type": "string"}, "policy": {"$ref": "#/$defs/policy"}, "policy_source": {"type": "string", "maxLength": 200}}},
+    "selected_controls": {"type": "object", "required": ["control_kind", "review_floor", "replay_policy", "scenario_id"], "additionalProperties": false, "properties": {"control_kind": {"type": "string", "enum": ["native", "supported_floor", "replay"]}, "review_floor": {"type": ["number", "null"]}, "replay_policy": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/policy"}]}, "scenario_id": {"type": "string", "pattern": "^[a-z]+:[A-Za-z0-9_.:@-]{1,120}$"}, "what_stayed_fixed": {"type": "string", "maxLength": 1000}}},
+    "user_constraints": {"type": "object", "required": ["queue_budget", "notes"], "additionalProperties": false, "properties": {"queue_budget": {"type": ["integer", "null"], "minimum": 0}, "review_minutes_per_row": {"type": ["number", "null"], "minimum": 0}, "notes": {"type": "string", "maxLength": 2000}}},
+    "observations": {"type": "array", "maxItems": 100, "items": {"type": "object", "required": ["claim", "value", "source_key", "verified_by"], "additionalProperties": false, "properties": {"claim": {"type": "string", "maxLength": 500}, "value": {"type": ["number", "string", "null"]}, "source_key": {"type": "string", "maxLength": 300}, "verified_by": {"type": "string", "enum": ["artifact", "replay", "narrative", "user"]}}}},
+    "assumptions": {"type": "array", "maxItems": 50, "items": {"type": "string", "maxLength": 500}},
+    "alternatives_considered": {"type": "array", "maxItems": 50, "items": {"type": "object", "required": ["option", "why_not"], "additionalProperties": false, "properties": {"option": {"type": "string", "maxLength": 200}, "why_not": {"type": "string", "maxLength": 1000}}}},
+    "chosen_action": {"type": "string", "enum": ["adopt_scenario_for_review", "defer", "reject_scenario", "insufficient_evidence", "no_feasible_scenario"]},
+    "rationale": {"type": "string", "maxLength": 4000},
+    "limitations": {"type": "array", "maxItems": 50, "items": {"type": "string", "maxLength": 500}},
+    "outcome": {"type": "object", "required": ["status", "measured_value"], "additionalProperties": false, "properties": {"status": {"type": "string", "enum": ["not_observed", "not_measured"]}, "measured_value": {"type": "null"}}}
+  },
+  "$defs": {
+    "policy": {"type": "object", "required": ["accept_min", "review_min", "ambiguity_gap"], "additionalProperties": false, "properties": {"accept_min": {"type": "number", "minimum": 0, "maximum": 1}, "review_min": {"type": "number", "minimum": 0, "maximum": 1}, "ambiguity_gap": {"type": "number", "minimum": 0, "maximum": 1}}},
+    "snapshot_ref": {"type": "object", "required": ["snapshot_id", "analytical_digest", "evaluation_code_commit", "feature_version", "lab_contract_version"], "additionalProperties": false, "properties": {"snapshot_id": {"type": "string", "maxLength": 80}, "analytical_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "evaluation_code_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "feature_version": {"type": "string", "maxLength": 20}, "lab_contract_version": {"const": "1.0"}}}
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab curated cases (lab_cases_version 1.0)",
+  "description": "artifacts/lab/cases.json: a curated exhibit of test-fold A records with the evidence each method exported for them (identifiers, numbers, controlled reason codes and provenance only). Not a representative sample. Label metadata and full-candidate counts come from the owner-run local evidence stage and are absent, with the state 'truth_unavailable', when that stage did not run.",
+  "type": "object",
+  "required": ["lab_cases_version", "snapshot_id", "policies", "selection", "cases"],
+  "additionalProperties": false,
+  "properties": {
+    "lab_cases_version": {"const": "1.0"},
+    "snapshot_id": {"type": "string"},
+    "policies": {"type": "object", "propertyNames": {"enum": ["exact_v1", "rules_v1", "learned_v1"]}, "additionalProperties": {"type": "object", "required": ["accept_min", "review_min", "ambiguity_gap", "score_kind", "source_key"], "additionalProperties": false, "properties": {"accept_min": {"type": "number"}, "review_min": {"type": "number"}, "ambiguity_gap": {"type": "number"}, "score_kind": {"type": "string", "enum": ["binary_score", "uncalibrated_score", "calibrated_probability"]}, "source_key": {"type": "string"}}}},
+    "selection": {"type": "object", "required": ["strategy_version", "total_cases", "counts_by_reason", "criteria", "limitations", "local_evidence"], "additionalProperties": false, "properties": {"strategy_version": {"type": "string"}, "total_cases": {"type": "integer"}, "counts_by_reason": {"type": "object", "additionalProperties": {"type": "integer"}}, "criteria": {"type": "array", "items": {"$ref": "lab_manifest.schema.json#/$defs/criterion"}}, "limitations": {"type": "array", "items": {"type": "string"}}, "local_evidence": {"type": "object", "required": ["available", "note"], "additionalProperties": false, "properties": {"available": {"type": "boolean"}, "note": {"type": "string"}, "verifier": {"type": "string"}, "truth_content_sha256": {"type": "string"}, "candidates_file_sha256": {"type": "string"}, "features_file_sha256": {"type": "string"}}}}},
+    "cases": {"type": "array", "items": {"$ref": "#/$defs/case"}}
+  },
+  "$defs": {
+    "a_id": {"type": "string", "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"},
+    "b_id": {"type": "string", "pattern": "^[1-9][0-9]{0,11}$"},
+    "case": {"type": "object", "required": ["case_id", "a_id", "reason_codes", "narrative", "evidence", "comparison", "labels"], "additionalProperties": false, "properties": {
+      "case_id": {"$ref": "#/$defs/a_id"},
+      "a_id": {"$ref": "#/$defs/a_id"},
+      "reason_codes": {"type": "array", "minItems": 1, "items": {"type": "string", "pattern": "^[a-z_]+$"}},
+      "narrative": {"oneOf": [{"type": "null"}, {"type": "object", "required": ["kind", "source", "note"], "additionalProperties": false, "properties": {"kind": {"const": "narrative"}, "source": {"type": "string"}, "note": {"type": "string"}}}]},
+      "evidence": {"type": "array", "minItems": 3, "maxItems": 3, "items": {"$ref": "#/$defs/evidence_row"}},
+      "comparison": {"type": "object", "required": ["methods_exported", "distinct_chosen_b_ids", "agreement_class", "note"], "additionalProperties": false, "properties": {"methods_exported": {"type": "integer", "minimum": 0, "maximum": 3}, "distinct_chosen_b_ids": {"type": "integer", "minimum": 0}, "agreement_class": {"type": "string", "enum": ["all_exported_agree", "methods_disagree", "single_method_exported", "none_exported"]}, "note": {"type": "string"}}},
+      "labels": {"$ref": "#/$defs/labels"}
+    }},
+    "evidence_row": {"oneOf": [
+      {"type": "object", "required": ["method_version", "exported", "b_id", "score", "probability", "tier", "top2_gap", "gap_state", "block_keys", "ambiguity_demoted_derived", "run_id", "decided_at_utc", "source"], "additionalProperties": false, "properties": {
+        "method_version": {"type": "string"}, "exported": {"const": true},
+        "b_id": {"$ref": "#/$defs/b_id"}, "score": {"type": "number"}, "probability": {"type": "number"},
+        "tier": {"type": "string", "enum": ["auto_accept", "review"]},
+        "top2_gap": {"type": ["number", "null"]},
+        "gap_state": {"type": "string", "enum": ["exported", "single_candidate"]},
+        "block_keys": {"type": "array", "items": {"type": "string", "pattern": "^k_[a-z0-9_]+$"}},
+        "ambiguity_demoted_derived": {"type": ["boolean", "null"], "description": "Derived from the exported, six-decimal rounded values: tier is review, probability >= accept_min and top2_gap < ambiguity_gap. Null when the gap is null. A rounded gap equal to the threshold cannot be classified from the exhibit alone (see gap_at_rounded_boundary)."},
+        "gap_at_rounded_boundary": {"type": "boolean"},
+        "run_id": {"type": "string"}, "decided_at_utc": {"type": "string"},
+        "source": {"type": "string"}}},
+      {"type": "object", "required": ["method_version", "exported", "state", "reason", "source"], "additionalProperties": false, "properties": {"method_version": {"type": "string"}, "exported": {"const": false}, "state": {"const": "not_exported"}, "reason": {"type": "string", "enum": ["reject_or_no_candidate", "rejected", "no_candidate"]}, "source": {"type": "string"}}}
+    ]},
+    "labels": {"oneOf": [
+      {"type": "object", "required": ["state"], "additionalProperties": false, "properties": {"state": {"const": "truth_unavailable"}, "note": {"type": "string"}}},
+      {"type": "object", "required": ["state", "labelled", "truth_b_ids", "n_candidates_full", "truth_reachable_full", "per_method", "verifier"], "additionalProperties": false, "properties": {
+        "state": {"const": "verified_local"},
+        "labelled": {"type": "boolean"},
+        "truth_b_ids": {"type": "array", "items": {"$ref": "#/$defs/b_id"}},
+        "n_candidates_full": {"type": "integer", "minimum": 0},
+        "truth_reachable_full": {"type": ["boolean", "null"]},
+        "truth_visible_in_exported_choices": {"type": ["boolean", "null"]},
+        "per_method": {"type": "object", "additionalProperties": {"type": "object", "required": ["chosen_correct", "unrounded_gap", "unrounded_ambiguous"], "additionalProperties": false, "properties": {"chosen_correct": {"type": ["boolean", "null"]}, "unrounded_gap": {"type": ["number", "null"]}, "unrounded_ambiguous": {"type": ["boolean", "null"]}, "note": {"type": "string"}}}},
+        "verifier": {"type": "string"}}}
+    ]}
+  }
+}

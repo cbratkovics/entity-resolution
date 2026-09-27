@@ -1,7 +1,9 @@
 name: pages
 
-# Publishes the dbt docs and docs/site/ to GitHub Pages on every push to main
-# (docs/BRIEF.md 2.12). Builds the warehouse from the committed artifacts only.
+# Publishes the dbt docs, docs/site/ and the Decision Lab (ADR 0006) to GitHub Pages on every
+# push to main (docs/BRIEF.md 2.12). Builds the warehouse from the committed artifacts only; the
+# lab is compiled from the committed export under artifacts/lab/ (checked first, never rewritten)
+# and lands under site/lab/ in the same single Pages artifact.
 
 on:
   push:
@@ -34,12 +36,26 @@ jobs:
           make dbt
           mkdir -p docs/site/data
           .venv/bin/dbt run-operation export_gold --project-dir dbt --profiles-dir dbt --target dev
-      - name: Assemble the site (docs/site + dbt docs under /dbt/)
+      - name: Decision Lab export is current (no rewrite)
+        run: make lab-check
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: apps/decision-lab/.nvmrc
+          cache: npm
+          cache-dependency-path: apps/decision-lab/package-lock.json
+      - name: Build the Decision Lab at /entity-resolution/lab/
         run: |
-          mkdir -p site/dbt
+          npm ci
+          npm run build
+        working-directory: apps/decision-lab
+      - name: Assemble the site (docs/site + dbt docs under /dbt/ + lab under /lab/)
+        run: |
+          mkdir -p site/dbt site/lab
           cp -R docs/site/. site/
           cp dbt/target/static_index.html site/dbt/index.html
           cp dbt/target/manifest.json site/dbt/manifest.json
+          cp -R apps/decision-lab/dist/. site/lab/
+          test -f site/lab/index.html && test -f site/lab/data/manifest.json
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site

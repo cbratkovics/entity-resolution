@@ -46,4 +46,5 @@ step "lint"                      make lint
 step "test"                      make test
 step "dbt"                       make dbt
 step "docs"                      make docs
+step "lab-check"                 make lab-check
 echo "SMOKE OK in $(( $(date +%s) - t0 ))s (fresh clone at $clone)"

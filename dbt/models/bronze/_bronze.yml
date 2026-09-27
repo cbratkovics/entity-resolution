@@ -379,3 +379,65 @@ models:
         description: Where the dump was downloaded from.
       - name: licence_url
         description: Where the licence text in docs/DATA_SOURCES.md was read from.
+
+  - name: brz_lab_case_selection
+    description: "The Decision Lab's curated case selection (artifacts/lab/case_selection.json, ADR 0006): one row per selected test-fold A record with the deterministic reason codes that selected it. Empty until make lab-export has run."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [case_id]
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: case_id
+        description: Stable case identifier (equal to the A id).
+      - name: a_id
+        description: Side-A native id (MusicBrainz release group gid).
+      - name: reason_codes
+        description: Pipe-joined controlled reason codes of the selection criteria the case satisfied.
+      - name: selection_rank
+        description: Position of the case in the deterministic selection order.
+
+  - name: brz_lab_cases
+    description: "The evidence rows of the Decision Lab case bundle (artifacts/lab/cases.json), one row per (case_id, method_version), read through the JSON functions because exported and not-exported rows have different shapes. Reconciled to fct_lab_case_evidence by assert_lab_case_evidence_reconciles_to_bundle. Empty until make lab-export has run."
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [case_id, method_version]
+    columns:
+      - name: source_file
+        description: Path of the JSON file the row was read from.
+      - name: snapshot_id
+        description: Identity of the evidence snapshot the bundle was built from.
+      - name: case_id
+        description: Stable case identifier (equal to the A id).
+      - name: a_id
+        description: Side-A native id.
+      - name: method_version
+        description: The method the evidence row belongs to.
+      - name: exported
+        description: Whether the method exported a non-reject decision for the case.
+      - name: not_exported_reason
+        description: For non-exported rows, reject_or_no_candidate, rejected or no_candidate; null otherwise.
+      - name: b_id
+        description: The chosen side-B native id, null when not exported.
+      - name: score
+        description: The method's raw score for the chosen pair as exported (six decimals).
+      - name: probability
+        description: The probability the tier was assigned on, as exported.
+      - name: tier
+        description: auto_accept or review; null when not exported.
+      - name: top2_gap
+        description: Exported top-two gap; null for a single candidate or when not exported.
+      - name: gap_state
+        description: exported or single_candidate; null when not exported.
+      - name: block_keys
+        description: Pipe-joined blocking keys the chosen pair was found through.
+      - name: agreement_class
+        description: The bundle's agreement class for the case over exported rows.
+      - name: methods_exported
+        description: Number of methods that exported a decision for the case.
+      - name: distinct_chosen_b_ids
+        description: Distinct chosen B ids across the exported rows.
+      - name: labels_state
+        description: truth_unavailable (committed artifacts only) or verified_local (owner-run local evidence).

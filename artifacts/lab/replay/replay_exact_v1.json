@@ -1,0 +1,632 @@
+{
+ "a_id_order_sha256": "2cd62042ddf2e3179f5bb76dbf9fb5d1feecd6110398bcb2f273dd7424853ba4",
+ "columns": [
+  "v1",
+  "v2",
+  "n_candidates",
+  "labelled",
+  "top1_correct",
+  "truth_reachable"
+ ],
+ "completeness": {
+  "a_records_expected": 96557,
+  "a_records_in_file": 96557,
+  "conserved": true,
+  "labelled": 48372,
+  "labelled_reachable": 46625,
+  "with_candidates": 73216,
+  "without_candidates": 23341
+ },
+ "decision_value_kind": "binary_score",
+ "file": "replay_exact_v1.test.csv.gz",
+ "floor_sweep_reconciliation": {
+  "all_equal": true,
+  "points_compared": 18
+ },
+ "inputs": [
+  {
+   "manifest_key": "artifacts/manifest.json#pairs.features.file_sha256",
+   "path": "data/pairs/features.parquet",
+   "role": "local_features",
+   "sha256": "8b6fc8b4c1e5c89513f225f8a402e0f90f20cb9c740f74361903d4b8dc0d2ddf"
+  },
+  {
+   "manifest_key": "artifacts/manifest.json#pairs.candidates.file_sha256",
+   "path": "data/pairs/candidates.parquet",
+   "role": "local_candidates",
+   "sha256": "9c28aca92832faa812b1b40baf9d6357016b709de381eab216198c0759ca0f9a"
+  },
+  {
+   "manifest_key": "artifacts/manifest.json#sample.files.truth.file_sha256",
+   "path": "data/sample/truth.parquet",
+   "role": "local_truth",
+   "sha256": "c9955915080ad1eea0691f6924b12f1910da16be36dff35711ca59b78da7e58f"
+  },
+  {
+   "manifest_key": "artifacts/manifest.json#sample.files.a.file_sha256",
+   "path": "data/sample/a.parquet",
+   "role": "local_sample_a",
+   "sha256": "f8ed6458dac83a6d24d2349b9b5cea536ea1da328ae324a5e9a92dae406ed83a"
+  }
+ ],
+ "lab_replay_version": "1.0",
+ "legacy_sweep_divergence": {
+  "max_accepts_difference": 0,
+  "note": "The legacy sweep (review_sensitivity.json#points) computed the ambiguity-demotion flag once at the recorded accept threshold and reused it at every swept threshold. Below the recorded accept_min a record with a top-2 gap under ambiguity_gap and a value between the threshold and accept_min is accepted by the legacy calculation but must be review under a faithful replay; at or above the recorded accept_min the two coincide. legacy_matches_artifact confirms the restated legacy calculation reproduces the committed points; the corrected columns are the full replay.",
+  "points": [
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.5
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.51
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.52
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.53
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.54
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.55
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.56
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.57
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.58
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.59
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.6
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.61
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.62
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.63
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.64
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.65
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.66
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.67
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.68
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.69
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.7
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.71
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.72
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.73
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.74
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.75
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.76
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.77
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.78
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.79
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.8
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.81
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.82
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.83
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.84
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.85
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.86
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.87
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.88
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.89
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.9
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.91
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.92
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.93
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.94
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.95
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.96
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.97
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.98
+   },
+   {
+    "corrected_accepts": 36529,
+    "corrected_review_queue": 207,
+    "legacy_accepts": 36529,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 207,
+    "threshold": 0.99
+   }
+  ],
+  "thresholds_differing": 0
+ },
+ "method_version": "exact_v1",
+ "native_policy": {
+  "accept_min": 0.95,
+  "ambiguity_gap": 0.1,
+  "review_min": 0.5
+ },
+ "note": "Decision values recomputed from features of the recorded run (binary_score); unrounded; one row per test-fold A record in ascending A id order, identifiers omitted. The full-fidelity table with A and chosen B ids stays local under data/lab/ and is tied to this file by a_id_order_sha256.",
+ "population": {
+  "a_records": 96557,
+  "fold": "test",
+  "grain": "a_record",
+  "labelled_a": 48372,
+  "labelled_a_reachable": 46625,
+  "source_keys": [
+   "artifacts/split.json#folds.test.a_records",
+   "artifacts/split.json#folds.test.labelled_a_records",
+   "artifacts/eval_exact_v1.json#metrics.labelled_a_reachable",
+   "artifacts/eval_exact_v1.json#metrics.test_a",
+   "artifacts/eval_rules_v1.json#metrics.test_a",
+   "artifacts/eval_learned_v1.json#metrics.test_a",
+   "artifacts/eval_exact_v1.json#metrics.labelled_a",
+   "artifacts/eval_rules_v1.json#metrics.labelled_a",
+   "artifacts/eval_learned_v1.json#metrics.labelled_a"
+  ]
+ },
+ "reconciliation": {
+  "all_equal": true,
+  "checks": [
+   {
+    "artifact": 96557,
+    "equal": true,
+    "metric": "test_a",
+    "replay": 96557
+   },
+   {
+    "artifact": 48372,
+    "equal": true,
+    "metric": "labelled_a",
+    "replay": 48372
+   },
+   {
+    "artifact": 46625,
+    "equal": true,
+    "metric": "labelled_a_reachable",
+    "replay": 46625
+   },
+   {
+    "artifact": 0.963884,
+    "equal": true,
+    "metric": "pair_completeness_test",
+    "replay": 0.963884
+   },
+   {
+    "artifact": 35520,
+    "equal": true,
+    "metric": "at_auto_accept.accepted",
+    "replay": 35520
+   },
+   {
+    "artifact": 35475,
+    "equal": true,
+    "metric": "at_auto_accept.correct",
+    "replay": 35475
+   },
+   {
+    "artifact": 0.998733,
+    "equal": true,
+    "metric": "at_auto_accept.precision",
+    "replay": 0.998733
+   },
+   {
+    "artifact": 0.760858,
+    "equal": true,
+    "metric": "at_auto_accept.recall_labelled",
+    "replay": 0.760858
+   },
+   {
+    "artifact": 0.863717,
+    "equal": true,
+    "metric": "at_auto_accept.f1",
+    "replay": 0.863717
+   },
+   {
+    "artifact": 35717,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.accepted",
+    "replay": 35717
+   },
+   {
+    "artifact": 35671,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.correct",
+    "replay": 35671
+   },
+   {
+    "artifact": 0.998712,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.precision",
+    "replay": 0.998712
+   },
+   {
+    "artifact": 0.765062,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.recall_labelled",
+    "replay": 0.765062
+   },
+   {
+    "artifact": 0.866411,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.f1",
+    "replay": 0.866411
+   },
+   {
+    "artifact": 0.733379,
+    "equal": true,
+    "metric": "recall_overall",
+    "replay": 0.733379
+   },
+   {
+    "artifact": 0.378315,
+    "equal": true,
+    "metric": "coverage",
+    "replay": 0.378315
+   },
+   {
+    "artifact": 1009,
+    "equal": true,
+    "metric": "unverified_accepts.count",
+    "replay": 1009
+   },
+   {
+    "artifact": 0.027622,
+    "equal": true,
+    "metric": "unverified_accepts.share_of_accepts",
+    "replay": 0.027622
+   },
+   {
+    "artifact": 207,
+    "equal": true,
+    "metric": "ambiguity_rule.review_queue",
+    "replay": 207
+   },
+   {
+    "artifact": 207,
+    "equal": true,
+    "metric": "ambiguity_rule.decisions_moved_to_review",
+    "replay": 207
+   },
+   {
+    "artifact": 0.37831539919425833,
+    "equal": true,
+    "metric": "tier_shares.auto_accept",
+    "replay": 0.37831539919425833
+   },
+   {
+    "artifact": 0.0021438114274470003,
+    "equal": true,
+    "metric": "tier_shares.review",
+    "replay": 0.0021438114274470003
+   },
+   {
+    "artifact": 0.6195407893782947,
+    "equal": true,
+    "metric": "tier_shares.reject",
+    "replay": 0.6195407893782947
+   }
+  ],
+  "eval_artifact": "artifacts/eval_exact_v1.json",
+  "eval_artifact_sha256": "1eccd4954ffe74d72758afc06a3c0827eb4f6d57177abb4516364279b2b6d697"
+ },
+ "rows": 96557,
+ "snapshot_id": "20260923T140606+0000@7b7bf2ae19b1"
+}

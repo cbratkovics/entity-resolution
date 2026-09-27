@@ -1,0 +1,4555 @@
+{
+ "cases": [
+  {
+   "a_id": "00013f25-4f52-40e8-bb72-e15b84a5fdc7",
+   "case_id": "00013f25-4f52-40e8-bb72-e15b84a5fdc7",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose the same B (14127); tiers auto_accept, review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "14127",
+     "block_keys": [
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 0.8,
+     "run_id": "20260923T140606+0000",
+     "score": 0.8,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "14127",
+     "block_keys": [
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "learned_v1",
+     "probability": 0.641571,
+     "run_id": "20260923T140606+0000",
+     "score": 0.970821,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": null
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "14127"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "single_candidate"
+   ]
+  },
+  {
+   "a_id": "0001942d-bad7-438e-83b9-3781e3199746",
+   "case_id": "0001942d-bad7-438e-83b9-3781e3199746",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (267052); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "267052",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "267052",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.371429
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "267052",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999557,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.994299
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 9,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.37142858886718755
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "267052"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept"
+   ]
+  },
+  {
+   "a_id": "0002dac9-ce9d-35ce-86f8-64634ef4caae",
+   "case_id": "0002dac9-ce9d-35ce-86f8-64634ef4caae",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (665770); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "665770",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "665770",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.2
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "665770",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.969945
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 13,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.19999999999999996
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "665770"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept"
+   ]
+  },
+  {
+   "a_id": "0002f32f-e125-3453-9277-fdbb647b4967",
+   "case_id": "0002f32f-e125-3453-9277-fdbb647b4967",
+   "comparison": {
+    "agreement_class": "none_exported",
+    "distinct_chosen_b_ids": 0,
+    "methods_exported": 0,
+    "note": "No method exported this record: rejected by every method or no blocked candidate."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "rules_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 0,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "no_candidate"
+   ]
+  },
+  {
+   "a_id": "00036ce6-e1a2-49ff-8209-afd6a02b1f1d",
+   "case_id": "00036ce6-e1a2-49ff-8209-afd6a02b1f1d",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "902325",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 0.49375,
+     "run_id": "20260923T140606+0000",
+     "score": 0.49375,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": null
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "single_candidate"
+   ]
+  },
+  {
+   "a_id": "0004319f-448a-3559-8c6c-a2197cca9f24",
+   "case_id": "0004319f-448a-3559-8c6c-a2197cca9f24",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (1243107); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "1243107",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "1243107",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "1243107",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "1243107"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept",
+    "single_candidate"
+   ]
+  },
+  {
+   "a_id": "00056fde-ad36-4f8f-8768-f350839e5eda",
+   "case_id": "00056fde-ad36-4f8f-8768-f350839e5eda",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose the same B (1769443); tiers auto_accept, review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "1769443",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 0.8,
+     "run_id": "20260923T140606+0000",
+     "score": 0.8,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "1769443",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "learned_v1",
+     "probability": 0.561644,
+     "run_id": "20260923T140606+0000",
+     "score": 0.94961,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": null
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "single_candidate",
+    "unverified_accept"
+   ]
+  },
+  {
+   "a_id": "00059c10-95f2-3e08-bf9f-0cbbca8f177a",
+   "case_id": "00059c10-95f2-3e08-bf9f-0cbbca8f177a",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (328626); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "328626",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "328626",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.447143
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "328626",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.994879
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 3,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.4471428546905518
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "328626"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept"
+   ]
+  },
+  {
+   "a_id": "0007349a-1367-4c26-ac49-354745f5f069",
+   "case_id": "0007349a-1367-4c26-ac49-354745f5f069",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "1785929",
+     "block_keys": [
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 0.24735,
+     "run_id": "20260923T140606+0000",
+     "score": 0.24735,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": null
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "single_candidate"
+   ]
+  },
+  {
+   "a_id": "00081ca7-6b33-41fe-9f38-1d546bc709a8",
+   "case_id": "00081ca7-6b33-41fe-9f38-1d546bc709a8",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (1584981); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1584981",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1584981",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.378571
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1584981",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.994093
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 4,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.3785714302062989
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "1584981"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept"
+   ]
+  },
+  {
+   "a_id": "0008e153-26d6-4518-8e6d-2640e38a4228",
+   "case_id": "0008e153-26d6-4518-8e6d-2640e38a4228",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "107594",
+     "block_keys": [
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.5625,
+     "run_id": "20260923T140606+0000",
+     "score": 0.5625,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.38
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.3799999885559081
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "000c0f5e-6d4b-3e62-b0ba-55ccd7cceda7",
+   "case_id": "000c0f5e-6d4b-3e62-b0ba-55ccd7cceda7",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (27108); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "27108",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "27108",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.53
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "27108",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.994904
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.530000002861023
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "27108"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept"
+   ]
+  },
+  {
+   "a_id": "000dddd4-1ef2-4931-a0a8-823248492096",
+   "case_id": "000dddd4-1ef2-4931-a0a8-823248492096",
+   "comparison": {
+    "agreement_class": "none_exported",
+    "distinct_chosen_b_ids": 0,
+    "methods_exported": 0,
+    "note": "No method exported this record: rejected by every method or no blocked candidate."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "rules_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 0,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "no_candidate"
+   ]
+  },
+  {
+   "a_id": "00126ec6-143e-30fa-917b-3b33f58c6b07",
+   "case_id": "00126ec6-143e-30fa-917b-3b33f58c6b07",
+   "comparison": {
+    "agreement_class": "none_exported",
+    "distinct_chosen_b_ids": 0,
+    "methods_exported": 0,
+    "note": "No method exported this record: rejected by every method or no blocked candidate."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "rules_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 0,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "no_candidate"
+   ]
+  },
+  {
+   "a_id": "0014a8ec-3cc3-36fb-9c26-8ba225300c2a",
+   "case_id": "0014a8ec-3cc3-36fb-9c26-8ba225300c2a",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "521961",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.678571,
+     "run_id": "20260923T140606+0000",
+     "score": 0.678571,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.097802
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 4,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.09780219554901115
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "248126"
+    ],
+    "truth_reachable_full": false,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "001673a0-e413-4c34-a352-45b84188c62a",
+   "case_id": "001673a0-e413-4c34-a352-45b84188c62a",
+   "comparison": {
+    "agreement_class": "none_exported",
+    "distinct_chosen_b_ids": 0,
+    "methods_exported": 0,
+    "note": "No method exported this record: rejected by every method or no blocked candidate."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "rules_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "no_candidate",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 0,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "no_candidate"
+   ]
+  },
+  {
+   "a_id": "001dd63a-d08c-34db-8b6f-a3d662eb832b",
+   "case_id": "001dd63a-d08c-34db-8b6f-a3d662eb832b",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose the same B (91355); tiers review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "91355",
+     "block_keys": [
+      "k_title3"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.983333,
+     "run_id": "20260923T140606+0000",
+     "score": 0.983333,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.083333
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "91355",
+     "block_keys": [
+      "k_title3"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.905374,
+     "run_id": "20260923T140606+0000",
+     "score": 0.992232,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.875088
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.08333332824707018
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "91355"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "001df905-aa96-3290-9179-e069aea48c9f",
+   "case_id": "001df905-aa96-3290-9179-e069aea48c9f",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (90404); tiers auto_accept, review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "90404",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "90404",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": true,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.1
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "90404",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999557,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.922197
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 200,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.09999999999999998
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "90404"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "gap_at_rounded_boundary"
+   ]
+  },
+  {
+   "a_id": "001f15f8-8873-303d-a892-a725eadc69d7",
+   "case_id": "001f15f8-8873-303d-a892-a725eadc69d7",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (209733); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "209733",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "209733",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.4375
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "209733",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.994879
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.4375
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept",
+    "unverified_accept"
+   ]
+  },
+  {
+   "a_id": "00222ef1-45f7-4afe-89f5-a905c2aa9770",
+   "case_id": "00222ef1-45f7-4afe-89f5-a905c2aa9770",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "289908",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 0.8,
+     "run_id": "20260923T140606+0000",
+     "score": 0.8,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "single_candidate",
+    "unverified_accept"
+   ]
+  },
+  {
+   "a_id": "0023af6e-4dcc-3795-8a9c-fac5d30041c0",
+   "case_id": "0023af6e-4dcc-3795-8a9c-fac5d30041c0",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "8793",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "25790",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "8793",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.395415
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 19,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "8793"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement"
+   ]
+  },
+  {
+   "a_id": "002589fc-0c69-36d8-ab0b-35a0d0ee8ebc",
+   "case_id": "002589fc-0c69-36d8-ab0b-35a0d0ee8ebc",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose the same B (900307); tiers review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "900307",
+     "block_keys": [
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.8,
+     "run_id": "20260923T140606+0000",
+     "score": 0.8,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.072093
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "900307",
+     "block_keys": [
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.561644,
+     "run_id": "20260923T140606+0000",
+     "score": 0.952946,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.560528
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 8,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.07209302139282225
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "900307"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "0028dddd-968f-39a8-b415-c1f4fe5bc4a1",
+   "case_id": "0028dddd-968f-39a8-b415-c1f4fe5bc4a1",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1070974",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.717442,
+     "run_id": "20260923T140606+0000",
+     "score": 0.717442,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.121496
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 5,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.12149590110778818
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "unverified_accept"
+   ]
+  },
+  {
+   "a_id": "002c0d89-cced-468d-b2a8-5a30dda20952",
+   "case_id": "002c0d89-cced-468d-b2a8-5a30dda20952",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "1460828",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.786111,
+     "run_id": "20260923T140606+0000",
+     "score": 0.786111,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.036111
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 27,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.036111113548278784
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "002c10bc-6500-43ef-9665-f0652021354b",
+   "case_id": "002c10bc-6500-43ef-9665-f0652021354b",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "1496813",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.715789,
+     "run_id": "20260923T140606+0000",
+     "score": 0.715789,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.002153
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 7,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.002153114318847571
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "002efa84-3830-35be-9b5e-a8f6e2e49ef0",
+   "case_id": "002efa84-3830-35be-9b5e-a8f6e2e49ef0",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "1425917",
+     "block_keys": [
+      "k_title3"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.665455,
+     "run_id": "20260923T140606+0000",
+     "score": 0.665455,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.03306
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 21,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.033060186386108414
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "1085643"
+    ],
+    "truth_reachable_full": false,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "00321062-58ca-4af0-9e6d-5ee4c04db97d",
+   "case_id": "00321062-58ca-4af0-9e6d-5ee4c04db97d",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (546510); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "546510",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "546510",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.514359
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "546510",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.99954,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.995377
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.5143589677810669
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept",
+    "unverified_accept"
+   ]
+  },
+  {
+   "a_id": "003b31c8-7203-350d-b8c4-09e2b0773741",
+   "case_id": "003b31c8-7203-350d-b8c4-09e2b0773741",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (405808); tiers auto_accept, review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "405808",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "405808",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": true,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.1
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "405808",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999557,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.283134
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 26,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.09999999999999998
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "405808"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "gap_at_rounded_boundary"
+   ]
+  },
+  {
+   "a_id": "0043821c-2fbc-3dc1-b880-d46a3d930a68",
+   "case_id": "0043821c-2fbc-3dc1-b880-d46a3d930a68",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "3226156",
+     "block_keys": [
+      "k_title3"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.71,
+     "run_id": "20260923T140606+0000",
+     "score": 0.71,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.21625
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.21624999999999994
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "958908"
+    ],
+    "truth_reachable_full": false,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "verified_wrong_accept"
+   ]
+  },
+  {
+   "a_id": "0046a314-ef25-4bf2-b0cf-81cf1858bdc6",
+   "case_id": "0046a314-ef25-4bf2-b0cf-81cf1858bdc6",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "43401",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "481684",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.905374,
+     "run_id": "20260923T140606+0000",
+     "score": 0.992851,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.068459
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 22,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "481684"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "00574112-b2cc-4203-a248-5a2365c3a4e6",
+   "case_id": "00574112-b2cc-4203-a248-5a2365c3a4e6",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "1563332",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.72,
+     "run_id": "20260923T140606+0000",
+     "score": 0.72,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "349525",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.676275,
+     "run_id": "20260923T140606+0000",
+     "score": 0.97295,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.521894
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 162,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "00588162-feb4-44ab-b2dd-fe472fc11faa",
+   "case_id": "00588162-feb4-44ab-b2dd-fe472fc11faa",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (760825); tiers auto_accept, review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "760825",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "760825",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": true,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.1
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "760825",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.872262
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 6,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.09999999999999998
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "760825"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "gap_at_rounded_boundary"
+   ]
+  },
+  {
+   "a_id": "005c64c6-c3aa-3656-be18-9028eb4c1fb3",
+   "case_id": "005c64c6-c3aa-3656-be18-9028eb4c1fb3",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (404003); tiers auto_accept, review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "404003",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "404003",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": true,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.1
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "404003",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.99954,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.895261
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 2,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.09999999999999998
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "404003"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "gap_at_rounded_boundary"
+   ]
+  },
+  {
+   "a_id": "006b8f20-9bab-3a66-8bc2-eb16fe480bb4",
+   "case_id": "006b8f20-9bab-3a66-8bc2-eb16fe480bb4",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "382176",
+     "block_keys": [
+      "k_phonetic",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.8,
+     "run_id": "20260923T140606+0000",
+     "score": 0.8,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 11,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "007366bb-46e3-4d79-bfd0-9ff04384468b",
+   "case_id": "007366bb-46e3-4d79-bfd0-9ff04384468b",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "296950",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.926364,
+     "run_id": "20260923T140606+0000",
+     "score": 0.926364,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.026364
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "312381",
+     "block_keys": [
+      "k_artist_year",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.6,
+     "run_id": "20260923T140606+0000",
+     "score": 0.960397,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.298413
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 30,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.02636362075805654
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "312381"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "method_disagreement",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "007b9d51-503a-304c-bfeb-a6cb5b666193",
+   "case_id": "007b9d51-503a-304c-bfeb-a6cb5b666193",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "294404",
+     "block_keys": [
+      "k_title3"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.771739,
+     "run_id": "20260923T140606+0000",
+     "score": 0.771739,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.088406
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "206400",
+     "block_keys": [
+      "k_title3"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.555556,
+     "run_id": "20260923T140606+0000",
+     "score": 0.945742,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.515281
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 26,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.08840579509735114
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_demoted",
+    "method_disagreement",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "0095145c-737b-4b29-a77e-9f1774dcd8a4",
+   "case_id": "0095145c-737b-4b29-a77e-9f1774dcd8a4",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "183123",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.45,
+     "run_id": "20260923T140606+0000",
+     "score": 0.45,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": false,
+    "n_candidates_full": 4,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [],
+    "truth_reachable_full": null,
+    "truth_visible_in_exported_choices": null,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "00961421-c91e-400f-899c-2bf021a3b681",
+   "case_id": "00961421-c91e-400f-899c-2bf021a3b681",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "1206775",
+     "block_keys": [
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.8,
+     "run_id": "20260923T140606+0000",
+     "score": 0.8,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 61,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "572393"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "012383e8-7670-318d-99d4-a55e713a0f76",
+   "case_id": "012383e8-7670-318d-99d4-a55e713a0f76",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "3363193",
+     "block_keys": [
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.672093,
+     "run_id": "20260923T140606+0000",
+     "score": 0.672093,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.108457
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 14,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.10845665264129634
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "596215"
+    ],
+    "truth_reachable_full": false,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "verified_wrong_accept"
+   ]
+  },
+  {
+   "a_id": "01782826-e0ab-4056-a4d2-cf5b3b7d8a1c",
+   "case_id": "01782826-e0ab-4056-a4d2-cf5b3b7d8a1c",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "270752",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.9,
+     "run_id": "20260923T140606+0000",
+     "score": 0.9,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1588064",
+     "block_keys": [
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.712281,
+     "run_id": "20260923T140606+0000",
+     "score": 0.976774,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.07071
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 17,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": false,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "537877"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement",
+    "partial_export"
+   ]
+  },
+  {
+   "a_id": "022cd288-189d-48e3-a2ce-a095c6fdffff",
+   "case_id": "022cd288-189d-48e3-a2ce-a095c6fdffff",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "349141",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "347817",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "349141",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.31914
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 11,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "349141"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement"
+   ]
+  },
+  {
+   "a_id": "025d4370-3fd4-4c72-acea-44b0c35f700c",
+   "case_id": "025d4370-3fd4-4c72-acea-44b0c35f700c",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "2389681",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "2389666",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "2389681",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.1585
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 7,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "2389681"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement"
+   ]
+  },
+  {
+   "a_id": "02a46b21-e623-4861-b65e-2458519365fe",
+   "case_id": "02a46b21-e623-4861-b65e-2458519365fe",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (332714); tiers auto_accept. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "332714",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "332714",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    },
+    {
+     "ambiguity_demoted_derived": null,
+     "b_id": "332714",
+     "block_keys": [
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "single_candidate",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.99954,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": null
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 1,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "learned_v1": {
+      "chosen_correct": false,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "615444"
+    ],
+    "truth_reachable_full": false,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "agreement_all_accept",
+    "single_candidate",
+    "verified_wrong_accept"
+   ]
+  },
+  {
+   "a_id": "03180602-7188-4f88-810b-28f200428926",
+   "case_id": "03180602-7188-4f88-810b-28f200428926",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "338495",
+     "block_keys": [
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "414202",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.9,
+     "run_id": "20260923T140606+0000",
+     "score": 0.9,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "338495",
+     "block_keys": [
+      "k_phonetic",
+      "k_self_titled",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.641571,
+     "run_id": "20260923T140606+0000",
+     "score": 0.968842,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.423829
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 144,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": false,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "271681"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement",
+    "verified_wrong_accept"
+   ]
+  },
+  {
+   "a_id": "032d3660-3ca5-4208-bd78-681c950ca93f",
+   "case_id": "032d3660-3ca5-4208-bd78-681c950ca93f",
+   "comparison": {
+    "agreement_class": "single_method_exported",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 1,
+    "note": "Only rules_v1 exported this record; agreement between methods cannot be assessed from one exported row."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "3063572",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 0.9,
+     "run_id": "20260923T140606+0000",
+     "score": 0.9,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.35
+    },
+    {
+     "exported": false,
+     "method_version": "learned_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "state": "not_exported"
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 7,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": null,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 0.35000000095367434
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "845932"
+    ],
+    "truth_reachable_full": false,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": null,
+   "reason_codes": [
+    "partial_export",
+    "verified_wrong_accept"
+   ]
+  },
+  {
+   "a_id": "03cf0b3d-48f1-3b04-a3be-5e4d5b7dcae2",
+   "case_id": "03cf0b3d-48f1-3b04-a3be-5e4d5b7dcae2",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose the same B (683263); tiers review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "683263",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "683263",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "683263",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 8,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": false,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "82406"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": false,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": {
+    "kind": "narrative",
+    "note": "learned_v1 scores two Discogs masters, 683263 and 82406, at the same calibrated probability; the truth link is to 82406. Discogs holds two masters that are the same work after normalisation, the top-2 gap is zero, and the ambiguity rule sends the record to review instead of auto-accepting the wrong one. All three methods tie here.",
+    "source": "docs/FINDINGS.md#worked-examples-from-the-review-tier"
+   },
+   "reason_codes": [
+    "ambiguity_tie",
+    "worked_example"
+   ]
+  },
+  {
+   "a_id": "41cb566c-8384-4a00-b944-e72280c673df",
+   "case_id": "41cb566c-8384-4a00-b944-e72280c673df",
+   "comparison": {
+    "agreement_class": "all_exported_agree",
+    "distinct_chosen_b_ids": 1,
+    "methods_exported": 2,
+    "note": "The 2 exporting methods chose the same B (1214912); tiers review. Agreement on the B id says nothing about within-method ambiguity: see each row's top2_gap and tier."
+   },
+   "evidence": [
+    {
+     "exported": false,
+     "method_version": "exact_v1",
+     "reason": "rejected",
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "state": "not_exported"
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1214912",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": true,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.1
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "1214912",
+     "block_keys": [
+      "k_artist_year"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.676275,
+     "run_id": "20260923T140606+0000",
+     "score": 0.975534,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 35,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": null,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.09999999999999998
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "1214912"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": {
+    "kind": "narrative",
+    "note": "learned_v1 puts master 1214912 (a subtitle on one side) in the review tier and it is the truth link; a reviewer confirms it in one look. exact_v1 exports nothing for this record; rules_v1 reviews it at an exported gap of exactly 0.1, which the six-decimal exhibit cannot classify against the 0.10 threshold.",
+    "source": "docs/FINDINGS.md#worked-examples-from-the-review-tier"
+   },
+   "reason_codes": [
+    "ambiguity_tie",
+    "gap_at_rounded_boundary",
+    "partial_export",
+    "worked_example"
+   ]
+  },
+  {
+   "a_id": "ac8ca6a0-b24b-314c-ba05-c6b22c564ac9",
+   "case_id": "ac8ca6a0-b24b-314c-ba05-c6b22c564ac9",
+   "comparison": {
+    "agreement_class": "methods_disagree",
+    "distinct_chosen_b_ids": 2,
+    "methods_exported": 3,
+    "note": "The 3 exporting methods chose 2 different B ids: a disagreement between methods, distinct from the within-method ambiguity the gap rule measures."
+   },
+   "evidence": [
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "82443",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "exact_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_exact_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 1.0
+    },
+    {
+     "ambiguity_demoted_derived": true,
+     "b_id": "120663",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "rules_v1",
+     "probability": 1.0,
+     "run_id": "20260923T140606+0000",
+     "score": 1.0,
+     "source": "artifacts/mapping/mapping_rules_v1.test.csv.gz",
+     "tier": "review",
+     "top2_gap": 0.0
+    },
+    {
+     "ambiguity_demoted_derived": false,
+     "b_id": "82443",
+     "block_keys": [
+      "k_artist_year",
+      "k_phonetic",
+      "k_title3",
+      "k_title_sorted"
+     ],
+     "decided_at_utc": "2026-09-23T14:16:02+00:00",
+     "exported": true,
+     "gap_at_rounded_boundary": false,
+     "gap_state": "exported",
+     "method_version": "learned_v1",
+     "probability": 0.995415,
+     "run_id": "20260923T140606+0000",
+     "score": 0.999736,
+     "source": "artifacts/mapping/mapping_learned_v1.test.csv.gz",
+     "tier": "auto_accept",
+     "top2_gap": 0.283134
+    }
+   ],
+   "labels": {
+    "labelled": true,
+    "n_candidates_full": 15,
+    "per_method": {
+     "exact_v1": {
+      "chosen_correct": true,
+      "unrounded_ambiguous": false,
+      "unrounded_gap": 1.0
+     },
+     "learned_v1": {
+      "chosen_correct": true,
+      "note": "no unrounded learned scores exist",
+      "unrounded_ambiguous": null,
+      "unrounded_gap": null
+     },
+     "rules_v1": {
+      "chosen_correct": false,
+      "unrounded_ambiguous": true,
+      "unrounded_gap": 0.0
+     }
+    },
+    "state": "verified_local",
+    "truth_b_ids": [
+     "82443"
+    ],
+    "truth_reachable_full": true,
+    "truth_visible_in_exported_choices": true,
+    "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+   },
+   "narrative": {
+    "kind": "narrative",
+    "note": "rules_v1 gives masters 120663 and 82443 the same score; the truth link is to 82443. A tie the rule cannot break is a review, not an accept. exact_v1 and learned_v1 accept 82443: a genuine disagreement between methods, not ambiguity within one method.",
+    "source": "docs/FINDINGS.md#worked-examples-from-the-review-tier"
+   },
+   "reason_codes": [
+    "ambiguity_tie",
+    "method_disagreement",
+    "worked_example"
+   ]
+  }
+ ],
+ "lab_cases_version": "1.0",
+ "policies": {
+  "exact_v1": {
+   "accept_min": 0.95,
+   "ambiguity_gap": 0.1,
+   "review_min": 0.5,
+   "score_kind": "binary_score",
+   "source_key": "artifacts/methods/exact_v1.json#tier_policy"
+  },
+  "learned_v1": {
+   "accept_min": 0.95,
+   "ambiguity_gap": 0.1,
+   "review_min": 0.5,
+   "score_kind": "calibrated_probability",
+   "source_key": "artifacts/methods/learned_v1.json#tier_policy"
+  },
+  "rules_v1": {
+   "accept_min": 0.65,
+   "ambiguity_gap": 0.1,
+   "review_min": 0.0756756772994995,
+   "score_kind": "uncalibrated_score",
+   "source_key": "artifacts/methods/rules_v1.json#tier_policy"
+  }
+ },
+ "selection": {
+  "counts_by_reason": {
+   "agreement_all_accept": 9,
+   "ambiguity_demoted": 8,
+   "ambiguity_tie": 13,
+   "gap_at_rounded_boundary": 5,
+   "method_disagreement": 10,
+   "no_candidate": 4,
+   "partial_export": 25,
+   "single_candidate": 7,
+   "unverified_accept": 5,
+   "verified_wrong_accept": 5,
+   "worked_example": 3
+  },
+  "criteria": [
+   {
+    "available": 3,
+    "cap": 3,
+    "description": "The release groups discussed in docs/FINDINGS.md; narrative copied from there.",
+    "deterministic_order": "order of docs/FINDINGS.md",
+    "reason_code": "worked_example",
+    "selected": 3,
+    "source": "findings_narrative"
+   },
+   {
+    "available": 34519,
+    "cap": 6,
+    "description": "All three methods exported the same B in the auto_accept tier.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "agreement_all_accept",
+    "selected": 6,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 605,
+    "cap": 8,
+    "description": "At least two methods exported this record and chose different B ids.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "method_disagreement",
+    "selected": 8,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 1918,
+    "cap": 6,
+    "description": "Some exported method has a top-2 gap of exactly 0.0 and the review tier.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "ambiguity_tie",
+    "selected": 6,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 5348,
+    "cap": 6,
+    "description": "Some exported method has the review tier, a probability at or above its accept_min and a rounded top-2 gap strictly between 0 and ambiguity_gap: demoted by the ambiguity rule.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "ambiguity_demoted",
+    "selected": 6,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 939,
+    "cap": 4,
+    "description": "Some exported method has the review tier and a six-decimal gap equal to ambiguity_gap; the exhibit alone cannot say whether the unrounded gap is below it.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "gap_at_rounded_boundary",
+    "selected": 4,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 15577,
+    "cap": 5,
+    "description": "Some exported method has a null top-2 gap: the record had one blocked candidate.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "single_candidate",
+    "selected": 5,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 36480,
+    "cap": 5,
+    "description": "Exported by one or two methods only; the others rejected it or had no candidate.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "partial_export",
+    "selected": 5,
+    "source": "committed_exhibits"
+   },
+   {
+    "available": 4560,
+    "cap": 5,
+    "description": "Auto-accepted by some method and unlabelled: counted by coverage, invisible to precision.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "unverified_accept",
+    "selected": 5,
+    "source": "local_evidence"
+   },
+   {
+    "available": 271,
+    "cap": 5,
+    "description": "Labelled and auto-accepted by some method with a chosen B outside the truth set.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "verified_wrong_accept",
+    "selected": 5,
+    "source": "local_evidence"
+   },
+   {
+    "available": 23341,
+    "cap": 4,
+    "description": "A test-fold A record with no blocked candidate: reject for every method, absent from every exhibit.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "no_candidate",
+    "selected": 4,
+    "source": "local_evidence"
+   },
+   {
+    "available": 0,
+    "cap": 3,
+    "description": "A test-fold A record with candidates that every method rejected: absent from every exhibit.",
+    "deterministic_order": "ascending a_id",
+    "reason_code": "reject_all_methods",
+    "selected": 0,
+    "source": "local_evidence"
+   }
+  ],
+  "limitations": [
+   "A curated exhibit, not a representative sample: no figure in the lab is computed from these cases.",
+   "Each criterion takes the first `cap` qualifying A records in ascending A id order; a case carries every reason code it qualifies for, so counts_by_reason can exceed a criterion's cap.",
+   "worked_example: 3 available, 3 selected (cap 3)",
+   "agreement_all_accept: 34519 available, 6 selected (cap 6)",
+   "method_disagreement: 605 available, 8 selected (cap 8)",
+   "ambiguity_tie: 1918 available, 6 selected (cap 6)",
+   "ambiguity_demoted: 5348 available, 6 selected (cap 6)",
+   "gap_at_rounded_boundary: 939 available, 4 selected (cap 4)",
+   "single_candidate: 15577 available, 5 selected (cap 5)",
+   "partial_export: 36480 available, 5 selected (cap 5)",
+   "unverified_accept: 4560 available, 5 selected (cap 5)",
+   "verified_wrong_accept: 271 available, 5 selected (cap 5)",
+   "no_candidate: 23341 available, 4 selected (cap 4)",
+   "reject_all_methods: 0 available, 0 selected (cap 3)",
+   "Exhibit values are rounded to six decimals; a gap equal to the threshold is flagged gap_at_rounded_boundary because the exhibit cannot classify it."
+  ],
+  "local_evidence": {
+   "available": true,
+   "candidates_file_sha256": "9c28aca92832faa812b1b40baf9d6357016b709de381eab216198c0759ca0f9a",
+   "features_file_sha256": "8b6fc8b4c1e5c89513f225f8a402e0f90f20cb9c740f74361903d4b8dc0d2ddf",
+   "note": "labels, candidate counts and unrounded gaps verified against the hash-checked data/ inputs of the recorded run",
+   "truth_content_sha256": "b5dfc8dccfe683f4dd48e7c74ca6683f757737eaf53ec17b8b23605facb884f3",
+   "verifier": "entity_resolution.decision_lab.local_evidence@4a4e3d4e3cddb187fdeba4a7261ef5ab8a5369cc"
+  },
+  "strategy_version": "1.0",
+  "total_cases": 48
+ },
+ "snapshot_id": "20260923T140606+0000@7b7bf2ae19b1"
+}
