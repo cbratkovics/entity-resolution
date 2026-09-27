@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab evidence snapshot (lab_snapshot_version 1.0)",
+  "description": "artifacts/lab/snapshot.json: the aggregate comparison the lab renders by default. Every value is copied from a committed artifact and carries its source key; nothing is computed here except the copying. Test fold, A-record grain.",
+  "type": "object",
+  "required": ["lab_snapshot_version", "snapshot_id", "evidence", "population", "metric_definitions", "methods", "provenance"],
+  "additionalProperties": false,
+  "properties": {
+    "lab_snapshot_version": {"const": "1.0"},
+    "snapshot_id": {"type": "string"},
+    "evidence": {"$ref": "lab_manifest.schema.json#/$defs/evidence"},
+    "population": {"$ref": "lab_manifest.schema.json#/$defs/population"},
+    "metric_definitions": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object", "required": ["display_name", "definition", "numerator", "denominator", "scope", "unit", "kind"], "additionalProperties": false, "properties": {"display_name": {"type": "string"}, "definition": {"type": "string"}, "numerator": {"type": "string"}, "denominator": {"type": "string"}, "scope": {"type": "string"}, "unit": {"type": "string", "enum": ["ratio", "count", "share"]}, "kind": {"type": "string", "enum": ["accuracy", "volume", "workload", "calibration", "upper_bound"]}}}},
+    "methods": {"type": "object", "propertyNames": {"enum": ["exact_v1", "rules_v1", "learned_v1"]}, "minProperties": 1, "additionalProperties": {"$ref": "#/$defs/method"}},
+    "provenance": {"type": "object", "required": ["eval_artifacts", "method_records", "review_sensitivity", "split", "note"], "additionalProperties": false, "properties": {"eval_artifacts": {"type": "object", "additionalProperties": {"$ref": "#/$defs/fileref"}}, "method_records": {"type": "object", "additionalProperties": {"$ref": "#/$defs/fileref"}}, "review_sensitivity": {"$ref": "#/$defs/fileref"}, "split": {"$ref": "#/$defs/fileref"}, "note": {"type": "string"}}}
+  },
+  "$defs": {
+    "fileref": {"type": "object", "required": ["path", "sha256"], "additionalProperties": false, "properties": {"path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}, "code_commit": {"type": "string"}, "generated_at_utc": {"type": "string"}}},
+    "metric": {"type": "object", "required": ["value", "numerator", "denominator", "source_key"], "additionalProperties": false, "properties": {"value": {"type": ["number", "null"]}, "numerator": {"type": ["integer", "null"]}, "denominator": {"type": ["integer", "null"]}, "source_key": {"type": "string"}, "unavailable_reason": {"type": ["string", "null"]}}},
+    "count": {"type": "object", "required": ["value", "source_key"], "additionalProperties": false, "properties": {"value": {"type": ["integer", "null"]}, "source_key": {"type": "string"}}},
+    "floor_point": {"type": "object", "required": ["floor", "queue_floor", "queue_ambiguity", "queue_total", "queue_share_of_test_a", "recall_with_review"], "additionalProperties": false, "properties": {"floor": {"type": "number"}, "queue_floor": {"type": "integer"}, "queue_ambiguity": {"type": "integer"}, "queue_total": {"type": "integer"}, "queue_share_of_test_a": {"type": ["number", "null"]}, "recall_with_review": {"type": ["number", "null"]}}},
+    "legacy_point": {"type": "object", "required": ["threshold", "accepts", "queue_floor", "queue_ambiguity", "review_queue", "precision_labelled", "expected_false_accepts", "total_cost"], "additionalProperties": false, "properties": {"threshold": {"type": "number"}, "accepts": {"type": "integer"}, "queue_floor": {"type": "integer"}, "queue_ambiguity": {"type": "integer"}, "review_queue": {"type": "integer"}, "precision_labelled": {"type": ["number", "null"]}, "expected_false_accepts": {"type": ["number", "null"]}, "total_cost": {"type": "object", "additionalProperties": {"type": ["number", "null"]}}}},
+    "method": {"type": "object", "required": ["method_version", "definition", "score_kind", "fitted_on", "policy", "policy_source", "metrics", "counts", "calibration", "review_floor", "legacy_threshold_sweep", "mapping_exhibit"], "additionalProperties": false, "properties": {
+      "method_version": {"type": "string"},
+      "definition": {"type": "string"},
+      "score_kind": {"type": "string", "enum": ["binary_score", "uncalibrated_score", "calibrated_probability"]},
+      "fitted_on": {"type": ["object", "null"]},
+      "policy": {"type": "object", "required": ["accept_min", "review_min", "ambiguity_gap"], "additionalProperties": false, "properties": {"accept_min": {"type": "number"}, "review_min": {"type": "number"}, "ambiguity_gap": {"type": "number"}}},
+      "policy_source": {"type": "string"},
+      "metrics": {"type": "object", "required": ["precision", "recall_labelled", "recall_overall", "f1", "coverage", "pair_completeness_test", "unverified_accepts_share", "precision_or_review", "recall_labelled_or_review"], "additionalProperties": {"$ref": "#/$defs/metric"}},
+      "counts": {"type": "object", "required": ["test_a", "labelled_a", "labelled_a_reachable", "accepted_labelled", "correct_labelled", "accepted_all", "unverified_accepts", "review_queue", "decisions_moved_to_review", "tier_auto_accept", "tier_review", "tier_reject"], "additionalProperties": {"$ref": "#/$defs/count"}},
+      "calibration": {"type": "object", "required": ["pair_level_ece", "decision_level_ece", "pair_level_brier", "decision_level_brier", "note"], "additionalProperties": false, "properties": {"pair_level_ece": {"$ref": "#/$defs/metric"}, "decision_level_ece": {"$ref": "#/$defs/metric"}, "pair_level_brier": {"$ref": "#/$defs/metric"}, "decision_level_brier": {"$ref": "#/$defs/metric"}, "note": {"type": "string"}}},
+      "review_floor": {"type": "object", "required": ["accept_min", "status", "note", "points", "floors_omitted_at_or_above_accept_min", "source_key"], "additionalProperties": false, "properties": {"accept_min": {"type": "number"}, "status": {"type": "string", "enum": ["supported_exact_at_native_accept"]}, "note": {"type": "string"}, "points": {"type": "array", "items": {"$ref": "#/$defs/floor_point"}}, "floors_omitted_at_or_above_accept_min": {"type": "array", "items": {"type": "number"}}, "source_key": {"type": "string"}}},
+      "legacy_threshold_sweep": {"type": "object", "required": ["status", "note", "review_min", "chosen_accept_threshold", "false_accept_cost_ratios", "points", "source_key"], "additionalProperties": false, "properties": {"status": {"const": "legacy_snapshot_calculation"}, "note": {"type": "string"}, "review_min": {"type": "number"}, "chosen_accept_threshold": {"type": "number"}, "false_accept_cost_ratios": {"type": "array", "items": {"type": "number"}}, "points": {"type": "array", "items": {"$ref": "#/$defs/legacy_point"}}, "source_key": {"type": "string"}}},
+      "mapping_exhibit": {"type": "object", "required": ["path", "sha256", "rows", "note"], "additionalProperties": false, "properties": {"path": {"type": "string"}, "sha256": {"type": "string"}, "rows": {"type": "integer"}, "note": {"type": "string"}}}
+    }}
+  }
+}

@@ -22,6 +22,8 @@ DEFAULT = [
     "docs/METHODS_CARD.md",
     "docs/PROFILE.md",
     "docs/REPRODUCIBILITY.md",
+    "docs/DECISION_LAB.md",
+    "docs/LAB_QA_GUIDE.md",
     "docs/adr",
     "docs/site",
 ]

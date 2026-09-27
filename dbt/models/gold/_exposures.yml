@@ -23,3 +23,25 @@ exposures:
     owner:
       name: cbratkovics
       email: cbratkovics@gmail.com
+
+  - name: decision_lab
+    label: Entity Resolution Decision Lab (GitHub Pages, /lab/)
+    type: application
+    maturity: medium
+    url: https://cbratkovics.github.io/entity-resolution/lab/
+    description: >
+      The static Decision Lab (apps/decision-lab, ADR 0006) renders the method comparison, the
+      supported review-floor control, the curated case explorer, the decision ledger and the
+      complete-replay view from the compact exports under artifacts/lab/, which are built from
+      the committed artifacts by entity_resolution.decision_lab. The warehouse projects the same
+      curated cases (fct_lab_case_evidence, fct_lab_case_comparison) and reconciles them to the
+      bundle; the aggregate marts it depends on are the ones the results page reads.
+    depends_on:
+      - ref('fct_lab_case_evidence')
+      - ref('fct_lab_case_comparison')
+      - ref('fct_eval_metrics')
+      - ref('fct_review_floor')
+      - ref('dim_method_version')
+    owner:
+      name: cbratkovics
+      email: cbratkovics@gmail.com

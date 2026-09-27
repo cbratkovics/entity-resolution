@@ -67,3 +67,15 @@ sources:
         meta:
           formatter: template
           external_location: "read_csv_auto('{{ var('artifacts_dir') }}/mapping/mapping_*.test.csv.gz', filename = true, header = true, union_by_name = true, all_varchar = true)"
+
+      - name: lab_case_selection
+        description: artifacts/lab/case_selection.json — the Decision Lab's deterministic curated case selection (case id, A id, reason codes, rank), written by `make lab-export` (ADR 0006).
+        meta:
+          formatter: template
+          external_location: "read_json_auto('{{ var('artifacts_dir') }}/lab/case_selection.json', filename = true)"
+
+      - name: lab_cases
+        description: artifacts/lab/cases.json — the Decision Lab case bundle as raw JSON objects (one document); the evidence rows are flattened by brz_lab_cases (ADR 0006). Identifiers, numbers, controlled codes and provenance only.
+        meta:
+          formatter: template
+          external_location: "read_json_objects('{{ var('artifacts_dir') }}/lab/cases.json', filename = true, maximum_object_size = 50000000)"

@@ -27,3 +27,13 @@ docs/site/data/
 !artifacts/**
 # A global ~/.gitignore that ignores `*.sql` would hide the dbt project; keep it self-contained.
 !dbt/**/*.sql
+
+# Local session notes and owner worksheets; never published
+/.local/
+
+# Decision lab app: synced copy of artifacts/lab, dependencies and build/test outputs
+apps/decision-lab/public/data/
+apps/decision-lab/node_modules/
+apps/decision-lab/dist/
+apps/decision-lab/test-results/
+apps/decision-lab/playwright-report/

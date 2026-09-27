@@ -31,3 +31,5 @@ jobs:
         run: make dbt
       - name: Docs cite what the artifacts carry
         run: make docs
+      - name: Decision Lab export reconciles to the artifacts (replay bundles re-verified from the compressed files)
+        run: make lab-check

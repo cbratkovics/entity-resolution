@@ -2,7 +2,7 @@
 
 Record linkage between two open music catalogues, measured against labelled ground truth.
 
-[Live site](https://cbratkovics.github.io/entity-resolution/) · [dbt docs](https://cbratkovics.github.io/entity-resolution/dbt/) · [Findings](docs/FINDINGS.md) · [Methods card](docs/METHODS_CARD.md) · [Brief](docs/BRIEF.md) · ![ci](https://github.com/cbratkovics/entity-resolution/actions/workflows/ci.yml/badge.svg)
+[Live site](https://cbratkovics.github.io/entity-resolution/) · [Decision Lab](https://cbratkovics.github.io/entity-resolution/lab/) · [dbt docs](https://cbratkovics.github.io/entity-resolution/dbt/) · [Findings](docs/FINDINGS.md) · [Methods card](docs/METHODS_CARD.md) · [Brief](docs/BRIEF.md) · ![ci](https://github.com/cbratkovics/entity-resolution/actions/workflows/ci.yml/badge.svg)
 
 ## What the numbers say
 
@@ -118,6 +118,38 @@ same figures as charts.
 
 Site: https://cbratkovics.github.io/entity-resolution/ (published by `pages.yml` once Pages is enabled).
 
+## Decision Lab
+
+The results page reports how good each method is; the Decision Lab at
+[`/entity-resolution/lab/`](https://cbratkovics.github.io/entity-resolution/lab/) asks the
+question a policy owner decides: which records to accept automatically, which to send to
+review, which to leave unresolved, and what evidence and trade-offs justify that. It is a
+static, local-first workbench (`apps/decision-lab/`, ADR-0006) over the frozen benchmark:
+
+- **Compare** the three methods at their recorded thresholds, with every metric's numerator,
+  denominator and artifact key beside it, and price a review budget against the exported
+  review-floor points only (no interpolation; "no supported setting meets this budget" is a
+  valid answer).
+- **Inspect** curated real cases from the test-fold mapping exhibits: chosen candidates, tiers,
+  exported gaps, block keys, method agreement versus within-method ambiguity, and the exact
+  state of every missing field (not exported, truth unavailable, single candidate). Identifiers
+  and numbers only; source-site links are built from validated ids.
+- **Decide** locally: accept, reject a candidate, defer, undo, with reason codes and a
+  rationale; export a decision receipt or the review-event ledger as JSON and import it back
+  under the same snapshot. These are user decisions kept in the browser, never labels, mapping
+  writes or measured outcomes; the benchmark metrics do not move.
+- **Replay** any policy over the whole test fold for `exact_v1` and `rules_v1`, whose decision
+  values are pure functions of the frozen features, and see the replay reconcile to the
+  evaluation artifact at the recorded policy. `learned_v1` has no frozen model, so its replay is
+  declared unavailable rather than reconstructed (ADR-0007).
+- **Sandbox** the mechanics on an unmistakably synthetic fixture (ties, boundaries, single and
+  no-candidate records, a duplicate-join distortion) that never enters a real figure.
+
+The lab reads compact exports under `artifacts/lab/` built by `make lab-export` and checked by
+`make lab-check`; `docs/DECISION_LAB.md` has the architecture and contracts,
+`docs/LAB_QA_GUIDE.md` the case-by-case review guide. Node is needed only for `make lab-dev`,
+`lab-test`, `lab-build` and `lab-verify`.
+
 ## How to run
 
 ```
@@ -128,6 +160,9 @@ make dbt      # dbt build against the committed artifacts, docs generate, descri
 make docs     # regenerate docs/METHODS_CARD.md and run the number and placeholder checks
 make smoke    # all of the above from a fresh clone in a temp dir
 make full     # the full build over the real dumps (network; about an hour cold on the owner's machine, see docs/REPRODUCIBILITY.md)
+make lab-export lab-check   # build and verify the Decision Lab export under artifacts/lab/
+make lab-test lab-build     # Node: type check, unit tests, production build of apps/decision-lab
+make lab-verify             # lab-check, lab-test, lab-build and the Playwright browser journeys
 ```
 
 `data/` holds the dumps and every derived row and is git-ignored. Committed data is limited

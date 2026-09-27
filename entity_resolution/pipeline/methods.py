@@ -5,12 +5,22 @@ apply the too-good-to-be-true rule (docs/BRIEF.md 2.7 to 2.9 as amended).
 Fit order and inputs (rule 6): rules thresholds on fit-fold labelled decisions; the classifier
 on fit-fold pairs of labelled A records; the calibrator on calibrate-fold labelled pairs;
 everything reported on test. The truth table reaches only ``labels`` and the evaluator.
+
+Beside the mapping, ``_finish`` writes the unrounded scored pairs of each method to
+``data/scored/scored_<method_version>.parquet`` (ignored, never committed) with a sidecar
+``scored_<method_version>.json`` naming the run, and records the file under the method
+record's ``parameters.scored_pairs``. The decision-lab replay exporter
+(``entity_resolution.decision_lab.replay``) prefers that file when its run id matches the
+manifest, which is what makes a ``learned_v1`` complete replay possible on a future run; it
+falls back to recomputing ``exact_v1`` and ``rules_v1`` from the frozen features and leaves
+``learned_v1`` unavailable when no scored file of the recorded run exists.
 """
 
 from __future__ import annotations
 
 import gzip
 import hashlib
+import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -23,6 +33,7 @@ from entity_resolution.config import (
     MAPPING_DIR,
     METHODS_DIR,
     REVIEW_SENSITIVITY_PATH,
+    SCORED_DIR,
 )
 from entity_resolution.eval import evaluator, review_cost, split
 from entity_resolution.features import FEATURE_VERSION
@@ -97,6 +108,42 @@ def write_mapping(frame: pd.DataFrame, method_version: str) -> dict[str, Any]:
         "test_exhibit": exhibit.relative_to(exhibit.parents[2]).as_posix(),
         "test_exhibit_sha256": _sha256_file(exhibit),
     }
+
+
+def write_scored_pairs(
+    pairs: pd.DataFrame,
+    method_version: str,
+    run_id: str,
+    code_commit: str,
+    scored_dir: Path = SCORED_DIR,
+) -> dict[str, Any]:
+    """Write every scored pair (``a_id``, ``b_id``, ``fold``, ``score``, ``probability``),
+    unrounded, to ``<scored_dir>/scored_<method_version>.parquet`` plus a JSON sidecar with the
+    run id; returns the record for ``parameters.scored_pairs``."""
+    scored_dir.mkdir(parents=True, exist_ok=True)
+    path = scored_dir / f"scored_{method_version}.parquet"
+    frame = pd.DataFrame(
+        {
+            "a_id": pairs["a_id"].astype("string"),
+            "b_id": pairs["b_id"].astype("string"),
+            "fold": pairs["fold"].astype("string"),
+            "score": pairs["score"].astype("float64"),
+            "probability": pairs["probability"].astype("float64"),
+        }
+    )
+    frame.to_parquet(path, index=False, engine="pyarrow", compression="zstd")
+    record = {
+        "path": path.relative_to(path.parents[2]).as_posix(),
+        "rows": int(len(frame)),
+        "file_sha256": _sha256_file(path),
+        "run_id": run_id,
+        "method_version": method_version,
+        "code_commit": code_commit,
+    }
+    (scored_dir / f"scored_{method_version}.json").write_text(
+        json.dumps(record, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return record
 
 
 def run_methods(
@@ -306,6 +353,11 @@ def _finish(
     )
     mapping = write_mapping(mapping_frame(decisions, method_version, run_id, now), method_version)
     records[method_version]["parameters"]["mapping"] = mapping
+    # method_version.schema.json leaves ``parameters`` open, so the scored-pairs record sits
+    # beside ``mapping``; the parquet itself stays under data/ (docs/BRIEF.md rule 2)
+    records[method_version]["parameters"]["scored_pairs"] = write_scored_pairs(
+        pairs, method_version, run_id, code_commit
+    )
     registry.write_method_record(records[method_version], METHODS_DIR)
     art = evaluator.evaluate(
         method_version=method_version,

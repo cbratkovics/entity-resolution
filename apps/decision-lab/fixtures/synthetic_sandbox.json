@@ -1,0 +1,1383 @@
+{
+ "badge": "SYNTHETIC \u2014 invented records and fixture scores; not the historical snapshot",
+ "candidates": [
+  {
+   "a_id": "SYN-A-001",
+   "b_id": "SYN-B-001",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 1.0
+   }
+  },
+  {
+   "a_id": "SYN-A-001",
+   "b_id": "SYN-B-002",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 1.0
+   }
+  },
+  {
+   "a_id": "SYN-A-002",
+   "b_id": "SYN-B-003",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 0.98
+   }
+  },
+  {
+   "a_id": "SYN-A-002",
+   "b_id": "SYN-B-004",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.93
+   }
+  },
+  {
+   "a_id": "SYN-A-003",
+   "b_id": "SYN-B-005",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.8
+   }
+  },
+  {
+   "a_id": "SYN-A-003",
+   "b_id": "SYN-B-006",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.76
+   }
+  },
+  {
+   "a_id": "SYN-A-004",
+   "b_id": "SYN-B-007",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 0.97
+   }
+  },
+  {
+   "a_id": "SYN-A-006",
+   "b_id": "SYN-B-008",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 0.95
+   }
+  },
+  {
+   "a_id": "SYN-A-006",
+   "b_id": "SYN-B-009",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.6
+   }
+  },
+  {
+   "a_id": "SYN-A-007",
+   "b_id": "SYN-B-010",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 0.99
+   }
+  },
+  {
+   "a_id": "SYN-A-007",
+   "b_id": "SYN-B-009",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.2
+   }
+  },
+  {
+   "a_id": "SYN-A-008",
+   "b_id": "SYN-B-012",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 0.99
+   }
+  },
+  {
+   "a_id": "SYN-A-008",
+   "b_id": "SYN-B-011",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.7
+   }
+  },
+  {
+   "a_id": "SYN-A-009",
+   "b_id": "SYN-B-014",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.3
+   }
+  },
+  {
+   "a_id": "SYN-A-010",
+   "b_id": "SYN-B-014",
+   "values": {
+    "synthetic_exact_like": 1.0,
+    "synthetic_rules_like": 1.0
+   }
+  },
+  {
+   "a_id": "SYN-A-010",
+   "b_id": "SYN-B-016",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.4
+   }
+  },
+  {
+   "a_id": "SYN-A-011",
+   "b_id": "SYN-B-015",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.7
+   }
+  },
+  {
+   "a_id": "SYN-A-011",
+   "b_id": "SYN-B-016",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.1
+   }
+  },
+  {
+   "a_id": "SYN-A-012",
+   "b_id": "SYN-B-016",
+   "values": {
+    "synthetic_exact_like": 0.0,
+    "synthetic_rules_like": 0.35
+   }
+  }
+ ],
+ "cases": [
+  {
+   "a_id": "SYN-A-001",
+   "case_id": "SYN-CASE-exact_tie_gap_zero",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-001",
+      "demoted": true,
+      "gap": 0.0,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": false,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-001",
+      "demoted": true,
+      "gap": 0.0,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": false,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-001",
+      "demoted": true,
+      "gap": 0.0,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": false,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-001",
+      "demoted": true,
+      "gap": 0.0,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": false,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-001",
+      "demoted": true,
+      "gap": 0.0,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": false,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-001",
+      "demoted": true,
+      "gap": 0.0,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": false,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Two identical B masters tie at the top: gap 0, review under any positive gap threshold; the lexically smaller B id is the chosen one."
+  },
+  {
+   "a_id": "SYN-A-002",
+   "case_id": "SYN-CASE-near_gap_demotion",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-003",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-003",
+      "demoted": true,
+      "gap": 0.04999999999999993,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-003",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-003",
+      "demoted": true,
+      "gap": 0.04999999999999993,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-003",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-003",
+      "demoted": true,
+      "gap": 0.04999999999999993,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Top value above accept_min but the runner-up is within the gap: demoted to review at gap 0.10; wide_gap_0.25 keeps it there."
+  },
+  {
+   "a_id": "SYN-A-003",
+   "case_id": "SYN-CASE-regression_0_80_0_76",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-005",
+      "demoted": false,
+      "gap": 0.0,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-005",
+      "demoted": true,
+      "gap": 0.040000000000000036,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-005",
+      "demoted": false,
+      "gap": 0.0,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-005",
+      "demoted": false,
+      "gap": 0.040000000000000036,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-005",
+      "demoted": false,
+      "gap": 0.0,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": true,
+      "chosen_b_id": "SYN-B-005",
+      "demoted": false,
+      "gap": 0.040000000000000036,
+      "reason": "ambiguity_gap_below_threshold",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "The mandatory regression: values 0.80 and 0.76. Review at accept 0.95; lowering accept to 0.75 must still give review (gap 0.04 < 0.10); the legacy flag reuse would accept it."
+  },
+  {
+   "a_id": "SYN-A-004",
+   "case_id": "SYN-CASE-single_candidate",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-007",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-007",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-007",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-007",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-007",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-007",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "One candidate: null gap, never ambiguous; auto_accept on value alone."
+  },
+  {
+   "a_id": "SYN-A-005",
+   "case_id": "SYN-CASE-no_candidate",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": null,
+      "demoted": false,
+      "gap": null,
+      "reason": "no_candidate",
+      "tier": "reject",
+      "top1_correct": null,
+      "truth_reachable": false
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": null,
+      "demoted": false,
+      "gap": null,
+      "reason": "no_candidate",
+      "tier": "reject",
+      "top1_correct": null,
+      "truth_reachable": false
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": null,
+      "demoted": false,
+      "gap": null,
+      "reason": "no_candidate",
+      "tier": "reject",
+      "top1_correct": null,
+      "truth_reachable": false
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": null,
+      "demoted": false,
+      "gap": null,
+      "reason": "no_candidate",
+      "tier": "reject",
+      "top1_correct": null,
+      "truth_reachable": false
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": null,
+      "demoted": false,
+      "gap": null,
+      "reason": "no_candidate",
+      "tier": "reject",
+      "top1_correct": null,
+      "truth_reachable": false
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": null,
+      "demoted": false,
+      "gap": null,
+      "reason": "no_candidate",
+      "tier": "reject",
+      "top1_correct": null,
+      "truth_reachable": false
+     }
+    }
+   },
+   "purpose": "No blocked candidate: reject with reason no_candidate; the labelled truth SYN-B-013 is unreachable and the record still counts in the population."
+  },
+  {
+   "a_id": "SYN-A-006",
+   "case_id": "SYN-CASE-value_exactly_at_accept",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-008",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-008",
+      "demoted": false,
+      "gap": 0.35,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-008",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-008",
+      "demoted": false,
+      "gap": 0.35,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-008",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-008",
+      "demoted": false,
+      "gap": 0.35,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Top value exactly at accept_min (0.95): inclusive bound, auto_accept; the runner-up is far away."
+  },
+  {
+   "a_id": "SYN-A-007",
+   "case_id": "SYN-CASE-unlabelled_accept",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-010",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": null,
+      "truth_reachable": null
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-010",
+      "demoted": false,
+      "gap": 0.79,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": null,
+      "truth_reachable": null
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-010",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": null,
+      "truth_reachable": null
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-010",
+      "demoted": false,
+      "gap": 0.79,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": null,
+      "truth_reachable": null
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-010",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": null,
+      "truth_reachable": null
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-010",
+      "demoted": false,
+      "gap": 0.79,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": null,
+      "truth_reachable": null
+     }
+    }
+   },
+   "purpose": "Unlabelled A record auto-accepted: counted by coverage and unverified accepts, invisible to precision."
+  },
+  {
+   "a_id": "SYN-A-008",
+   "case_id": "SYN-CASE-labelled_wrong_accept",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-012",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": false,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-012",
+      "demoted": false,
+      "gap": 0.29000000000000004,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": false,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-012",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": false,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-012",
+      "demoted": false,
+      "gap": 0.29000000000000004,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": false,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-012",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": false,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-012",
+      "demoted": false,
+      "gap": 0.29000000000000004,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": false,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Labelled record whose top candidate is not the truth link: an auto_accept that precision counts as wrong."
+  },
+  {
+   "a_id": "SYN-A-009",
+   "case_id": "SYN-CASE-blocking_unreachable_truth",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": false,
+      "truth_reachable": false
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": false,
+      "truth_reachable": false
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": false,
+      "truth_reachable": false
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": false,
+      "truth_reachable": false
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": false,
+      "truth_reachable": false
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": false,
+      "truth_reachable": false
+     }
+    }
+   },
+   "purpose": "The truth link SYN-B-013 is not among the blocked candidates: recall_labelled cannot count it, whatever the policy; the one candidate is rejected."
+  },
+  {
+   "a_id": "SYN-A-010",
+   "case_id": "SYN-CASE-clean_accept",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": 0.6,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": 0.6,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": 1.0,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-014",
+      "demoted": false,
+      "gap": 0.6,
+      "reason": "value_at_or_above_accept_min",
+      "tier": "auto_accept",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Exact hit with a clear gap: auto_accept under every preset."
+  },
+  {
+   "a_id": "SYN-A-011",
+   "case_id": "SYN-CASE-review_by_value",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-015",
+      "demoted": false,
+      "gap": 0.0,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-015",
+      "demoted": false,
+      "gap": 0.6,
+      "reason": "value_at_or_above_review_min",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-015",
+      "demoted": false,
+      "gap": 0.0,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-015",
+      "demoted": false,
+      "gap": 0.6,
+      "reason": "value_at_or_above_review_min",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-015",
+      "demoted": false,
+      "gap": 0.0,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-015",
+      "demoted": false,
+      "gap": 0.6,
+      "reason": "value_at_or_above_review_min",
+      "tier": "review",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Value between review_min and accept_min with a wide gap: review by value, not by ambiguity; lowered_accept_0.75 does not lift 0.70 to accept."
+  },
+  {
+   "a_id": "SYN-A-012",
+   "case_id": "SYN-CASE-reject_below_floor",
+   "expected": {
+    "lowered_accept_0.75": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-016",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-016",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "native_0.95_0.50_0.10": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-016",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-016",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    },
+    "wide_gap_0.25": {
+     "synthetic_exact_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-016",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     },
+     "synthetic_rules_like": {
+      "ambiguous": false,
+      "chosen_b_id": "SYN-B-016",
+      "demoted": false,
+      "gap": null,
+      "reason": "value_below_review_min",
+      "tier": "reject",
+      "top1_correct": true,
+      "truth_reachable": true
+     }
+    }
+   },
+   "purpose": "Value below review_min: reject; the ambiguity rule never lifts a reject."
+  }
+ ],
+ "downstream_fixture": {
+  "conserved_row_count": 16,
+  "fact_rows": [
+   {
+    "b_id": "SYN-B-001",
+    "units": 10
+   },
+   {
+    "b_id": "SYN-B-002",
+    "units": 13
+   },
+   {
+    "b_id": "SYN-B-003",
+    "units": 16
+   },
+   {
+    "b_id": "SYN-B-004",
+    "units": 19
+   },
+   {
+    "b_id": "SYN-B-005",
+    "units": 22
+   },
+   {
+    "b_id": "SYN-B-006",
+    "units": 25
+   },
+   {
+    "b_id": "SYN-B-007",
+    "units": 28
+   },
+   {
+    "b_id": "SYN-B-008",
+    "units": 31
+   },
+   {
+    "b_id": "SYN-B-009",
+    "units": 34
+   },
+   {
+    "b_id": "SYN-B-010",
+    "units": 37
+   },
+   {
+    "b_id": "SYN-B-011",
+    "units": 40
+   },
+   {
+    "b_id": "SYN-B-012",
+    "units": 43
+   },
+   {
+    "b_id": "SYN-B-013",
+    "units": 46
+   },
+   {
+    "b_id": "SYN-B-014",
+    "units": 49
+   },
+   {
+    "b_id": "SYN-B-015",
+    "units": 52
+   },
+   {
+    "b_id": "SYN-B-016",
+    "units": 55
+   }
+  ],
+  "mapping_with_duplicate": [
+   {
+    "a_id": "SYN-A-010",
+    "b_id": "SYN-B-014"
+   },
+   {
+    "a_id": "SYN-A-009",
+    "b_id": "SYN-B-014"
+   }
+  ],
+  "note": "fact_rows carries one row per synthetic B master with a unit count. Joining it through mapping_with_duplicate, where two A records map to SYN-B-014, inflates the joined row count above conserved_row_count: the duplicate-join distortion a one-to-many mapping causes downstream. The fact table itself is unchanged."
+ },
+ "generated_by": "entity_resolution.decision_lab.synthetic",
+ "labels": {
+  "SYN-A-001": [
+   "SYN-B-002"
+  ],
+  "SYN-A-002": [
+   "SYN-B-003"
+  ],
+  "SYN-A-003": [
+   "SYN-B-005"
+  ],
+  "SYN-A-004": [
+   "SYN-B-007"
+  ],
+  "SYN-A-005": [
+   "SYN-B-013"
+  ],
+  "SYN-A-006": [
+   "SYN-B-008"
+  ],
+  "SYN-A-008": [
+   "SYN-B-011"
+  ],
+  "SYN-A-009": [
+   "SYN-B-013"
+  ],
+  "SYN-A-010": [
+   "SYN-B-014"
+  ],
+  "SYN-A-011": [
+   "SYN-B-015"
+  ],
+  "SYN-A-012": [
+   "SYN-B-016"
+  ]
+ },
+ "policies": [
+  {
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "preset": "native_0.95_0.50_0.10"
+  },
+  {
+   "policy": {
+    "accept_min": 0.75,
+    "ambiguity_gap": 0.1,
+    "review_min": 0.5
+   },
+   "preset": "lowered_accept_0.75"
+  },
+  {
+   "policy": {
+    "accept_min": 0.95,
+    "ambiguity_gap": 0.25,
+    "review_min": 0.5
+   },
+   "preset": "wide_gap_0.25"
+  }
+ ],
+ "records": {
+  "a": [
+   {
+    "artist_credit": "Mirvane",
+    "id": "SYN-A-001",
+    "title": "Zorbic Quandle",
+    "year": 1991
+   },
+   {
+    "artist_credit": "Vombrel Teskan",
+    "id": "SYN-A-002",
+    "title": "Plonket Drassil",
+    "year": 1984
+   },
+   {
+    "artist_credit": "Brindlow",
+    "id": "SYN-A-003",
+    "title": "Ulpharo",
+    "year": 2003
+   },
+   {
+    "artist_credit": "Fennwick",
+    "id": "SYN-A-004",
+    "title": "Cravitt Ostrume",
+    "year": 1977
+   },
+   {
+    "artist_credit": "Jollivant",
+    "id": "SYN-A-005",
+    "title": "Glomper Hexadrim",
+    "year": 2010
+   },
+   {
+    "artist_credit": "Lurvane Nubbleton",
+    "id": "SYN-A-006",
+    "title": "Kremdusk",
+    "year": 1999
+   },
+   {
+    "artist_credit": "Skelvish",
+    "id": "SYN-A-007",
+    "title": "Pharquil Rondobel",
+    "year": null
+   },
+   {
+    "artist_credit": "Wexlorn",
+    "id": "SYN-A-008",
+    "title": "Trombique",
+    "year": 1968
+   },
+   {
+    "artist_credit": "Quandle Mirvane",
+    "id": "SYN-A-009",
+    "title": "Yarbuckle Zorbic",
+    "year": 2015
+   },
+   {
+    "artist_credit": "Teskan",
+    "id": "SYN-A-010",
+    "title": "Drassil Vombrel",
+    "year": 1990
+   },
+   {
+    "artist_credit": "Cravitt",
+    "id": "SYN-A-011",
+    "title": "Ulpharo Brindlow",
+    "year": 1972
+   },
+   {
+    "artist_credit": "Glomper Hexadrim",
+    "id": "SYN-A-012",
+    "title": "Ostrume Fennwick",
+    "year": 2001
+   }
+  ],
+  "b": [
+   {
+    "artist_credit": "Mirvane",
+    "id": "SYN-B-001",
+    "title": "Zorbic Quandle",
+    "year": 1991
+   },
+   {
+    "artist_credit": "Mirvane",
+    "id": "SYN-B-002",
+    "title": "Zorbic Quandle",
+    "year": 1991
+   },
+   {
+    "artist_credit": "Vombrel Teskan",
+    "id": "SYN-B-003",
+    "title": "Plonket Drassil",
+    "year": 1984
+   },
+   {
+    "artist_credit": "Vombrel",
+    "id": "SYN-B-004",
+    "title": "Plonket Drassil",
+    "year": 1984
+   },
+   {
+    "artist_credit": "Brindlow",
+    "id": "SYN-B-005",
+    "title": "Ulpharo",
+    "year": 2003
+   },
+   {
+    "artist_credit": "Brindlow Cravitt",
+    "id": "SYN-B-006",
+    "title": "Ulpharo",
+    "year": 2004
+   },
+   {
+    "artist_credit": "Fennwick",
+    "id": "SYN-B-007",
+    "title": "Cravitt Ostrume",
+    "year": 1977
+   },
+   {
+    "artist_credit": "Lurvane Nubbleton",
+    "id": "SYN-B-008",
+    "title": "Kremdusk",
+    "year": 1999
+   },
+   {
+    "artist_credit": "Lurvane",
+    "id": "SYN-B-009",
+    "title": "Kremdusk",
+    "year": 1998
+   },
+   {
+    "artist_credit": "Skelvish",
+    "id": "SYN-B-010",
+    "title": "Pharquil Rondobel",
+    "year": 1988
+   },
+   {
+    "artist_credit": "Wexlorn",
+    "id": "SYN-B-011",
+    "title": "Trombique",
+    "year": 1968
+   },
+   {
+    "artist_credit": "Wexlorn Yarbuckle",
+    "id": "SYN-B-012",
+    "title": "Trombique",
+    "year": 1969
+   },
+   {
+    "artist_credit": "Quandle Mirvane",
+    "id": "SYN-B-013",
+    "title": "Yarbuckle Zorbic",
+    "year": 2015
+   },
+   {
+    "artist_credit": "Teskan",
+    "id": "SYN-B-014",
+    "title": "Drassil Vombrel",
+    "year": 1990
+   },
+   {
+    "artist_credit": "Cravitt",
+    "id": "SYN-B-015",
+    "title": "Ulpharo Brindlow",
+    "year": 1972
+   },
+   {
+    "artist_credit": "Glomper",
+    "id": "SYN-B-016",
+    "title": "Ostrume Fennwick",
+    "year": 1994
+   }
+  ]
+ },
+ "sandbox_version": "1.0",
+ "score_kinds": {
+  "synthetic_exact_like": "fixture score chosen by hand to exercise the policy (0 or 1, like exact_v1); not a prediction of any fitted model; learned_v1 is omitted because no frozen model can score synthetic pairs",
+  "synthetic_rules_like": "fixture score chosen by hand to exercise the policy (a value in [0, 1], like the uncalibrated rules_v1 score); not a prediction of any fitted model; learned_v1 is omitted because no frozen model can score synthetic pairs"
+ },
+ "synthetic": true,
+ "vocabulary": [
+  "Zorbic",
+  "Quandle",
+  "Mirvane",
+  "Plonket",
+  "Drassil",
+  "Vombrel",
+  "Teskan",
+  "Ulpharo",
+  "Brindlow",
+  "Cravitt",
+  "Ostrume",
+  "Fennwick",
+  "Glomper",
+  "Hexadrim",
+  "Jollivant",
+  "Kremdusk",
+  "Lurvane",
+  "Nubbleton",
+  "Pharquil",
+  "Rondobel",
+  "Skelvish",
+  "Trombique",
+  "Wexlorn",
+  "Yarbuckle"
+ ]
+}

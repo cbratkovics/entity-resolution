@@ -1,0 +1,632 @@
+{
+ "a_id_order_sha256": "2cd62042ddf2e3179f5bb76dbf9fb5d1feecd6110398bcb2f273dd7424853ba4",
+ "columns": [
+  "v1",
+  "v2",
+  "n_candidates",
+  "labelled",
+  "top1_correct",
+  "truth_reachable"
+ ],
+ "completeness": {
+  "a_records_expected": 96557,
+  "a_records_in_file": 96557,
+  "conserved": true,
+  "labelled": 48372,
+  "labelled_reachable": 46625,
+  "with_candidates": 73216,
+  "without_candidates": 23341
+ },
+ "decision_value_kind": "uncalibrated_score",
+ "file": "replay_rules_v1.test.csv.gz",
+ "floor_sweep_reconciliation": {
+  "all_equal": true,
+  "points_compared": 12
+ },
+ "inputs": [
+  {
+   "manifest_key": "artifacts/manifest.json#pairs.features.file_sha256",
+   "path": "data/pairs/features.parquet",
+   "role": "local_features",
+   "sha256": "8b6fc8b4c1e5c89513f225f8a402e0f90f20cb9c740f74361903d4b8dc0d2ddf"
+  },
+  {
+   "manifest_key": "artifacts/manifest.json#pairs.candidates.file_sha256",
+   "path": "data/pairs/candidates.parquet",
+   "role": "local_candidates",
+   "sha256": "9c28aca92832faa812b1b40baf9d6357016b709de381eab216198c0759ca0f9a"
+  },
+  {
+   "manifest_key": "artifacts/manifest.json#sample.files.truth.file_sha256",
+   "path": "data/sample/truth.parquet",
+   "role": "local_truth",
+   "sha256": "c9955915080ad1eea0691f6924b12f1910da16be36dff35711ca59b78da7e58f"
+  },
+  {
+   "manifest_key": "artifacts/manifest.json#sample.files.a.file_sha256",
+   "path": "data/sample/a.parquet",
+   "role": "local_sample_a",
+   "sha256": "f8ed6458dac83a6d24d2349b9b5cea536ea1da328ae324a5e9a92dae406ed83a"
+  }
+ ],
+ "lab_replay_version": "1.0",
+ "legacy_sweep_divergence": {
+  "max_accepts_difference": 7393,
+  "note": "The legacy sweep (review_sensitivity.json#points) computed the ambiguity-demotion flag once at the recorded accept threshold and reused it at every swept threshold. Below the recorded accept_min a record with a top-2 gap under ambiguity_gap and a value between the threshold and accept_min is accepted by the legacy calculation but must be review under a faithful replay; at or above the recorded accept_min the two coincide. legacy_matches_artifact confirms the restated legacy calculation reproduces the committed points; the corrected columns are the full replay.",
+  "points": [
+   {
+    "corrected_accepts": 51872,
+    "corrected_review_queue": 21344,
+    "legacy_accepts": 59265,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 13951,
+    "threshold": 0.5
+   },
+   {
+    "corrected_accepts": 51655,
+    "corrected_review_queue": 21561,
+    "legacy_accepts": 58773,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 14443,
+    "threshold": 0.51
+   },
+   {
+    "corrected_accepts": 51426,
+    "corrected_review_queue": 21790,
+    "legacy_accepts": 58248,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 14968,
+    "threshold": 0.52
+   },
+   {
+    "corrected_accepts": 51128,
+    "corrected_review_queue": 22088,
+    "legacy_accepts": 57591,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 15625,
+    "threshold": 0.53
+   },
+   {
+    "corrected_accepts": 50824,
+    "corrected_review_queue": 22392,
+    "legacy_accepts": 56842,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 16374,
+    "threshold": 0.54
+   },
+   {
+    "corrected_accepts": 50472,
+    "corrected_review_queue": 22744,
+    "legacy_accepts": 55955,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 17261,
+    "threshold": 0.55
+   },
+   {
+    "corrected_accepts": 50134,
+    "corrected_review_queue": 23082,
+    "legacy_accepts": 55132,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 18084,
+    "threshold": 0.56
+   },
+   {
+    "corrected_accepts": 49829,
+    "corrected_review_queue": 23387,
+    "legacy_accepts": 54215,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 19001,
+    "threshold": 0.57
+   },
+   {
+    "corrected_accepts": 49525,
+    "corrected_review_queue": 23691,
+    "legacy_accepts": 53230,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 19986,
+    "threshold": 0.58
+   },
+   {
+    "corrected_accepts": 49269,
+    "corrected_review_queue": 23947,
+    "legacy_accepts": 52444,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 20772,
+    "threshold": 0.59
+   },
+   {
+    "corrected_accepts": 48994,
+    "corrected_review_queue": 24222,
+    "legacy_accepts": 51431,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 21785,
+    "threshold": 0.6
+   },
+   {
+    "corrected_accepts": 48805,
+    "corrected_review_queue": 24411,
+    "legacy_accepts": 50652,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 22564,
+    "threshold": 0.61
+   },
+   {
+    "corrected_accepts": 48639,
+    "corrected_review_queue": 24577,
+    "legacy_accepts": 50008,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 23208,
+    "threshold": 0.62
+   },
+   {
+    "corrected_accepts": 48492,
+    "corrected_review_queue": 24724,
+    "legacy_accepts": 49407,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 23809,
+    "threshold": 0.63
+   },
+   {
+    "corrected_accepts": 48325,
+    "corrected_review_queue": 24891,
+    "legacy_accepts": 48825,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 24391,
+    "threshold": 0.64
+   },
+   {
+    "corrected_accepts": 48140,
+    "corrected_review_queue": 25076,
+    "legacy_accepts": 48140,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 25076,
+    "threshold": 0.65
+   },
+   {
+    "corrected_accepts": 47585,
+    "corrected_review_queue": 25631,
+    "legacy_accepts": 47585,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 25631,
+    "threshold": 0.66
+   },
+   {
+    "corrected_accepts": 47384,
+    "corrected_review_queue": 25832,
+    "legacy_accepts": 47384,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 25832,
+    "threshold": 0.67
+   },
+   {
+    "corrected_accepts": 47202,
+    "corrected_review_queue": 26014,
+    "legacy_accepts": 47202,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 26014,
+    "threshold": 0.68
+   },
+   {
+    "corrected_accepts": 46970,
+    "corrected_review_queue": 26246,
+    "legacy_accepts": 46970,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 26246,
+    "threshold": 0.69
+   },
+   {
+    "corrected_accepts": 46728,
+    "corrected_review_queue": 26488,
+    "legacy_accepts": 46728,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 26488,
+    "threshold": 0.7
+   },
+   {
+    "corrected_accepts": 46564,
+    "corrected_review_queue": 26652,
+    "legacy_accepts": 46564,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 26652,
+    "threshold": 0.71
+   },
+   {
+    "corrected_accepts": 46350,
+    "corrected_review_queue": 26866,
+    "legacy_accepts": 46350,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 26866,
+    "threshold": 0.72
+   },
+   {
+    "corrected_accepts": 46151,
+    "corrected_review_queue": 27065,
+    "legacy_accepts": 46151,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 27065,
+    "threshold": 0.73
+   },
+   {
+    "corrected_accepts": 45933,
+    "corrected_review_queue": 27283,
+    "legacy_accepts": 45933,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 27283,
+    "threshold": 0.74
+   },
+   {
+    "corrected_accepts": 45687,
+    "corrected_review_queue": 27529,
+    "legacy_accepts": 45687,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 27529,
+    "threshold": 0.75
+   },
+   {
+    "corrected_accepts": 45555,
+    "corrected_review_queue": 27661,
+    "legacy_accepts": 45555,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 27661,
+    "threshold": 0.76
+   },
+   {
+    "corrected_accepts": 45391,
+    "corrected_review_queue": 27825,
+    "legacy_accepts": 45391,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 27825,
+    "threshold": 0.77
+   },
+   {
+    "corrected_accepts": 45205,
+    "corrected_review_queue": 28011,
+    "legacy_accepts": 45205,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 28011,
+    "threshold": 0.78
+   },
+   {
+    "corrected_accepts": 45071,
+    "corrected_review_queue": 28145,
+    "legacy_accepts": 45071,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 28145,
+    "threshold": 0.79
+   },
+   {
+    "corrected_accepts": 44959,
+    "corrected_review_queue": 28257,
+    "legacy_accepts": 44959,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 28257,
+    "threshold": 0.8
+   },
+   {
+    "corrected_accepts": 43220,
+    "corrected_review_queue": 29996,
+    "legacy_accepts": 43220,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 29996,
+    "threshold": 0.81
+   },
+   {
+    "corrected_accepts": 43148,
+    "corrected_review_queue": 30068,
+    "legacy_accepts": 43148,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 30068,
+    "threshold": 0.82
+   },
+   {
+    "corrected_accepts": 43068,
+    "corrected_review_queue": 30148,
+    "legacy_accepts": 43068,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 30148,
+    "threshold": 0.83
+   },
+   {
+    "corrected_accepts": 42988,
+    "corrected_review_queue": 30228,
+    "legacy_accepts": 42988,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 30228,
+    "threshold": 0.84
+   },
+   {
+    "corrected_accepts": 42897,
+    "corrected_review_queue": 30319,
+    "legacy_accepts": 42897,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 30319,
+    "threshold": 0.85
+   },
+   {
+    "corrected_accepts": 42213,
+    "corrected_review_queue": 31003,
+    "legacy_accepts": 42213,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 31003,
+    "threshold": 0.86
+   },
+   {
+    "corrected_accepts": 42130,
+    "corrected_review_queue": 31086,
+    "legacy_accepts": 42130,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 31086,
+    "threshold": 0.87
+   },
+   {
+    "corrected_accepts": 42056,
+    "corrected_review_queue": 31160,
+    "legacy_accepts": 42056,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 31160,
+    "threshold": 0.88
+   },
+   {
+    "corrected_accepts": 41961,
+    "corrected_review_queue": 31255,
+    "legacy_accepts": 41961,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 31255,
+    "threshold": 0.89
+   },
+   {
+    "corrected_accepts": 41887,
+    "corrected_review_queue": 31329,
+    "legacy_accepts": 41887,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 31329,
+    "threshold": 0.9
+   },
+   {
+    "corrected_accepts": 40020,
+    "corrected_review_queue": 33196,
+    "legacy_accepts": 40020,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 33196,
+    "threshold": 0.91
+   },
+   {
+    "corrected_accepts": 39916,
+    "corrected_review_queue": 33300,
+    "legacy_accepts": 39916,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 33300,
+    "threshold": 0.92
+   },
+   {
+    "corrected_accepts": 39757,
+    "corrected_review_queue": 33459,
+    "legacy_accepts": 39757,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 33459,
+    "threshold": 0.93
+   },
+   {
+    "corrected_accepts": 39633,
+    "corrected_review_queue": 33583,
+    "legacy_accepts": 39633,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 33583,
+    "threshold": 0.94
+   },
+   {
+    "corrected_accepts": 39482,
+    "corrected_review_queue": 33734,
+    "legacy_accepts": 39482,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 33734,
+    "threshold": 0.95
+   },
+   {
+    "corrected_accepts": 39261,
+    "corrected_review_queue": 33955,
+    "legacy_accepts": 39261,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 33955,
+    "threshold": 0.96
+   },
+   {
+    "corrected_accepts": 39036,
+    "corrected_review_queue": 34180,
+    "legacy_accepts": 39036,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 34180,
+    "threshold": 0.97
+   },
+   {
+    "corrected_accepts": 38788,
+    "corrected_review_queue": 34428,
+    "legacy_accepts": 38788,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 34428,
+    "threshold": 0.98
+   },
+   {
+    "corrected_accepts": 38501,
+    "corrected_review_queue": 34715,
+    "legacy_accepts": 38501,
+    "legacy_matches_artifact": true,
+    "legacy_review_queue": 34715,
+    "threshold": 0.99
+   }
+  ],
+  "thresholds_differing": 15
+ },
+ "method_version": "rules_v1",
+ "native_policy": {
+  "accept_min": 0.65,
+  "ambiguity_gap": 0.1,
+  "review_min": 0.0756756772994995
+ },
+ "note": "Decision values recomputed from features of the recorded run (uncalibrated_score); unrounded; one row per test-fold A record in ascending A id order, identifiers omitted. The full-fidelity table with A and chosen B ids stays local under data/lab/ and is tied to this file by a_id_order_sha256.",
+ "population": {
+  "a_records": 96557,
+  "fold": "test",
+  "grain": "a_record",
+  "labelled_a": 48372,
+  "labelled_a_reachable": 46625,
+  "source_keys": [
+   "artifacts/split.json#folds.test.a_records",
+   "artifacts/split.json#folds.test.labelled_a_records",
+   "artifacts/eval_exact_v1.json#metrics.labelled_a_reachable",
+   "artifacts/eval_exact_v1.json#metrics.test_a",
+   "artifacts/eval_rules_v1.json#metrics.test_a",
+   "artifacts/eval_learned_v1.json#metrics.test_a",
+   "artifacts/eval_exact_v1.json#metrics.labelled_a",
+   "artifacts/eval_rules_v1.json#metrics.labelled_a",
+   "artifacts/eval_learned_v1.json#metrics.labelled_a"
+  ]
+ },
+ "reconciliation": {
+  "all_equal": true,
+  "checks": [
+   {
+    "artifact": 96557,
+    "equal": true,
+    "metric": "test_a",
+    "replay": 96557
+   },
+   {
+    "artifact": 48372,
+    "equal": true,
+    "metric": "labelled_a",
+    "replay": 48372
+   },
+   {
+    "artifact": 46625,
+    "equal": true,
+    "metric": "labelled_a_reachable",
+    "replay": 46625
+   },
+   {
+    "artifact": 0.963884,
+    "equal": true,
+    "metric": "pair_completeness_test",
+    "replay": 0.963884
+   },
+   {
+    "artifact": 43639,
+    "equal": true,
+    "metric": "at_auto_accept.accepted",
+    "replay": 43639
+   },
+   {
+    "artifact": 43404,
+    "equal": true,
+    "metric": "at_auto_accept.correct",
+    "replay": 43404
+   },
+   {
+    "artifact": 0.994615,
+    "equal": true,
+    "metric": "at_auto_accept.precision",
+    "replay": 0.994615
+   },
+   {
+    "artifact": 0.930917,
+    "equal": true,
+    "metric": "at_auto_accept.recall_labelled",
+    "replay": 0.930917
+   },
+   {
+    "artifact": 0.961712,
+    "equal": true,
+    "metric": "at_auto_accept.f1",
+    "replay": 0.961712
+   },
+   {
+    "artifact": 47421,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.accepted",
+    "replay": 47421
+   },
+   {
+    "artifact": 46554,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.correct",
+    "replay": 46554
+   },
+   {
+    "artifact": 0.981717,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.precision",
+    "replay": 0.981717
+   },
+   {
+    "artifact": 0.998477,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.recall_labelled",
+    "replay": 0.998477
+   },
+   {
+    "artifact": 0.990026,
+    "equal": true,
+    "metric": "at_auto_accept_or_review.f1",
+    "replay": 0.990026
+   },
+   {
+    "artifact": 0.897296,
+    "equal": true,
+    "metric": "recall_overall",
+    "replay": 0.897296
+   },
+   {
+    "artifact": 0.498566,
+    "equal": true,
+    "metric": "coverage",
+    "replay": 0.498566
+   },
+   {
+    "artifact": 4501,
+    "equal": true,
+    "metric": "unverified_accepts.count",
+    "replay": 4501
+   },
+   {
+    "artifact": 0.093498,
+    "equal": true,
+    "metric": "unverified_accepts.share_of_accepts",
+    "replay": 0.093498
+   },
+   {
+    "artifact": 25076,
+    "equal": true,
+    "metric": "ambiguity_rule.review_queue",
+    "replay": 25076
+   },
+   {
+    "artifact": 7260,
+    "equal": true,
+    "metric": "ambiguity_rule.decisions_moved_to_review",
+    "replay": 7260
+   },
+   {
+    "artifact": 0.4985656140932299,
+    "equal": true,
+    "metric": "tier_shares.auto_accept",
+    "replay": 0.4985656140932299
+   },
+   {
+    "artifact": 0.2597015234524685,
+    "equal": true,
+    "metric": "tier_shares.review",
+    "replay": 0.2597015234524685
+   },
+   {
+    "artifact": 0.24173286245430162,
+    "equal": true,
+    "metric": "tier_shares.reject",
+    "replay": 0.24173286245430162
+   }
+  ],
+  "eval_artifact": "artifacts/eval_rules_v1.json",
+  "eval_artifact_sha256": "e5befa5bab755f7957fbb405ec7dc6d3402d6d86c9e1b3361e606cf09b3203f7"
+ },
+ "rows": 96557,
+ "snapshot_id": "20260923T140606+0000@7b7bf2ae19b1"
+}

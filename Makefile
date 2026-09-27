@@ -1,4 +1,4 @@
-.PHONY: help setup lint format test dbt full smoke docs
+.PHONY: help setup lint format test dbt full smoke docs lab-export lab-check lab-fixtures lab-dev lab-test lab-build lab-verify lab-export lab-check lab-fixtures
 
 PY ?= .venv/bin/python
 PKG = entity_resolution
@@ -16,6 +16,13 @@ help:
 	@echo "full   - the full build over the real dumps (network, hours): entity_resolution.pipeline.match"
 	@echo "smoke  - clone HEAD (+ uncommitted changes) into a temp dir and run setup lint test dbt docs there"
 	@echo "docs   - regenerate docs/METHODS_CARD.md, check PROFILE.md, FINDINGS.md and README blocks are current, run the number and placeholder checks"
+	@echo "lab-dev    - sync artifacts/lab into the app and run the Vite dev server (Node)"
+	@echo "lab-test   - the lab's pytest modules, then npm typecheck, lint and vitest (Node)"
+	@echo "lab-build  - production build of apps/decision-lab at /entity-resolution/lab/ and gzip sizes (Node)"
+	@echo "lab-verify - lab-check, lab-test, lab-build, then the Playwright journeys against the built app (Node, Chromium)"
+	@echo "lab-export   - build artifacts/lab (snapshot, cases, replay bundles when data/ is present) and the decision-lab fixtures"
+	@echo "lab-check    - verify artifacts/lab in place: hashes, schemas, allowlist, recomputation, replay reconciliation (no data/ needed)"
+	@echo "lab-fixtures - rewrite the shared policy fixtures and the synthetic sandbox under apps/decision-lab/fixtures"
 
 setup:
 	uv sync --frozen --all-extras
@@ -62,3 +69,36 @@ docs:
 	$(PY) scripts/profile_sources.py render --check
 	$(PY) scripts/render_findings.py --check
 	$(PY) scripts/check_numbers.py
+
+# The decision lab (docs/DECISION_LAB.md): a static export under artifacts/lab built from the
+# committed artifacts; the replay bundles and case labels need the hash-verified data/ inputs.
+lab-export:
+	$(PY) -m $(PKG).decision_lab.cli export
+
+lab-check:
+	$(PY) -m $(PKG).decision_lab.cli check
+
+lab-fixtures:
+	$(PY) -m $(PKG).decision_lab.cli fixtures
+	$(PY) -m $(PKG).decision_lab.cli synthetic
+
+# Node targets (ADR 0006). Every Python-only target above works without Node; these need
+# `npm ci` once in apps/decision-lab (lockfile frozen, Node version in apps/decision-lab/.nvmrc).
+LAB = apps/decision-lab
+NPM = npm --prefix $(LAB)
+
+lab-dev:
+	$(NPM) run dev
+
+lab-test:
+	$(PY) -m pytest tests/test_lab_policy.py tests/test_lab_export.py tests/test_lab_ledger.py tests/test_lab_synthetic.py tests/test_lab_qa_catalog.py
+	$(NPM) run typecheck
+	$(NPM) run lint
+	$(NPM) test
+
+lab-build:
+	$(NPM) run build
+	$(NPM) run size
+
+lab-verify: lab-check lab-test lab-build
+	$(NPM) run test:e2e

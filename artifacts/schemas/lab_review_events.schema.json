@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab review-event ledger export (review_events_version 1.0)",
+  "description": "An append-only log of per-case review events recorded in the browser and exported by the user. Events are local decisions, never upstream mapping writes, labels or measured outcomes. Undo appends a reversal; nothing is deleted. Effective state is derived: at most one effective accepted B per (scenario_id, a_id). Imports are untrusted and validated against this schema and the loaded snapshot.",
+  "type": "object",
+  "required": ["review_events_version", "snapshot", "exported_at_utc", "events"],
+  "additionalProperties": false,
+  "properties": {
+    "review_events_version": {"const": "1.0"},
+    "snapshot": {"$ref": "lab_receipt.schema.json#/$defs/snapshot_ref"},
+    "exported_at_utc": {"type": "string", "maxLength": 40},
+    "events": {"type": "array", "maxItems": 5000, "items": {"$ref": "#/$defs/event"}}
+  },
+  "$defs": {
+    "event": {"type": "object", "required": ["event_id", "seq", "occurred_at_utc", "snapshot_id", "scenario_id", "a_id", "method_version", "action", "b_id", "reason_code", "rationale", "supersedes_event_id", "reverses_event_id", "evidence_ref"], "additionalProperties": false, "properties": {
+      "event_id": {"type": "string", "pattern": "^[A-Za-z0-9_-]{8,64}$"},
+      "seq": {"type": "integer", "minimum": 1},
+      "occurred_at_utc": {"type": "string", "maxLength": 40},
+      "snapshot_id": {"type": "string", "maxLength": 80},
+      "scenario_id": {"type": "string", "pattern": "^[a-z]+:[A-Za-z0-9_.:@-]{1,120}$"},
+      "a_id": {"type": "string", "pattern": "^([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}|SYN-A-[0-9]{3})$"},
+      "method_version": {"type": "string", "enum": ["exact_v1", "rules_v1", "learned_v1", "synthetic_exact_like", "synthetic_rules_like"]},
+      "action": {"type": "string", "enum": ["accept_candidate", "reject_candidate", "defer", "undo"]},
+      "b_id": {"type": ["string", "null"], "pattern": "^([1-9][0-9]{0,11}|SYN-B-[0-9]{3})$"},
+      "reason_code": {"type": "string", "enum": ["evidence_sufficient", "tie_unresolvable", "needs_source_lookup", "candidate_wrong_work", "candidate_right_work", "insufficient_evidence", "reversal", "other"]},
+      "rationale": {"type": ["string", "null"], "maxLength": 2000},
+      "supersedes_event_id": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9_-]{8,64}$"},
+      "reverses_event_id": {"type": ["string", "null"], "pattern": "^[A-Za-z0-9_-]{8,64}$"},
+      "evidence_ref": {"type": "object", "required": ["case_id", "source"], "additionalProperties": false, "properties": {"case_id": {"type": "string", "maxLength": 80}, "source": {"type": "string", "enum": ["cases.json", "synthetic_sandbox"]}}}
+    }}
+  }
+}

@@ -436,6 +436,126 @@ models:
               arguments:
                 values: ["test"]
 
+  - name: fct_lab_case_evidence
+    description: "Decision Lab case evidence at (case_id, method_version) grain (ADR 0006): for every curated case and every method, the decision the method exported for it in the test-fold mapping (fct_mapping), with the method's recorded tier policy beside it, or exported = false when the method exported nothing (reject tier or no candidate, ADR 0005). Derived flags come from the six-decimal exported values."
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [case_id, method_version]
+    columns:
+      - name: case_id
+        description: Stable case identifier (equal to the A id).
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: a_id
+        description: Side-A native id (MusicBrainz release group gid).
+        data_type: varchar
+      - name: method_version
+        description: The method the row belongs to.
+        data_type: varchar
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('dim_method_version')
+                field: method_version
+      - name: reason_codes
+        description: Pipe-joined controlled reason codes that selected the case.
+        data_type: varchar
+      - name: selection_rank
+        description: Position of the case in the deterministic selection order.
+        data_type: bigint
+      - name: exported
+        description: Whether fct_mapping carries a non-reject decision of this method for the case.
+        data_type: boolean
+      - name: b_id
+        description: The chosen side-B native id; null when not exported.
+        data_type: varchar
+      - name: score
+        description: The method's raw score for the chosen pair; null when not exported.
+        data_type: double
+      - name: probability
+        description: The probability the tier was assigned on; null when not exported.
+        data_type: double
+      - name: tier
+        description: auto_accept or review; null when not exported.
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [auto_accept, review]
+      - name: top2_gap
+        description: Exported top-two gap; null for a single candidate or when not exported.
+        data_type: double
+      - name: gap_state
+        description: exported when a gap value was exported, single_candidate when the method had one candidate; null when not exported.
+        data_type: varchar
+      - name: block_keys
+        description: Pipe-joined blocking keys the chosen pair was found through.
+        data_type: varchar
+      - name: accept_min
+        description: The method's recorded auto-accept threshold.
+        data_type: double
+      - name: review_min
+        description: The method's recorded review floor.
+        data_type: double
+      - name: ambiguity_gap
+        description: The method's recorded ambiguity gap.
+        data_type: double
+      - name: ambiguity_demoted_derived
+        description: Derived from exported values, tier is review, probability at or above accept_min and top2_gap below ambiguity_gap; null when the gap is null or the row is not exported.
+        data_type: boolean
+      - name: gap_at_rounded_boundary
+        description: The exported six-decimal gap equals the ambiguity gap exactly, so the exhibit alone cannot say whether the ambiguity rule fired; null when the gap is null.
+        data_type: boolean
+      - name: run_id
+        description: Identifier of the full-build run that decided the pair.
+        data_type: varchar
+      - name: decided_at_utc
+        description: When the decision was written.
+        data_type: timestamp
+
+  - name: fct_lab_case_comparison
+    description: "One row per Decision Lab case: how many methods exported a decision, how many distinct B ids they chose, and the agreement class over exported rows. methods_disagree is disagreement across methods, distinct from ambiguity between candidates inside one method."
+    config:
+      contract:
+        enforced: true
+    data_tests:
+      - dbt_utils.unique_combination_of_columns:
+          arguments:
+            combination_of_columns: [case_id]
+    columns:
+      - name: case_id
+        description: Stable case identifier (equal to the A id).
+        data_type: varchar
+        data_tests:
+          - not_null
+      - name: a_id
+        description: Side-A native id.
+        data_type: varchar
+      - name: reason_codes
+        description: Pipe-joined controlled reason codes that selected the case.
+        data_type: varchar
+      - name: selection_rank
+        description: Position of the case in the deterministic selection order.
+        data_type: bigint
+      - name: methods_exported
+        description: Number of methods with an exported decision for the case (0 to 3).
+        data_type: bigint
+      - name: distinct_chosen_b_ids
+        description: Distinct chosen B ids across the exported rows.
+        data_type: bigint
+      - name: agreement_class
+        description: none_exported, single_method_exported, all_exported_agree or methods_disagree.
+        data_type: varchar
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [none_exported, single_method_exported, all_exported_agree, methods_disagree]
+
 unit_tests:
   - name: slv_mapping_deduplicates_at_a_id_and_method
     description: Two exhibit rows for the same (a_id, method_version) collapse to the higher probability, then the lower b_id.
@@ -464,3 +584,26 @@ unit_tests:
       rows:
         - {method_version: learned_v1, threshold: 0.95, cost_ratio: 5, total_cost_recomputed: 90.0, is_chosen: true}
         - {method_version: learned_v1, threshold: 0.90, cost_ratio: 20, total_cost_recomputed: 500.0, is_chosen: false}
+
+  - name: fct_lab_case_comparison_classifies_agreement
+    description: Three exported rows with one B id agree; two exported rows with two B ids disagree; one exported row is single_method_exported; none is none_exported.
+    model: fct_lab_case_comparison
+    given:
+      - input: ref('fct_lab_case_evidence')
+        rows:
+          - {case_id: c1, a_id: c1, reason_codes: agreement_all_accept, selection_rank: 1, exported: true, b_id: "5"}
+          - {case_id: c1, a_id: c1, reason_codes: agreement_all_accept, selection_rank: 1, exported: true, b_id: "5"}
+          - {case_id: c1, a_id: c1, reason_codes: agreement_all_accept, selection_rank: 1, exported: true, b_id: "5"}
+          - {case_id: c2, a_id: c2, reason_codes: method_disagreement, selection_rank: 2, exported: true, b_id: "5"}
+          - {case_id: c2, a_id: c2, reason_codes: method_disagreement, selection_rank: 2, exported: true, b_id: "7"}
+          - {case_id: c2, a_id: c2, reason_codes: method_disagreement, selection_rank: 2, exported: false, b_id: null}
+          - {case_id: c3, a_id: c3, reason_codes: partial_export, selection_rank: 3, exported: true, b_id: "9"}
+          - {case_id: c3, a_id: c3, reason_codes: partial_export, selection_rank: 3, exported: false, b_id: null}
+          - {case_id: c3, a_id: c3, reason_codes: partial_export, selection_rank: 3, exported: false, b_id: null}
+          - {case_id: c4, a_id: c4, reason_codes: no_candidate, selection_rank: 4, exported: false, b_id: null}
+    expect:
+      rows:
+        - {case_id: c1, methods_exported: 3, distinct_chosen_b_ids: 1, agreement_class: all_exported_agree}
+        - {case_id: c2, methods_exported: 2, distinct_chosen_b_ids: 2, agreement_class: methods_disagree}
+        - {case_id: c3, methods_exported: 1, distinct_chosen_b_ids: 1, agreement_class: single_method_exported}
+        - {case_id: c4, methods_exported: 0, distinct_chosen_b_ids: 0, agreement_class: none_exported}

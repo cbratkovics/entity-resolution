@@ -29,10 +29,13 @@
   .note { font-size: 14px; }
   code { font-family: ui-monospace, monospace; font-size: 13px; }
   .missing { color: var(--muted); font-style: italic; }
+  .sitenav { font-size: 14px; color: var(--muted); margin-bottom: 12px; }
+  .sitenav a { color: var(--ink); }
 </style>
 </head>
 <body>
 <main>
+  <nav aria-label="Site" class="sitenav"><a href="./" aria-current="page">Results</a> · <a href="lab/">Decision Lab</a> · <a href="dbt/">dbt docs</a> · <a href="https://github.com/cbratkovics/entity-resolution">Repository</a></nav>
   <h1>Entity resolution: Discogs masters against MusicBrainz release groups</h1>
   <p>Three methods score the same blocked candidate pairs and are judged on the same test fold against labelled ground truth. Unlinked MusicBrainz records are unlabelled, not known non-matches: they count toward coverage and unverified accepts, never precision, recall or F1. Every figure here is read from the JSON files the dbt project exports into <code>data/</code>; the page types no number of its own.</p>
   <div class="panel" id="takeaway"><strong>Decision summary</strong><p>Loading the artifact-backed comparison…</p></div>

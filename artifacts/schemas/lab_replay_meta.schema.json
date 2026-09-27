@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Decision Lab complete-replay bundle metadata (lab_replay_version 1.0)",
+  "description": "artifacts/lab/replay/replay_<method_version>.json beside replay_<method_version>.test.csv.gz. The CSV holds one row per test-fold A record (every A record of the population, including no-candidate and baseline-reject records) with unrounded decision values of the top two candidates, the full blocked candidate count and label metadata; no identifiers. This file carries the completeness proof, the reconciliation to the evaluation artifact and the legacy-sweep divergence.",
+  "type": "object",
+  "required": ["lab_replay_version", "snapshot_id", "method_version", "decision_value_kind", "file", "columns", "rows", "population", "completeness", "inputs", "native_policy", "reconciliation", "floor_sweep_reconciliation", "legacy_sweep_divergence", "a_id_order_sha256", "note"],
+  "additionalProperties": false,
+  "properties": {
+    "lab_replay_version": {"const": "1.0"},
+    "snapshot_id": {"type": "string"},
+    "method_version": {"type": "string"},
+    "decision_value_kind": {"type": "string", "enum": ["binary_score", "uncalibrated_score", "calibrated_probability"]},
+    "file": {"type": "string"},
+    "columns": {"type": "array", "items": {"type": "string"}, "const": ["v1", "v2", "n_candidates", "labelled", "top1_correct", "truth_reachable"]},
+    "rows": {"type": "integer", "minimum": 0},
+    "population": {"$ref": "lab_manifest.schema.json#/$defs/population"},
+    "completeness": {"type": "object", "required": ["a_records_expected", "a_records_in_file", "with_candidates", "without_candidates", "labelled", "labelled_reachable", "conserved"], "additionalProperties": false, "properties": {"a_records_expected": {"type": "integer"}, "a_records_in_file": {"type": "integer"}, "with_candidates": {"type": "integer"}, "without_candidates": {"type": "integer"}, "labelled": {"type": "integer"}, "labelled_reachable": {"type": "integer"}, "conserved": {"type": "boolean"}}},
+    "inputs": {"type": "array", "items": {"type": "object", "required": ["path", "sha256", "role"], "additionalProperties": false, "properties": {"path": {"type": "string"}, "sha256": {"type": "string"}, "role": {"type": "string"}, "manifest_key": {"type": "string"}}}},
+    "native_policy": {"type": "object", "required": ["accept_min", "review_min", "ambiguity_gap"], "additionalProperties": false, "properties": {"accept_min": {"type": "number"}, "review_min": {"type": "number"}, "ambiguity_gap": {"type": "number"}}},
+    "reconciliation": {"type": "object", "required": ["eval_artifact", "eval_artifact_sha256", "all_equal", "checks"], "additionalProperties": false, "properties": {"eval_artifact": {"type": "string"}, "eval_artifact_sha256": {"type": "string"}, "all_equal": {"type": "boolean"}, "checks": {"type": "array", "items": {"type": "object", "required": ["metric", "replay", "artifact", "equal"], "additionalProperties": false, "properties": {"metric": {"type": "string"}, "replay": {}, "artifact": {}, "equal": {"type": "boolean"}}}}}},
+    "floor_sweep_reconciliation": {"type": "object", "required": ["all_equal", "points_compared"], "additionalProperties": false, "properties": {"all_equal": {"type": "boolean"}, "points_compared": {"type": "integer"}}},
+    "legacy_sweep_divergence": {"type": "object", "required": ["note", "thresholds_differing", "max_accepts_difference", "points"], "additionalProperties": false, "properties": {"note": {"type": "string"}, "thresholds_differing": {"type": "integer"}, "max_accepts_difference": {"type": "integer"}, "points": {"type": "array", "items": {"type": "object", "required": ["threshold", "legacy_accepts", "corrected_accepts", "legacy_review_queue", "corrected_review_queue", "legacy_matches_artifact"], "additionalProperties": false, "properties": {"threshold": {"type": "number"}, "legacy_accepts": {"type": "integer"}, "corrected_accepts": {"type": "integer"}, "legacy_review_queue": {"type": "integer"}, "corrected_review_queue": {"type": "integer"}, "legacy_matches_artifact": {"type": "boolean"}}}}}},
+    "a_id_order_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$", "description": "sha256 of the newline-joined A ids in file order (ascending); ties the identifier-free bundle to the local full-fidelity parquet under data/lab/."},
+    "note": {"type": "string"}
+  }
+}

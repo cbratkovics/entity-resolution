@@ -4,7 +4,9 @@ name: ci
 # frozen install, lint, the pytest suite (real-data tests skip), a dbt build against the
 # committed artifacts, the description / number / card checks, and the smoke test from a fresh
 # clone. No network beyond package downloads, no secrets, no paid service. The full build over
-# the real dumps lives in full-build.yml; the site is published by pages.yml.
+# the real dumps lives in full-build.yml; the site is published by pages.yml. The `lab` job
+# checks the Decision Lab export (ADR 0006), type-checks, unit-tests, builds and browser-tests
+# the app at its Pages base path.
 
 on:
   push:
@@ -45,5 +47,48 @@ jobs:
         run: .venv/bin/python scripts/check_numbers.py
       - name: Methods card matches the artifacts and carries no placeholder
         run: .venv/bin/python scripts/check_model_card.py
+      - name: Decision Lab export is current and internally consistent (no rewrite)
+        run: make lab-check
       - name: Smoke test from a fresh clone in a temp dir
         run: bash scripts/smoke.sh
+
+  lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: apps/decision-lab/.nvmrc
+          cache: npm
+          cache-dependency-path: apps/decision-lab/package-lock.json
+      - name: Install (npm ci, lockfile frozen)
+        run: npm ci
+        working-directory: apps/decision-lab
+      - name: Sync the committed lab export into the app
+        run: npm run sync-data
+        working-directory: apps/decision-lab
+      - name: Type check
+        run: npm run typecheck
+        working-directory: apps/decision-lab
+      - name: Lint
+        run: npm run lint
+        working-directory: apps/decision-lab
+      - name: Unit tests (policy parity with the Python fixtures, ledger, validators)
+        run: npm test
+        working-directory: apps/decision-lab
+      - name: Build at the Pages base path and report sizes
+        run: npm run build && npm run size
+        working-directory: apps/decision-lab
+      - name: Install Chromium for Playwright
+        run: npx playwright install --with-deps chromium
+        working-directory: apps/decision-lab
+      - name: Browser journeys against the built app at /entity-resolution/lab/
+        run: npm run test:e2e
+        working-directory: apps/decision-lab
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: apps/decision-lab/playwright-report
+          retention-days: 7
